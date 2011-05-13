@@ -51,13 +51,26 @@ De même que pour la sélection du maire, la sélection de l'accusé demande un 
 === Vote ===
   # Chaque joueur vote pour la personne qu'il souhaite voir pendue. Les bots choisissent la personne qu'ils trouvent la plus suspecte (ou aléatoirement en cas d'ex-aequo).
   # Détermination de la personne à pendre:
-    Si majorité relative: la personne avec le plus grand nombre de voies est pendue
-    Sinon, c'est le maire qui décide parmi les ex-aequo
+    * Si majorité relative: la personne avec le plus grand nombre de voies est pendue
+    * Sinon, c'est le maire qui décide parmi les ex-aequo
   # Evolution du niveau de suspicion suivant la personne tuée:
-    Si la personne était un villageois, le niveau de confiance des villageois envers ceux qui ont voté pour le pendu diminue, de même que le niveau de dangerosité des loup-garoux envers ceux qui ont voté pour le pendu.
-    Si le pendu était un loup-garou, le niveau de confiance des villageois envers ceux qui ont voté pour le pendu augmente, de même que le niveau de dangerosité des loup-garoux envers ceux qui ont voté pour le pendu augmente.
-    Le niveau de confiance d'un joueur envers ceux qui ont voté contre lui diminue
-    Eventuellement, les votes des autres joueurs contre d'autres joueurs influent ses propres niveaux de confiance (si A vote contre une personne B en qui on a confiance, alors A sera plus suspect ; si B vote contre A, le niveau de confiance envers A diminuera). L'importance des modifications dépendra des niveaux existants. Le vote du maire peut avoir plus d'importance que celui des autres (un maire ayant voté contre un loup-garou regagnera la confiance de ses citoyens alors qu'un maire ayant voté contre un villageois perdra cette confiance).
+    * Si la personne était un villageois, le niveau de confiance des villageois envers ceux qui ont voté pour le pendu diminue, de même que le niveau de dangerosité des loups-garous envers ceux qui ont voté pour le pendu.
+    * Si le pendu était un loup-garou, le niveau de confiance des villageois envers ceux qui ont voté pour le pendu augmente, de même que le niveau de dangerosité des loups-garous envers ceux qui ont voté pour le pendu augmente.
+    * Le niveau de confiance d'un joueur envers ceux qui ont voté contre lui diminue
+    * Eventuellement, les votes des autres joueurs contre d'autres joueurs influent ses propres niveaux de confiance (si A vote contre une personne B en qui on a confiance, alors A sera plus suspect ; si B vote contre A, le niveau de confiance envers A diminuera). L'importance des modifications dépendra des niveaux existants. Le vote du maire peut avoir plus d'importance que celui des autres (un maire ayant voté contre un loup-garou regagnera la confiance de ses citoyens alors qu'un maire ayant voté contre un villageois perdra cette confiance).
   # Si le maire doit être pendu, celui-ci désigne son successeur. Le niveau de confiance envers le successeur évolue en fonction du rôle qu'avait le maire.
-    Si le maire était un loup alors les paysans perdront confiance envers le nouveau maire
-    Si le maire était un paysan alors les paysans auront plus confiance envers le nouveau maire mais les loup-garou augmenteront leur niveau de dangerosité lié à ce nouveau maire.
+    * Si le maire était un loup alors les paysans perdront confiance envers le nouveau maire
+    * Si le maire était un paysan alors les paysans auront plus confiance envers le nouveau maire mais les loups-garous augmenteront leur niveau de dangerosité lié à ce nouveau maire.
+
+= Phases de nuit =
+== Choix des loups-garous ==
+Chaque nuit les loups-garous peuvent se concerter pour éliminer un joueur. Pour cela ils doivent tous se mettre d'accord sur une cible. Tous les loups connaissent le vote de chacun des autres loups. Pour l'élection on procède de la manière suivante:
+  # Chaque loup-garou vote pour une cible (au cours du premier tour, il leur ai possible de voter blanc)
+  # Probabilité que certains des joueurs endormis repèrent un ou plusieurs loups
+  # Si unanimité des votes, la cible est validée, sinon on retourne à l'étape un
+
+Remarques:
+  * Le nombre d'itérations est limité
+
+
+
