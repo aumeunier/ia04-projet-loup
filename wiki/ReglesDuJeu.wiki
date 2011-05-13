@@ -1,0 +1,11 @@
+#summary Ensemble des règles du Loup-Garou de Thiercelieux.
+
+= Introduction =
+Cette section contient une description exhaustive des règles de jeu du Loup-Garou de Thiercelieux. Dans le cas de modifications apportées à ces règles dans l'adaptation de ce jeu dans le cadre de notre projet, les deux règles sont spécifiées.
+
+
+= Règles de base =
+
+= Phases de jeu =
+
+= Les rôles =
