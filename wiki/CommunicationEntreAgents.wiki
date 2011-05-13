@@ -1,0 +1,107 @@
+#summary Définition de la communication entre les agents
+
+= Introduction =
+Cette section détaille la communication entre les agents: quelles sont les informations échangées, à quel moment et de quelle manière. Pour la liste des agents et de leurs rôles respectifs, se référencer à la section Agents du wiki.
+
+= Conteur et Joueur =
+Le Conteur est le contrôleur de la partie, les Joueurs sont les personnes qui jouent et qui peuvent "jouer" un rôle. Les Joueurs ont une "mémoire" de partie en partie.
+  * Enregistrement d'un joueur auprès du conteur:
+  Un joueur qui rentre dans une nouvelle partie doit s'enregistrer auprès du conteur.
+    # Le joueur se connecte et demande un enregistrement auprès du conteur
+    # Le conteur valide ou non l'inscription
+
+  * Désinscription d'un joueur
+  Lorsqu'un joueur quitte la partie il doit se désinscrire.
+    # Envoie d'un message du Joueur à Conteur
+    # Le Conteur désinscrire le Joueur et peut le remplacer par un bot (version ultérieure) ou le remplacer par un mort si jamais la partie est en cours
+
+  * Lancement d'une partie
+  En début de partie le conteur demande aux joueurs connectés s'ils veulent jouer. 
+    # Envoie d'un message début de partie de Conteur à tous les joueurs qui se sont enregistrés auprès de lui
+    # Réponse du Joueur: rentre ou non dans la partie
+    # Le Conteur obtient le nombre total de joueurs souhaitant jouer, détermine les rôles à utiliser suivant ce nombre et réparti les rôles aléatoirement. Il émet la liste des rôles
+    # Chaque joueur reçoit son rôle et l'instancie, il le lie à soi-même ainsi qu'à sa GUI pour accélérer les communications entre GUI et programme.
+
+  * Fin d'une partie
+    # Le Conteur indique à tous les joueurs que la partie est terminée
+    # Le Joueur supprime son rôle
+
+= Joueur et Rôle = 
+Chaque Joueur peut jouer un rôle pendant une partie. Les Rôles représentent les différents personnages du jeu du Loup Garou de Thiercelieux.
+  * Début d'une partie
+    # Le Joueur envoie des informations au Rôle (mémoire et stratégies)
+    # Le Rôle reçoit ces données et les traite
+  * Fin d'une partie
+    # Le Joueur notifie le Rôle de la fin de partie
+    # Le Rôle envoie des informations sur la partie au Joueur
+    # Le Joueur stocke les informations et supprime le Rôle
+
+= Communication et Rôle = 
+== Vote ==
+  # Vote déclenche un vote avec un type (loup, pendu, maire, nomination du maire)
+  # Les joueurs pouvant voter répondent
+  # Vote traite les votes et si nécessaire effectue de nouveaux tours de vote
+
+== Conseil == 
+  # Conseil demande des conseils à chaque joueur
+  # Les joueurs envoient leurs conseils
+  # Conseil traite les conseils, les indique à tout le monde et effectue de nouveaux tours si nécessaire
+
+== Action == 
+  * Action spécifique
+    # Déclenche la demande d'une action d'un rôle spécifique
+    # Si le Joueur ayant le rôle existe et est vivant, il répond à cette action
+
+  * Démarrage d'une partie 
+    # Communication indique à tous les Rôles que la partie commence
+    # Les Rôles récupèrent les AID de tous les autres joueurs afin de savoir pour qui ils peuvent voter (pas de communication directe entre les deux)
+
+  * Mort d'un joueur
+
+== Rôle ==
+Le Rôle s'enregistre auprès de chaque Agent Communication (Vote, Conseil, Action)
+
+= Conteur et Communication = 
+  * Vote 
+    # Conteur lance un vote
+    # Communication renvoie le résultat du vote
+  * Action (spécifique ou globale)
+    # Conteur lance l'action
+    # Communication renvoie le résultat de l'action (résultat ou vide si phase finie mais pas d'action)
+  * Demande phase de conseil
+  * Indique la mort d'un joueur
+
+
+= Messages = 
+== Conteur - Joueur ==
+{
+
+  type: YOU_DIE, ACCEPT_PLAYER, START_GAME, ATTRIBUTE_ROLE, END_GAME, PHASE, .. , REGISTER, START_GAME, LEAVE_GAME
+
+  rôle:  ..
+
+  phase: JOUR, NUIT
+
+  value (START_GAME): YES, NO
+
+}
+
+== Joueur - Rôle == 
+Osef for now
+
+== Communication - Rôle ==
+=== Vote ===
+{
+  type: KILL_PAYSAN, KILL_LG, ELECT_MAYOR, SUCCESSOR
+
+  nbVoix: int
+
+  choix: ..
+
+}
+
+=== Conseil ===
+?
+
+=== Action ===
+?
