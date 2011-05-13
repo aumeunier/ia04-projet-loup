@@ -1,0 +1,11 @@
+#summary Ce qu'il faut faire pour le dossier.
+
+= Introduction =
+Cette page décrit les différentes section à inclure dans le dossier de rendu de projet. 
+
+= Indications =
+  * Problèmes qui se posent
+  * Solutions possibles
+  * Priorités des tâches
+  * Expliquer résolution des tâches
+  * Montrer solutions envisagées si pas assez de temps pour la réalisation
