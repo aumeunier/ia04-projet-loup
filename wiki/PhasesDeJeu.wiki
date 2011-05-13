@@ -1,0 +1,28 @@
+#summary Décomposition des différentes phases de jeu
+
+= Introduction =
+
+Dans cette section seront présentées toutes les phases de jeu, décomposées en éléments simples.
+
+
+= Phase de jour =
+
+== Selection du maire (premier tour) ==
+La sélection du maire au premier tour se fait en plusieurs étapes: les candidatures, le vote, le résultat.
+
+=== Candidatures pour être maire ===
+Les candidatures se font en plusieurs fois: il est possible de se présenter dès le premier tour ou d'attendre quelques tours. Cette phase se fait donc par itération, dès lors que personne ne se présente pendant une itération, la phase est considérée terminée. En cas de non candidature (personne ne s'est présenté), une deuxième itération est effectuée et si personne ne s'est encore présenté alors le maire sera sélectionné au hasard.
+
+Pour chaque itération, le processus est le suivant:
+  Candidature de X personnes
+  Chaque joueur émet un avis positif ou négatif (dans une version ultérieure, l'avis pourrait se faire sur une échelle plutôt que sur un simple positif/négatif) sur la personne. Les niveaux de confiance de chaque joueur sont modifiés suivant les avis de tous les joueurs.
+    * Les joueurs se présentant auront probablement des avis négatifs sur les autres personnes se présentant.
+    * Les joueurs se présentant auront une meilleure confiance envers ceux qui émettent un avis favorable à leur égard et une confiance plus faible envers ceux qui émettent un avis défavorable à leur encontre.
+    * Les autres joueurs seront plus affectés par les joueurs en qui ils ont déjà confiance. Ainsi, une personne A en qui ils ont confiance et émettant un avis négatif sur une personne B qu'il considère déjà comme peu digne de confiance aura une influence plus importante sur son niveau de confiance de B que si une personne C, peu digne de confiance selon lui, émettait un avis négatif sur la personne A.
+  Les niveaux de confiance sont recalculés.
+
+Remarques:
+  * Dans la première version, les niveau de confiance au début d'une partie seront tous identiques, les avis seront donc assez aléatoire et les niveaux de confiance résultant de cette phase seront essentiellement une pondération des avis positifs par les avis négatifs. En revanche, dans une deuxième version, les niveaux de confiance des parties antérieures et les connaissances qu'un joueur possède sur les autres joueurs auront une influence sur les niveaux de confiance initiaux.
+  * Dans un premier temps l'évaluation des niveaux de confiance pendant la phase des candidatures se fera uniquement sur les nouvelles candidatures. Il serait en revanche possible de recalculer à chaque itération tous les niveaux de confiance envers toutes les personnes s'étant présentées.
+  * Il serait possible d'ajouter une importance à la phase à laquelle le joueur se présente. Ainsi, un joueur se présentant maire dès le premier tour est souvent suspect alors qu'un joueur se présentant dans les tours suivants pourra être considéré comme une personne souhaitant s'opposer à un joueur suspect.
+
