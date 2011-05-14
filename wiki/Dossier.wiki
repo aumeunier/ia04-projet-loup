@@ -9,3 +9,43 @@ Cette page décrit les différentes section à inclure dans le dossier de rendu 
   * Priorités des tâches
   * Expliquer résolution des tâches
   * Montrer solutions envisagées si pas assez de temps pour la réalisation
+
+---- 
+= Table des matières =
+= Table des figures =
+= Introduction = 
+  * Projet IA04 - contraintes
+  * Objectifs du projet / Pourquoi ce projet
+  
+= Règles des Loups-Garous de Thiercelieux =
+  * Règles générales
+  * Les phases de jeu
+  * Les personnages
+
+= Architecture = 
+  * Organisation des agents
+  * Communication entre les agents
+
+= Implémentation = 
+== Phases de Jeu ==
+  * Conteur
+  * Horloge
+  * Ordre des phases de jeu
+
+== Description des Agents ==
+  * AgentX (Role, Behaviour, Stratégies)
+  * AgentY (Role, Behaviour, Stratégies)
+  * ..
+
+== Interfaces  ==
+  * Interface d'un Joueur Humain
+  * Interface d'un Joueur Bot
+  * Interface d'un Mort/Observateur
+  * Autres interfaces (Conteur, Web, Omniscient, etc, ou Restlet ??)
+
+== Services Restlet ==
+  * Service A
+  * Service B
+
+= Conclusion = 
+= Glossaire =
