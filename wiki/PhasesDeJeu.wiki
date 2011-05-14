@@ -1,9 +1,9 @@
 #summary Décomposition des différentes phases de jeu
 
-= Introduction =
-
 Dans cette section seront présentées toutes les phases de jeu, décomposées en éléments simples.
 
+= Liste de toutes les étapes d'un tour=
+TO BE COMPLETED
 
 = Phase de jour =
 
@@ -71,6 +71,4 @@ Chaque nuit les loups-garous peuvent se concerter pour éliminer un joueur. Pour
 
 Remarques:
   * Le nombre d'itérations est limité
-
-
 
