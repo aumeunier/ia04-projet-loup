@@ -1,0 +1,43 @@
+#summary Description des rôles implémentés ou à implémenter dans le jeu.
+
+= Introduction =
+Cette décrit les rôles que nous souhaitons implémenter dans le jeu. Ces rôles sont assez similaires à ce du jeu original mais les descriptions seront plus orientées vers l'implémentation.
+
+= Jeu de base =
+== Villageois ==
+Personnage de base. Peut se présenter en tant que maire, élire le maire en début de partie et voter pour la personne à pendre. Le but d'un villageois sera de survivre à la partie et donc d'éliminer les loups-garous.
+
+En terme d'implémentation le *RoleVillageois* est le rôle par défaut si le joueur n'obtient pas un rôle spécial. Il existera également un *BehaviourVillageois* que la quasi-totalité des rôles auront.
+
+== Loup-Garou ==
+Rôle fréquent que bon nombre de joueurs auront. Le loup-garou s'éveille la nuit et peut s'entendre avec les autres loups pour désigner une cible à tuer. Le but du loup-garou est de survivre à la partie et donc d'éliminer tous les villageois.
+
+En terme d'implémentation le *RoleLoupGarou* est un rôle simple. Les loups-garous auront un BehaviourVillageois et un *BehaviourLoupGarou*. Ce dernier permettra d'agir la nuit pour la chasse des loups-garous.
+
+== Maire ==
+Rôle détenu par une personne à tout moment de la partie. Le maire peut-être n'importe quel villageois. Il est souvent suspect. Son rôle est normalement d'aider le village à survivre en le guidant par ses bonnes décisions. C'est lui qui prendra des décisions dans le cas d'ex-aequo. S'il est pendu par le village il doit nommer son successeur.
+
+En terme d'implémentation le maire est modélisé par un simple *BehaviourMaire* qui lui permet de répondre aux messages destinés uniquement au maire: rompre un ex-aequo, nommer son successeur. Il n'est pas nécessaire d'utiliser un RoleMaire étant donné que le maire est forcément relié à un autre rôle, que ce soit un paysan, un loup-garou ou un rôle spécial.
+
+== Sorcière == 
+Ce rôle ne peut être détenu que par une seule personne au maximum. La sorcière possède deux potions, l'une pouvant sauver quelqu'un, l'autre pouvant tuer quelqu'un. La nuit, après le vote des loup-garous elle peut décider de sauver la cible si elle a encore sa potion de vie, et décider de tuer une autre si elle a encore sa potion de mort.
+
+En terme d'implémentation la sorcière est modélisée par un *RoleSorcière* qui possède deux potions. Ce rôle possèdera deux behaviours: le BehaviourVillageois et le *BehaviourSorciere* qui répondra aux messages destinés uniquement à la sorcière ("Veux-tu utliser tes potions ?").
+
+== Voyante ==
+== Chasseur ==
+== Cupidon ==
+== Amoureux == 
+== Voleur ==
+== Petite fille == 
+
+= Première extension: Nouvelle Lune =
+== Bouc-Emissaire ==
+== Joueur de flûte ==
+== Salvateur ==
+== L'idiot du village ==
+== L'ancien du village ==
+
+= Deuxième extension: Le Village = 
+== Corbeau ==
+== Loup-Garou blanc == 
