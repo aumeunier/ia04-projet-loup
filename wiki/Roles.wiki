@@ -1,7 +1,13 @@
 #summary Description des rôles implémentés ou à implémenter dans le jeu.
 
 = Introduction =
-Cette décrit les rôles que nous souhaitons implémenter dans le jeu. Ces rôles sont assez similaires à ce du jeu original mais les descriptions seront plus orientées vers l'implémentation.
+Cette décrit les rôles que nous souhaitons implémenter dans le jeu. Ces rôles sont assez similaires à ce du jeu original mais les descriptions seront plus orientées vers l'implémentation. Seront indiqués les Roles et les Behaviour utilisés pour modéliser le personnage. Pourront aussi être décrites les stratégies de chaque rôle. Ces stratégies permettront d'aider les bots à déterminer quand et comment appliquer leurs rôles spéciaux.
+
+= Spécial =
+== Observateur ==
+== Mort ==
+== RoleBase ==
+Tous les autres rôles du jeu héritent de ce *RoleCore* qui donnera quelques caractéristiques et méthodes de base. Un *RoleCoreBehaviour* permettra de répondre à certains messages généraux comme la mort du personnage, la fin d'une partie, le début d'une partie ou la révélation d'un personnage.
 
 = Jeu de base =
 == Villageois ==
@@ -25,11 +31,34 @@ Ce rôle ne peut être détenu que par une seule personne au maximum. La sorciè
 En terme d'implémentation la sorcière est modélisée par un *RoleSorcière* qui possède deux potions. Ce rôle possèdera deux behaviours: le BehaviourVillageois et le *BehaviourSorciere* qui répondra aux messages destinés uniquement à la sorcière ("Veux-tu utliser tes potions ?").
 
 == Voyante ==
+Ce rôle ne peut être détenu que par une seule personne au maximum. La voyante peut observer, une fois par nuit, le rôle d'un joueur de son choix. Le rôle de voyante permet donc de savoir qui est qui et d'agir en conséquence. En revanche c'est un rôle très dangereux pour les loups-garous, la voyante doit donc agir discrètement pour ne pas être la prochaine cible.
+
+En terme d'implémentation la voyante est modélisée par un *RoleVoyante*. Ce rôle possèdera deux behaviours: le BehaviourVillageois et le *BehaviourVoyante* qui répondra aux messages destinés uniquement à la voyante ("Quelle personne veux-tu observer ?").
+
 == Chasseur ==
+Ce rôle ne peut être détenu que par une seule personne au maximum.  Le chasseur peut, lorsqu'il est tué par les loups-garous, tuer une personne de son choix.
+
+En terme d'implémentation le chasseur est modélisé par un *RoleChasseur* qui possèdera deux behaviours: le BehaviourVillageois et le *BehaviourChasseur* qui répondra aux messages destinés uniquement au chasseur ("Qui veux-tu tuer avant de mourir ?").
+
 == Cupidon ==
+Ce rôle ne peut être détenu que par une seule personne au maximum. Cupidon n'a un rôle qu'en début de partie: il peut désigner deux personnes qui seront désormais des Amoureux (voir ci-dessous).
+
+En terme d'implémentation Cupidon sera modélisé par un *RoleCupidon* qui indiquera qui choisir (stratégie) et se souviendra des deux personnes liées. Un *BehaviourCupidon* lui permettra de répondre au message destiné à Cupidon en début de partie ("Qui veux-tu désigner comme étant Amoureux?").
+
 == Amoureux == 
+Ce rôle est détenu par deux personnes exactement. Les Amoureux ont eu leur sort lié par Cupidon en début de partie. Ils doivent faire en sorte qu'ils soient les deux derniers survivants, peu importe qu'ils soient loups-garous et/ou paysans. Les Amoureux connaissent par ailleurs le rôle de leur amoureux.
+
+En terme d'implémentation les amoureux sont modélisés à l'intérieur du RoleCoreBehaviour (AID de son amoureux, null si pas d'amoureux). Certaines stratégies peuvent être modifiées si la personne est amoureuse, elle aura ainsi une confiance absolue en son amoureux et fera en sorte que cette personne survive à tout prix.
+
 == Voleur ==
+Ce rôle ne peut être détenu que par une seule personne au maximum. Le Voleur peut, en début de partie, choisir son rôle entre deux cartes restantes. Si une des deux cartes indique le rôle de Loup-Garou le voleur doit la prendre.
+
+En terme d'implémentation le Voleur sera modélisé d'une manière un peu spéciale: le Conteur indiquera au joueur que c'est lui le Voleur et qu'il a le choix entre deux cartes. Le joueur pourra choisir entre ces deux rôles et agira suivant ce rôle.
+
 == Petite fille == 
+Ce rôle ne peut être détenu que par une seule personne au maximum. La petite fille peut observer les agissements des loups-garous pendant la nuit. Elle peut ainsi essayer de détecter qui est un loup-garou. En revanche, si la petite fille est repérée par les loups elle est automatiquement désignée comme cible des loups pour cette nuit.
+
+En terme d'implémentation la petite fille est modélisée par un *RolePetiteFille*. Ce rôle possèdera deux behaviours: le BehaviourVillageois et le *BehaviourPetiteFille* qui répondra aux messages destinés uniquement à la petite fille. Le RolePetiteFille indiquera quel risque elle souhaite prendre pour la nuit (plus le risque pris est grand, plus elle a de chances de repérer les loups-garous mais plus elle a de chances de se faire repérer).
 
 = Première extension: Nouvelle Lune =
 == Bouc-Emissaire ==
