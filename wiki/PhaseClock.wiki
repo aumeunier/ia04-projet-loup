@@ -1,0 +1,38 @@
+#summary Description de l'horloge interne du systeme.
+
+= Introduction =
+La PhaseClock est contrôlée par l'AgtStoryteller. Elle permet de réguler la vitesse de la partie (s'assurer que la partie ne va pas trop vite lorsqu'il n'y a que des bots et que des joueurs inactifs ne bloquent pas la partie). Dans cette section seront décries les rôles de l'horloge, les interactions entre l'horloge et l'AgtStoryteller ainsi que les réactions de l'AgtStoryteller lors de l'enchaînement des phases
+
+= Description de PhaseClock =
+L'horloge contient un élément lui permettant de savoir quelle est la phase actuelle. La liste utilisée doit contenir tous les évènements possibles (enchaînement complet de toutes les phases possibles dans un tour complet de jeu) qui est contenue dans la classe Global. L'horloge utilise par ailleurs un Timer lui permettant de déclencher des évènements après qu'un certain temps se soit écoulé. Etant donné qu'une seule phase peut être active à un moment donné, un seul timer est utilisé, auquel on changera l'activité après chaque phase, si nécessaire.
+
+= Interactions avec AgtStoryteller =
+=== nextPhase ===
+Cette méthode permet à l'AgtStoryteller de demander à la PhaseClock de passer à la phase suivante. La méthode gère de manière interne à quelle phase il faut passer. Un appel à la méthode shouldSkipPhase de l'AgtStoryteller sera cependant utilisé afin d'éviter de répéter des phases inutiles.
+
+=== repeatPhase ===
+Il peut arriver qu'une phase se répète. L'AgtStoryteller peut vouloir laisser plus de temps aux joueurs ou bien demander manuellement une nouvelle itération de cette phase. Cette méthode permet à PhaseClock de relancer le timer lié à cette phase.
+
+=== phaseShouldEnd === 
+Cette méthode permet d'appeler la bonne méthode d'AgtStoryteller afin qu'il fasse le traitement nécessaire.
+
+= Reactions de Storyteller =
+=== startPhaseX ===
+Traitement interne, puis souvent:
+1) Notifie Communication
+2) Communication attends une ou plusieurs réponses des AgtRole
+3a) Communication obtient toutes les réponses nécessaires
+4a) Communication renvoie le résultat à AgtStoryteller
+5a) Storyteller enregistre le résultat et attends (ou pas) le prochain tick de phaseShouldEnd avant de l'analyser et d'effectuer les traitements nécessaires
+
+3b) Communication n'obtient pas assez de résultats
+4b) Storyteller recoit un évènement phaseShouldEnd
+5b) Storyteller donne plus de temps aux joueurs et relance le timer
+5c) Storyteller demande une réponse partielle à Communication. Si toujours pas de réponser, passer à 5d)
+5d) Storyteller passe à l'étape suivante. Les résultats renvoyés par Communication après cet instant ne seront plus pris en compte. De plus, Communication va recevoir un message lui indiquant d'arrêter son activité en cours. Les AgtJoueur devraient aussi recevoir un message pour que la GUI soit mise à jour.
+
+
+=== phaseShouldEnd ===
+a) Wait answer from the Communication agents and call repeatPhase de sa PhaseClock
+b) Ask an immediate answer from the Communication agent
+c) Goes to the next phase and call nextPhase de sa PhaseClock
