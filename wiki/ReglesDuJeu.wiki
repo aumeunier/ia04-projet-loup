@@ -9,3 +9,17 @@ Cette section contient une description exhaustive des règles de jeu du Loup-Gar
 = Phases de jeu =
 
 = Les rôles =
+
+==Les rôles de bases==
+Le simple villageois:
+but: survivre et éliminer les loups-garous
+Actions: vote du village.
+
+Le Loup Garou:
+but: survivre et éliminer les joueurs non loups-garous.
+Actions: vote du village, vote des loups.
+
+==Les rôles additionnel==
+Le Maire/Capitaine
+but: aucun
+Action: Revote en cas d'égalité, désigne un successeur.
