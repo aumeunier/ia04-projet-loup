@@ -1,23 +1,34 @@
 package ia04.projet.loup;
 
 /**
- * Cette classe contient des variables ou méthodes que nous pourrions vouloir accéder de n'importe où dans le projet.
+ * This class contains variables and methods that can be used anywhere in the program
  * @author aurelien
  *
  */
 public class Global {
 	/**
-	 * Cette énumération contient les différentes phases de jeu que nous avons dans le jeu.
-	 * Les phases ont une influence sur l'interface des joueurs.
+	 * This enumeration contains the different game phases we have in the game.
+	 * These phases are used to modify the player's interface.
 	 * @author aurelien
 	 *
 	 */
 	public enum GamePhases{
-		DAY, NIGHT
+		/**
+		 * NONE phase is when there is no game (between games or while starting game)
+		 */
+		NONE,
+		/**
+		 * DAY phase
+		 */
+		DAY, 
+		/**
+		 * NIGHT phase
+		 */
+		NIGHT
 	}
 	/**
-	 * Cette énumération contient les rôles que nous avons implémenté dans le jeu.
-	 * Une description de chaque rôle peut être trouvé soit dans la classe qui lui est reliée soit sur le wiki du projet.
+	 * This enumeration contains the roles we have implemented in our game
+	 * A description of each role can be found either in its related class or on the project'swiki
 	 * @author aurelien
 	 *
 	 */

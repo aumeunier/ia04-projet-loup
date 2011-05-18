@@ -2,13 +2,13 @@ package ia04.projet.loup.messages;
 import ia04.projet.loup.Global;
 
 /**
- * Cette classe est utilisée pour créer les messages entre le Conteur et le Joueur.
+ * This class is used to create message between the Storyteller and the Player.
  * @author aurelien
  *
  */
-public class mConteurJoueur extends Message {
+public class mStorytellerPlayer extends mMessage {
 	/**
-	 * Les types de message qu'on peut envoyer via cette classe. Chaque type correspond à un 
+	 * Message types we can send using this class
 	 * @author aurelien
 	 *
 	 */
@@ -26,14 +26,14 @@ public class mConteurJoueur extends Message {
 	private boolean participateInGame;
 	
 	/**
-	 * Transforme le message sous une forme compréhensible par un humain
+	 * Transform the message to a human-understandable form
 	 */
 	@Override
 	public String toString(){
 		return "";
 	}
 	/**
-	 * Le message est de la forme:
+	 * Message format is:
 	 * {
 	 * 	type: YOU_DIE, ACCEPT_PLAYER, START_GAME, ATTRIBUTE_ROLE, END_GAME, PHASE, 
 	 * 			.. , REGISTER, START_GAME, LEAVE_GAME (obligatoire)
@@ -54,5 +54,3 @@ public class mConteurJoueur extends Message {
 		"}";
 	}
 }
-/*
-*/

@@ -8,26 +8,30 @@ public class BehaviourStoryteller extends Behaviour {
 	 * 
 	 */
 	private static final long serialVersionUID = 1058995384097785392L;
+	
+	public BehaviourStoryteller(AgtStoryteller a){
+		super(a);
+	}
 
 	@Override
 	public void action() {
 		ACLMessage msg = myAgent.receive();
 		if(msg != null){
-			// Reception du message
+			// Message reception
 			String msgString = msg.getContent();
 			int msgPerformative = msg.getPerformative();
 			// TODO:
 			
-			// A - Le message peut venir d'un AgtPlayer:			
-			// 1. Enregistrement d'un joueur aupres de myAgent
-			// 2. Desinscription d'un joueur deja inscrit
-			// 3. Lancement d'une partie, participation ou non du joueur a la partie
-			// 4. Eventuelles reponses pendant l'attribution des roles (ex. voleur)
-			// 5. Apres indication des roles, joueur previent s'il est pret
+			// A - Message can come from an AgtPlayer:			
+			// 1. Player's registration
+			// 2. Player's unregistration
+			// 3. Participation in the new game
+			// 4. Eventual answers to role attribution
+			// 5. Is the player ready to play (has finished role initialization)
 			
-			// B - Le message peut venir d'un AgtCommunication (Vote / Advice / Action)
-			// 1. Reponse a une action
-			// 2. Reponse a un vote 
+			// B - Message can come from an AgtCommunication (Vote / Advice / Action)
+			// 1. Answer to an action
+			// 2. Answer to a vote 
 		}
 	}
 

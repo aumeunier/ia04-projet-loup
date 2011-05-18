@@ -2,33 +2,33 @@ package ia04.projet.loup.messages;
 
 import jade.core.AID;
 
-public class mCommunicationRole extends Message {
+public class mCommunicationRole extends mMessage {
 	enum mType {
 		KILL_PAYSAN, KILL_WEREWOLF, ELECT_MAYOR, NAME_SUCCESSOR
 	}
 	private mType type;
-	private int nbVoix;
+	private int voiceNumber;
 	private AID choice;
 	
-	public mCommunicationRole(mType _type, int _nbVoix, AID _choice){
+	public mCommunicationRole(mType _type, int _voiceNumber, AID _choice){
 		this.type = _type;
-		this.nbVoix = _nbVoix;
+		this.voiceNumber = _voiceNumber;
 		this.choice = _choice;
 	}
 	
 	/**
-	 * Transforme le message sous une forme compréhensible par un humain
+	 * Transform the message to a human-understandable form
 	 */
 	@Override
 	public String toString(){
 		return "";
 	}
 	/**
-	 * Le message est de la forme:
+	 * Message format is:
 	 * {
 	 * 	type: KILL_PAYSAN, KILL_LG, ELECT_MAYOR, SUCCESSOR
-	 * 	nbVoix: le nombre de voix dont le joueur dispose
-	 * 	choix: aid du joueur pour qui on vote (optionnel, considéré comme blanc si non présent)
+	 * 	voiceNumber: number of voices the player has
+	 * 	choice: aid of the player's against whom the player voted (optional, blank vote if nothing)
 	 * }
 	 * @return The message in a JSON form
 	 */
@@ -37,8 +37,8 @@ public class mCommunicationRole extends Message {
 		return 
 		"{\n" +
 		"\t \"type\":"+type.toString()+",\n"+
-		"\t \"nbVoix\":"+String.valueOf(nbVoix)+"\n"+
-		((choice!=null)?("\t \"role\":"+choice.toString()+",\n"):(""))+
+		"\t \"voiceNumber\":"+String.valueOf(voiceNumber)+"\n"+
+		((choice!=null)?("\t \"choice\":"+choice.toString()+",\n"):(""))+
 		"}";
 	}
 }

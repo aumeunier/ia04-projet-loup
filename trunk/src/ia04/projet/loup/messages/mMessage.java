@@ -1,6 +1,6 @@
 package ia04.projet.loup.messages;
 
-public class Message implements IMessage{
+public class mMessage implements IMessage{
 	public static void parseJson(String jsonString){
 		
 	}
