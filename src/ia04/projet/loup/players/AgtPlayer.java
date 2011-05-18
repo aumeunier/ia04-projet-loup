@@ -6,10 +6,16 @@ import jade.gui.GuiEvent;
 
 public class AgtPlayer extends GuiAgent {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3215896432211766320L;
+
 	@Override
 	protected void onGuiEvent(GuiEvent arg0) {
-		// TODO Auto-generated method stub
-		
+		// TODO:
 	}
+	
+	
 
 }
