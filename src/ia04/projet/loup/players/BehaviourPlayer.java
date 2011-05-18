@@ -9,20 +9,20 @@ public class BehaviourPlayer extends Behaviour {
 	public void action() {
 		ACLMessage msg = myAgent.receive();
 		if(msg != null){
-			// Reception du message
+			// Message reception
 			String msgString = msg.getContent();
 			int msgPerformative = msg.getPerformative();
 			// TODO:
 			
-			// A - Le message peut venir de l'AgtStoryteller:			
-			// 1. Validation d'inscription
-			// 2. Debut de partie, demande de participation
-			// 3. Attribution du role 
-			// 4. Eventuels messages supplementaires pendant l'attribution des roles (ex. voleur)
-			// 5. Fin de partie
+			// A - Message can come from an AgtStoryteller:			
+			// 1. Inscription validation
+			// 2. Beginning of a game, participation request
+			// 3. Role attribution
+			// 4. Eventual additional messages concerning the role attribution
+			// 5. End of the game
 			
-			// B - Le message peut venir d'un AgtRole
-			// 1. Reception d'informations liees a stocker en bdd et reutilisables dans le futur
+			// B - Message can come from an AgtRole
+			// 1. Reception of information concerning the db (stats, can be reused in future games)
 		}
 	}
 
