@@ -76,11 +76,11 @@ Le Rôle s'enregistre auprès de chaque Agent Communication (Vote, Conseil, Acti
 == Conteur - Joueur ==
 {
 
-  type: YOU_DIE, ACCEPT_PLAYER, START_GAME, ATTRIBUTE_ROLE, END_GAME, PHASE, .. , REGISTER, START_GAME, LEAVE_GAME
+  type: YOU_DIE, ACCEPT_PLAYER, START_GAME, ATTRIBUTE_ROLE, END_GAME, PHASE, .. , REGISTER, START_GAME, LEAVE_GAME, STORYTELLING
 
   rôle:  ..
 
-  phase: JOUR, NUIT
+  phase: JOUR, NUIT,...
 
   value (START_GAME): YES, NO
 
