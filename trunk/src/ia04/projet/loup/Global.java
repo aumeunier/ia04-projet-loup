@@ -24,11 +24,22 @@ public class Global {
 	}
 	/**
 	 * This enumeration contains the roles we have implemented in our game
-	 * A description of each role can be found either in its related class or on the project'swiki
+	 * A description of each role can be found either in its related class or on the project's wiki
 	 * @author aurelien
 	 *
 	 */
 	public enum Roles {
 		
+	}
+	
+	/**
+	 * This enumeration contains the strategies we have implemented in our game
+	 * A description of each strategy can be found either in its related class or on the project's wiki
+	 * @author aurelien
+	 *
+	 */
+	public enum Strategies {
+		/** Strategy used for the very beginning of the project: random behavior */
+		RABBIT
 	}
 }
