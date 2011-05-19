@@ -4,9 +4,6 @@ import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 
 public class BehaviourStoryteller extends Behaviour {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1058995384097785392L;
 	
 	public BehaviourStoryteller(AgtStoryteller a){

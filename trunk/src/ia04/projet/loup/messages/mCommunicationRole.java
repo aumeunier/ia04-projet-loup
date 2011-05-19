@@ -3,6 +3,11 @@ package ia04.projet.loup.messages;
 import jade.core.AID;
 
 public class mCommunicationRole extends mMessage {
+	/**
+	 * Message types we can send using this class
+	 * @author aurelien
+	 *
+	 */
 	enum mType {
 		KILL_PAYSAN, KILL_WEREWOLF, ELECT_MAYOR, NAME_SUCCESSOR
 	}
@@ -16,9 +21,6 @@ public class mCommunicationRole extends mMessage {
 		this.choice = _choice;
 	}
 	
-	/**
-	 * Transform the message to a human-understandable form
-	 */
 	@Override
 	public String toString(){
 		return "";
