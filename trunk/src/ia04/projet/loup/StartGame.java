@@ -22,7 +22,7 @@ public class StartGame {
 	public static void main(String[] args) throws StaleProxyException, ProfileException {
 		if(MainComput){
 			Runtime rt = Runtime.instance();
-			Profile pf = new ProfileImpl("./ressources/properties.txt");
+			Profile pf = new ProfileImpl("./resources/properties.txt");
 
 			// Create the AgentContainer
 			AgentContainer mc = rt.createMainContainer(pf);
