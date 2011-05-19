@@ -9,7 +9,7 @@ Cette page décrit les différentes section à inclure dans le dossier de rendu 
   * Priorités des tâches
   * Expliquer résolution des tâches
   * Montrer solutions envisagées si pas assez de temps pour la réalisation
-
+  * Mettre en valeur la gestion/organisation du projet (svn)
 ---- 
 = Table des matières =
 = Table des figures =
