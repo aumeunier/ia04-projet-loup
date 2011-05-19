@@ -33,6 +33,10 @@ public class StartGame {
 			AgentController ac = mc.acceptNewAgent("Storyteller",storyteller);
 			ac.start();
 			System.out.println("Storyteller agent created...");
+			
+			// Start the game
+			//TODO: should start when they are enough players registered and willing to play
+			storyteller.startGame(); 
 		}
 		else {
 			Runtime rt = Runtime.instance();

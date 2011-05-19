@@ -13,17 +13,13 @@ public class Global {
 	 *
 	 */
 	public enum GamePhases{
-		/**
-		 * NONE phase is when there is no game (between games or while starting game)
-		 */
+		/** When there is no game (between games or while starting game) */
 		NONE,
-		/**
-		 * DAY phase
-		 */
+		/** Beginning of a new turn */
+		NEW_TURN,
+		/** Beginning of the day phase */
 		DAY, 
-		/**
-		 * NIGHT phase
-		 */
+		/** Beginning of the night phase */
 		NIGHT
 	}
 	/**
