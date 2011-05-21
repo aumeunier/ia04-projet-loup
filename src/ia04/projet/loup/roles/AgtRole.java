@@ -11,7 +11,7 @@ import jade.core.Agent;
  *
  */
 
-public abstract class AgtRole extends Agent {
+public class AgtRole extends Agent {
 	
 	/**
 	 * 
