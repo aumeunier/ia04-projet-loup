@@ -12,7 +12,7 @@ import java.util.TimerTask;
  *
  */
 public class PhaseClock {
-	private static final float AVERAGE_SPEED = 0.01f;
+	private static final float AVERAGE_SPEED = 0.25f;
 	/** The timer used to time the phases */
 	private Timer timer;
 	/** Is the clock on ? */
@@ -92,17 +92,15 @@ public class PhaseClock {
 		case NONE:
 			startNextPhase();
 			return;
-		case NEW_TURN:
-			nbOfTurns++;
-			lengthOfPhase = (int) (1000*AVERAGE_SPEED);
-			break;
 		case DAY:
 			lengthOfPhase = (int) (10000*AVERAGE_SPEED);
 			break;
 		case NIGHT:
+			nbOfTurns++;
 			lengthOfPhase = (int) (5000*AVERAGE_SPEED);
 			break;
 		default:
+			lengthOfPhase = (int) (5000*AVERAGE_SPEED);
 			break;				
 		}
 		

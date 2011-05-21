@@ -15,24 +15,73 @@ public class Global {
 	public enum GamePhases{
 		/** When there is no game (between games or while starting game) */
 		NONE,
-		/** Beginning of a new turn */
-		NEW_TURN,
+		/** Beginning of the night phase */
+		NIGHT,
+		/** Only during the first night: choose 2 people that will be lovers */
+		CUPID,
+		/** Only during the first night: the lovers chosen by Cupid reveal to each other their role */
+		LOVERS,
+		/** Only during the first night: the thief can choose his role between two (has to choose Wolf if there is one) */
+		THIEF,
+		/** The guardian can choose a person that won't die this turn if it's the victim*/
+		GUARDIAN,
+		/** The clairvoyant can see the role of a person every turn */
+		CLAIRVOYANT,
+		/** The were-wolves gather and pick their victim */
+		WEREWOLVES,
+		/** The witch can use a revive pot and a deathly pot */
+		WITCH,
+		/** The white wolf can kill a wolf every two turns */
+		WHITE_WOLF,
+		/** The raven can put two votes on a person before the turn even begins */
+		RAVEN,
+		/** The flute player can charm two people per day */
+		FLUTE_PLAYER,
+		/** The charmed players recognize each other */
+		CHARMED,
+		
 		/** Beginning of the day phase */
 		DAY, 
-		/** Beginning of the night phase */
-		NIGHT
+		/** The people who died during the night are revealed */
+		VICTIMS_REVELATION,
+		/** If the victims have special actions at their death */
+		VICTIMS_EVENT,
+		/** Only during the first day: the mayor is elected */
+		MAYOR_ELECTION,
+		/** The village select the villager to hang */
+		HANGED_VOTE,
+		/** The role of the person to be hung is revealed */
+		HANGED_REVELATION,
+		/** If the hung has a special action at his hanging... */
+		HANGED_EVENT,
+		/** The hung is hung */
+		HANGED_RESOLUTION		
 	}
 	/**
-	 * This enumeration contains the roles we have implemented in our game
+	 * This enumeration contains the possible roles in the game
 	 * A description of each role can be found either in its related class or on the project's wiki
 	 * @author aurelien
 	 *
 	 */
 	public enum Roles {
-		/** Simple villager (no special action)*/
+		/** Simple villager (no special action) */
 		VILLAGER,
 		/** Werewolf : a villager that wakes up during the night to eat somebody */
-		WEREWOLF
+		WEREWOLF,
+		/** Not implemented yet*/
+		CUPID,
+		LOVERS,
+		THIEF,
+		GUARDIAN,
+		CLAIRVOYANT,
+		WITCH,
+		WHITE_WOLF,
+		RAVEN,
+		FLUTE_PLAYER,
+		HUNTER,
+		SCAPEGOAT,
+		VILLAGE_IDIOT,
+		VILLAGE_SAGE
 	}
 	
 	/**
