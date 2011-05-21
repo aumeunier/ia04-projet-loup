@@ -63,7 +63,7 @@ Le Rôle s'enregistre auprès de chaque Agent Communication (Vote, Conseil, Acti
 
 = Conteur et Communication = 
   * Vote 
-    # Conteur lance un vote
+    # Conteur lance un vote (si Bouc-Emissaire, l'indique à l'AgCom)
     # Communication renvoie le résultat du vote
   * Action (spécifique ou globale)
     # Conteur lance l'action
