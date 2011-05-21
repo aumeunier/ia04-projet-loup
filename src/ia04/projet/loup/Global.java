@@ -46,16 +46,18 @@ public class Global {
 		VICTIMS_REVELATION,
 		/** If the victims have special actions at their death */
 		VICTIMS_EVENT,
+		/** The victims die */
+		VICTIMS_RESOLUTION,
 		/** Only during the first day: the mayor is elected */
 		MAYOR_ELECTION,
 		/** The village select the villager to hang */
-		HANGED_VOTE,
+		HUNG_VOTE,
 		/** The role of the person to be hung is revealed */
-		HANGED_REVELATION,
+		HUNG_REVELATION,
 		/** If the hung has a special action at his hanging... */
-		HANGED_EVENT,
+		HUNG_EVENT,
 		/** The hung is hung */
-		HANGED_RESOLUTION		
+		HUNG_RESOLUTION		
 	}
 	/**
 	 * This enumeration contains the possible roles in the game
@@ -64,13 +66,14 @@ public class Global {
 	 *
 	 */
 	public enum Roles {
+		/** A player that is not playing but can watch the game */
+		DEAD,
 		/** Simple villager (no special action) */
 		VILLAGER,
 		/** Werewolf : a villager that wakes up during the night to eat somebody */
 		WEREWOLF,
 		/** Not implemented yet*/
 		CUPID,
-		LOVERS,
 		THIEF,
 		GUARDIAN,
 		CLAIRVOYANT,

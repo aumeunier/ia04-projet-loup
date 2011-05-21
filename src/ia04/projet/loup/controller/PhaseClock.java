@@ -33,14 +33,14 @@ public class PhaseClock {
 	 */
 	public PhaseClock(AgtStoryteller s){
 		super();
-		this.nbOfTurns = 0;
+		this.nbOfTurns = -1;
 		this.storyteller = s;
 		this.timer = new Timer("phaseTimer");
 		this.isTimerRunning = false;
 	}	
 
 	public void startTimer(){
-		this.nbOfTurns = 1;
+		this.nbOfTurns = 0;
 		this.isTimerRunning = true;
 		startNextPhase();
 	}
@@ -92,9 +92,6 @@ public class PhaseClock {
 		case NONE:
 			startNextPhase();
 			return;
-		case DAY:
-			lengthOfPhase = (int) (10000*AVERAGE_SPEED);
-			break;
 		case NIGHT:
 			nbOfTurns++;
 			lengthOfPhase = (int) (5000*AVERAGE_SPEED);
@@ -112,7 +109,7 @@ public class PhaseClock {
 			timer.schedule(new TimerTask(){
 				@Override
 				public void run() {
-					storyteller.shouldEndPhase(currentPhase);
+					storyteller.endOfPhase(currentPhase);
 				}			
 			}, lengthOfPhase);
 		}
