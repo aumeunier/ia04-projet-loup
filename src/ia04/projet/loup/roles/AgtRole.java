@@ -1,6 +1,7 @@
 package ia04.projet.loup.roles;
 
 import ia04.projet.loup.Global;
+import ia04.projet.loup.Global.Strategies;
 import jade.core.Agent;
 
 /**
@@ -16,14 +17,17 @@ public abstract class AgtRole extends Agent {
 	 * 
 	 */
 	private static final long serialVersionUID = 1226925844951644365L;
-	private Global.Strategies currentStrategy;
+	/** The strategy in use */
+	protected Global.Strategies currentStrategy = Strategies.RABBIT;
+	
 	/**
-	 * The default constructor. Starts the agent and attach its behaviour.
-	 * Gets an acces to his player's GUI
+	 * The default constructor. Starts the agent and attach its behaviors (core + villager).
+	 * Gets an access to his player's GUI
 	 */
 	public AgtRole() {
 		super();
 		this.addBehaviour(new BehaviourRole());
+		this.addBehaviour(new BehaviourVillager());
 		initializeConfidenceLevel();
 		//TODO get the GUI
 	}
@@ -36,7 +40,7 @@ public abstract class AgtRole extends Agent {
 	 * 
 	 */
 	protected void initializeConfidenceLevel(){
-		
+		//alpha: do nothing
 	}
 	
 	/**

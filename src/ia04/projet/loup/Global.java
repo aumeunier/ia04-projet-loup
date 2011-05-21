@@ -29,7 +29,10 @@ public class Global {
 	 *
 	 */
 	public enum Roles {
-		
+		/** Simple villager (no special action)*/
+		VILLAGER,
+		/** Werewolf : a villager that wakes up during the night to eat somebody */
+		WEREWOLF
 	}
 	
 	/**
