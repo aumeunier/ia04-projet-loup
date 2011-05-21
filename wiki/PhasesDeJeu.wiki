@@ -3,7 +3,34 @@
 Dans cette section seront présentées toutes les phases de jeu, décomposées en éléments simples.
 
 = Liste de toutes les étapes d'un tour=
-TO BE COMPLETED
+Nuit
+	Cupidon (premiere nuit)
+	Voleur (premiere nuit)
+	Salvateur
+	Voyante	
+	Loup
+	Sorciere	
+	LoupGarou Blanc
+	Corbeau	
+	Joueur de Flute
+	
+Jour
+	Annonce du mort
+	Evenement en reponse a une mort pendant la nuit
+		Ancien
+		Chasseur
+		Amoureux
+	Election du maire
+	Avis
+	Vote
+	Revelation
+	Evenement en reponse a la revelation du role
+		Bouc-Emissaire
+		Chasseur
+		Amoureux
+		L'idiot
+		Nomination du maire
+	Pendaison
 
 = Phase de jour =
 
@@ -71,4 +98,3 @@ Chaque nuit les loups-garous peuvent se concerter pour éliminer un joueur. Pour
 
 Remarques:
   * Le nombre d'itérations est limité
-
