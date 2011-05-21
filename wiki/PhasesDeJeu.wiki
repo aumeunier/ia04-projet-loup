@@ -4,33 +4,33 @@ Dans cette section seront présentées toutes les phases de jeu, décomposées e
 
 = Liste de toutes les étapes d'un tour=
 Nuit
-	Cupidon (premiere nuit)
-	Voleur (premiere nuit)
-	Salvateur
-	Voyante	
-	Loup
-	Sorciere	
-	LoupGarou Blanc
-	Corbeau	
-	Joueur de Flute
+  # Cupidon (premiere nuit)
+  # Voleur (premiere nuit)
+  # Salvateur
+  # Voyante
+  # Loup
+  # Sorciere	
+  # LoupGarou Blanc
+  # Corbeau	
+  # Joueur de Flute
 	
 Jour
-	Annonce du mort
-	Evenement en reponse a une mort pendant la nuit
-		Ancien
-		Chasseur
-		Amoureux
-	Election du maire
-	Avis
-	Vote
-	Revelation
-	Evenement en reponse a la revelation du role
-		Bouc-Emissaire
-		Chasseur
-		Amoureux
-		L'idiot
-		Nomination du maire
-	Pendaison
+  # Annonce du mort
+  # Evenement en reponse a une mort pendant la nuit
+    * Ancien
+    * Chasseur
+    * Amoureux
+  # Election du maire
+  # Avis
+  # Vote
+  # Revelation
+  # Evenement en reponse a la revelation du role
+    * Bouc-Emissaire
+    * Chasseur
+    * Amoureux
+    * L'idiot
+    * Nomination du maire
+  # Pendaison
 
 = Phase de jour =
 
