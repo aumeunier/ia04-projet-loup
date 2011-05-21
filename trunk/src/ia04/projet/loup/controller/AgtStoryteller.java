@@ -4,6 +4,7 @@ import ia04.projet.loup.Global.GamePhases;
 import ia04.projet.loup.Global.Roles;
 import jade.core.AID;
 import jade.core.Agent;
+import jade.lang.acl.ACLMessage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -314,24 +315,40 @@ public class AgtStoryteller extends Agent {
 	 * @param messageType The type of message to send (is it a vote, an advice, an action)
 	 * @return
 	 */
-	public String createMessageForCommunicationAgent(String messageType){
+	public void sendMessageForCommunicationAgent(String messageType){
 		// TODO: everything
 		// A - Message for Vote: ask for a vote
 		// B - Message for Advice: ask for an advice turn
-		// C - Message for Action: ask for the realisation of a phase/action, notify a player's death, the beginning of a game
-		return "";
+		// C - Message for Action: ask for the realization of a phase/action, notify a player's death, the beginning of a game
 	}
+	
 	/**
-	 * Prepare a message to send to all the registered agents
+	 * Prepare and send a message to a registered agent
 	 * @param messageType
-	 * @return
+	 * @param aid AID of targeted agent.
 	 */
-	public String createMessageForRegisteredAgents(String messageType){
+	public void sendMessageForRegisteredAgents(String messageType, AID aid, String story){
 		// TODO: everything
+		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+		msg.addReceiver(aid);
+		
+		String Jmsg = "{type : " + messageType;
+		
 		// A - Start a game
+			//nothing else.
 		// B - Roles attribution
-		// C - End of the current game
-		return "";
+		if(messageType.equals("ATTRIBUTE_ROLE")){
+			Jmsg += ", role : " + playersMap.get(aid);
+			}
+		// C - 
+		if(messageType.equals("STORYTELLING")){
+			Jmsg += ", storytelling : " + story;
+		}
+		// D - End of the current game
+			//nothing else
+		
+		Jmsg +=" }";
+		this.send(msg);
 	}
 	
 	
