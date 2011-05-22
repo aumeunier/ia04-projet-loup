@@ -96,7 +96,7 @@ Osef for now
 
   nbVoix: int
 
-  choix: ..
+  choix: LocalName
 
 }
 
