@@ -1,5 +1,8 @@
 package ia04.projet.loup.roles;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 public class AgtWerewolf extends AgtRole {
 
 	/**
@@ -12,10 +15,12 @@ public class AgtWerewolf extends AgtRole {
 		addBehaviour(new BehaviourWerewolf());
 	}
 	
-	public void eatSomebody(){
+	public String eatSomebody(ArrayList<String> candidates){
 		switch (currentStrategy){
 		case RABBIT:
-			//TODO random choice
+			Random random = new Random();
+			return candidates.get(random.nextInt(candidates.size()));
+		default: return null;
 		}
 	}
 

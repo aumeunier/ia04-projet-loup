@@ -1,5 +1,10 @@
 package ia04.projet.loup.roles;
 
+import ia04.projet.loup.messages.mCommunicationRole;
+import ia04.projet.loup.messages.mMessage;
+import ia04.projet.loup.messages.mCommunicationRole.mType;
+import ia04.projet.loup.messages.mVote;
+import jade.core.AID;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 
@@ -18,13 +23,20 @@ public class BehaviourWerewolf extends Behaviour {
 		if(msg != null){
 			// Message reception
 			String msgString = msg.getContent();
+			AID msgSender = msg.getSender();
 			int msgPerformative = msg.getPerformative();			
 			
-			/** Votes for the victim of the night */
-			/** TODO catch the right message */
-			((AgtWerewolf) myAgent).eatSomebody();
+			//TODO check who sent the message (DF) if( msgSender == ACTION || ADVICE || VOTE)
+				mVote msgContent = (mVote)mMessage.parseJson(msgString, mCommunicationRole.class);
+				if (msgContent.getType() == mVote.mType.KILL_WW){
+					/** Votes for the victim of the night */
+					msgContent.setChoice(((AgtWerewolf) myAgent).eatSomebody(msgContent.getCandidates()));
+					ACLMessage response = msg.createReply();
+					response.setContent(msgContent.toJson());
+					myAgent.send(response);
+					break;
+				}
 		}
-
 	}
 
 	@Override

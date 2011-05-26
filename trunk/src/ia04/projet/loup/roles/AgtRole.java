@@ -1,7 +1,12 @@
 package ia04.projet.loup.roles;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
+
 import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.Strategies;
+import jade.core.AID;
 import jade.core.Agent;
 
 /**
@@ -19,6 +24,10 @@ public class AgtRole extends Agent {
 	private static final long serialVersionUID = 1226925844951644365L;
 	/** The strategy in use */
 	protected Global.Strategies currentStrategy = Strategies.RABBIT;
+	/** Array of the players */
+	protected java.util.List<AID> players = new ArrayList<AID>();
+	/** Map of the players with the corresponding confidence level */
+	protected HashMap<AID, Integer> confidenceLevel = new HashMap<AID, Integer>();
 	
 	/**
 	 * The default constructor. Starts the agent and attach its behaviors (core + villager).
@@ -47,10 +56,12 @@ public class AgtRole extends Agent {
 	 * during the day every role has the same action to do :
 	 * vote to kill somebody in the village 
 	 */
-	protected void vote(){
+	protected String vote(ArrayList<String> candidates){
 		switch (currentStrategy){
 		case RABBIT:
-			//TODO random vote
+			Random random = new Random();
+			return candidates.get(random.nextInt(candidates.size()));
+		default: return null;
 		}
 	}
 }
