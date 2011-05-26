@@ -1,6 +1,8 @@
 package ia04.projet.loup.roles;
 
 import ia04.projet.loup.messages.mCommunicationRole;
+import ia04.projet.loup.messages.mMessage;
+import ia04.projet.loup.messages.mVote;
 import jade.core.AID;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
@@ -29,15 +31,18 @@ public class BehaviourVillager extends Behaviour {
 			int msgPerformative = msg.getPerformative();
 			
 			/** TODO Checks the source of the message */
-			//if( sender == ACTION || ADVICE || VOTE)
-				mCommunicationRole msgContent = mCommunicationRole.parseJson(msgString); //TODO mCommunicationRole.parseJson must return a mCommunicationRole object
+			//if( msgSender == ACTION || ADVICE || VOTE)
+				mVote msgContent = (mVote)mMessage.parseJson(msgString, mCommunicationRole.class);
 				switch (msgContent.getType()){
 				/** TODO beta1 mayor election - Message can come from the AgtAdvice */		
-				case msgContent.type.ELECT_MAYOR: break;
-				case NAME_SUCCESSOR: break;
+				case ELECT_MAYOR: break;
+				case SUCCESSOR: break;
 				/** Votes for the victim of the  day */
 				case KILL_PAYSAN: 
-					((AgtRole) myAgent).vote();
+					msgContent.setChoice(((AgtRole) myAgent).vote(msgContent.getCandidates()));
+					ACLMessage response = msg.createReply();
+					response.setContent(msgContent.toJson());
+					myAgent.send(response);
 					break;
 				}
 			}
