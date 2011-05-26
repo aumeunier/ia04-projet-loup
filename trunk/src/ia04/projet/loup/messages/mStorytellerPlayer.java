@@ -25,7 +25,6 @@ public class mStorytellerPlayer extends mMessage {
 	public Global.GamePhases phase;
 	public boolean participateInGame;
 	public String storyTelling;
-	
 
 	public mStorytellerPlayer()
 	{
@@ -57,8 +56,8 @@ public class mStorytellerPlayer extends mMessage {
 		"\t \"type\":\""+type.toString()+"\",\n"+
 		((role!=null)?("\t \"role\":\""+role.toString()+"\",\n"):(""))+
 		((phase!=null)?("\t \"phase\":\""+phase.toString()+"\",\n"):(""))+
-		"\t \"participateInGame\":"+String.valueOf(participateInGame)+"\n"+
-		"\t \"storyTelling\":"+ storyTelling +"\n"+
+		"\t \"participateInGame\":\""+String.valueOf(participateInGame)+"\",\n"+
+		"\t \"storyTelling\":\""+storyTelling+"\"\n"+
 		"}";
 	}
 	
