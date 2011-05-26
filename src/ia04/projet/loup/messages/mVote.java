@@ -1,5 +1,7 @@
 package ia04.projet.loup.messages;
 
+import jade.core.AID;
+
 /**
  * This class is used to create a vote message between the AgtVote and the AgtRoles
  * @author paul

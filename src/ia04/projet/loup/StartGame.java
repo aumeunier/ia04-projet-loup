@@ -1,12 +1,15 @@
 package ia04.projet.loup;
 
 import ia04.projet.loup.controller.AgtStoryteller;
+import ia04.projet.loup.players.AgtPlayer;
+import jade.core.Agent;
 import jade.core.Profile;
 import jade.core.ProfileException;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
+import jade.wrapper.ControllerException;
 import jade.wrapper.StaleProxyException;
 
 public class StartGame {
@@ -16,10 +19,10 @@ public class StartGame {
 
 	/**
 	 * @param args
-	 * @throws StaleProxyException 
 	 * @throws ProfileException 
+	 * @throws ControllerException 
 	 */
-	public static void main(String[] args) throws StaleProxyException, ProfileException {
+	public static void main(String[] args) throws ProfileException, ControllerException {
 		if(MainComput){
 			Runtime rt = Runtime.instance();
 			Profile pf = new ProfileImpl("./resources/properties.txt");
@@ -32,11 +35,11 @@ public class StartGame {
 			AgtStoryteller storyteller = new AgtStoryteller();
 			AgentController ac = mc.acceptNewAgent("Storyteller",storyteller);
 			ac.start();
+			storyteller.populate(); 
 			System.out.println("Storyteller agent created...");
 			
 			// Start the game
 			//TODO: should start when they are enough players registered and willing to play
-			storyteller.startGame(); 
 		}
 		else {
 			Runtime rt = Runtime.instance();
@@ -46,7 +49,9 @@ public class StartGame {
 			AgentContainer mc = rt.createAgentContainer(p);	
 			
 			// Create a client
-			// TODO: client creation
+			AgtPlayer agp = new AgtPlayer();
+			Agent a = (Agent)mc.getAgent("Storyteller");
+			agp.Register(a.getAID());
 		}
 	}
 }

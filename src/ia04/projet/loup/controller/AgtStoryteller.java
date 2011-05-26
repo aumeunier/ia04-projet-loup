@@ -1,10 +1,18 @@
 package ia04.projet.loup.controller;
 
+import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.GamePhases;
 import ia04.projet.loup.Global.Roles;
+import ia04.projet.loup.messages.mStorytellerCommunication;
+import ia04.projet.loup.messages.mStorytellerPlayer;
+import ia04.projet.loup.players.AgtPlayer;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
+import jade.wrapper.AgentContainer;
+import jade.wrapper.AgentController;
+import jade.wrapper.ControllerException;
+import jade.wrapper.StaleProxyException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,8 +45,8 @@ public class AgtStoryteller extends Agent {
 	}
 	private static final long serialVersionUID = -1537520826022941930L;
 	/** The map of the players with their role. */
-	private HashMap<AID,Roles> playersMap;
-	private ArrayList<AID> lastVictimsRoles;
+	private HashMap<AID,Roles> playersMap = new HashMap<AID,Roles>();
+	private ArrayList<AID> lastVictimsRoles = new ArrayList<AID>();
 	/** The clock that regulates the game phases and game speed. */
 	private PhaseClock phaseClock;
 	//TODO: lovers, charmed
@@ -52,25 +60,94 @@ public class AgtStoryteller extends Agent {
 		this.addBehaviour(new BehaviourStoryteller(this));
 		this.phaseClock = new PhaseClock(this);
 	}
+
+	/**
+	 * Simulate the registration of several agents
+	 */
+	public void populate(){
+		AgentContainer mc = this.getContainerController();
+		AgentController ac;
+		try {
+			AgtPlayer werewolf1 = new AgtPlayer();
+			ac = mc.acceptNewAgent("werewolf1",werewolf1);
+			ac.start();
+			werewolf1.Register(this.getAID());
+			this.playersMap.put(werewolf1.getAID(), Roles.WEREWOLF);
+
+			AgtPlayer werewolf2 = new AgtPlayer();
+			ac = mc.acceptNewAgent("werewolf2",werewolf2);
+			ac.start();
+			werewolf2.Register(this.getAID());
+			this.playersMap.put(werewolf2.getAID(), Roles.WEREWOLF);
+
+			AgtPlayer werewolf3 = new AgtPlayer();
+			ac = mc.acceptNewAgent("werewolf3",werewolf2);
+			ac.start();
+			werewolf3.Register(this.getAID());
+			this.playersMap.put(werewolf3.getAID(), Roles.WEREWOLF);
+
+			AgtPlayer werewolf4 = new AgtPlayer();
+			ac = mc.acceptNewAgent("werewolf4",werewolf2);
+			ac.start();
+			werewolf4.Register(this.getAID());
+			this.playersMap.put(werewolf4.getAID(), Roles.WEREWOLF);
+
+			AgtPlayer villager1 = new AgtPlayer();
+			ac = mc.acceptNewAgent("villager1",villager1);
+			ac.start();
+			villager1.Register(this.getAID());
+			this.playersMap.put(villager1.getAID(), Roles.VILLAGER);
+
+			AgtPlayer villager2 = new AgtPlayer();
+			ac = mc.acceptNewAgent("villager2",villager2);
+			ac.start();
+			villager2.Register(this.getAID());
+			this.playersMap.put(villager2.getAID(), Roles.VILLAGER);
+
+			AgtPlayer villager3 = new AgtPlayer();
+			ac = mc.acceptNewAgent("villager3",villager3);
+			ac.start();
+			villager3.Register(this.getAID());
+			this.playersMap.put(villager3.getAID(), Roles.VILLAGER);
+
+			AgtPlayer witch = new AgtPlayer();
+			ac = mc.acceptNewAgent("witch",witch);
+			ac.start();
+			witch.Register(this.getAID());
+			this.playersMap.put(witch.getAID(), Roles.WITCH);
+
+			AgtPlayer clairvoyant = new AgtPlayer();
+			ac = mc.acceptNewAgent("clairvoyant",clairvoyant);
+			ac.start();
+			clairvoyant.Register(this.getAID());
+			this.playersMap.put(clairvoyant.getAID(), Roles.CLAIRVOYANT);			
+			
+		} catch (StaleProxyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ControllerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		this.askToStartGame();
+	}
 	
+	/**
+	 * Enough players registered. Storyteller can ask all the players whether they are ready or not.
+	 * If enough players are ready, the game will start.
+	 */
+	protected void askToStartGame(){
+		mStorytellerPlayer message = new mStorytellerPlayer();
+		message.type = mStorytellerPlayer.mType.START_GAME;
+		message.storyTelling = "Do you want to participate in the new game ?";
+		this.sendMessageToRegisteredAgents(message);
+	}
 	/**
 	 * Method called when a new game should start
 	 */
-	public void startGame(){
+	protected void startGame(){
+		this.lastVictimsRoles.clear();
 		this.phaseClock.startTimer();
-		this.playersMap = new HashMap<AID,Roles>();
-		this.lastVictimsRoles = new ArrayList<AID>();
-		
-		// TODO: test
-		int i = 0;
-		this.playersMap.put(new AID("test"+(i++)), Roles.WEREWOLF);
-		this.playersMap.put(new AID("test"+(i++)), Roles.WEREWOLF);
-		this.playersMap.put(new AID("test"+(i++)), Roles.WEREWOLF);
-		this.playersMap.put(new AID("test"+(i++)), Roles.VILLAGER);
-		this.playersMap.put(new AID("test"+(i++)), Roles.VILLAGER);
-		this.playersMap.put(new AID("test"+(i++)), Roles.VILLAGER);
-		this.playersMap.put(new AID("test"+(i++)), Roles.WITCH);
-		this.playersMap.put(new AID("test"+(i++)), Roles.CLAIRVOYANT);
 	}
 	
 	/**
@@ -87,7 +164,6 @@ public class AgtStoryteller extends Agent {
 	 * @param player The player to which we want to give the role
 	 */
 	public void addRoleToPlayer(Roles role, AID player){
-		// TODO: Send message to the player
 		this.playersMap.put(player, role);
 	}
 
@@ -211,79 +287,86 @@ public class AgtStoryteller extends Agent {
 	 * @param phase The phase to begin.
 	 */
 	public void willStartPhase(GamePhases phase){
-		// TODO: lots of stuff to do
 		System.out.print("Storyteller says: ");
+		
+		mStorytellerPlayer msg = new mStorytellerPlayer();
+		msg.type = mStorytellerPlayer.mType.STORYTELLING;
+		msg.phase = phase;
+		String storytelling = "";
 		switch(phase){
 		case NONE:
 			break;
 		case NIGHT:
-			System.out.println("NEW TURN\n\nIt is now the night. The village goes to sleep.");
+			storytelling = "NEW TURN\n\nIt is now the night. The village goes to sleep.";
 			break;
 		case CUPID:
-			System.out.println("Cupid wakes up. He can choose two people who will deeply fall in love.");
+			storytelling = "Cupid wakes up. He can choose two people who will deeply fall in love.";
 			break;
 		case LOVERS:
-			System.out.println("The lovers recognize each other.");
+			storytelling = "The lovers recognize each other.";
 			break;
 		case THIEF:
-			System.out.println("The thief can choose between two roles.");
+			storytelling = "The thief can choose between two roles.";
 			break;
 		case GUARDIAN:
-			System.out.println("The guardian can protect one person for tonight.");
+			storytelling = "The guardian can protect one person for tonight.";
 			break;
 		case CLAIRVOYANT:
-			System.out.println("The clairvoyant can detect someone's role.");
+			storytelling = "The clairvoyant can detect someone's role.";
 			break;
 		case WEREWOLVES:
-			System.out.println("The werewolves wake up and gather to select their victim for tonight.");
+			storytelling = "The werewolves wake up and gather to select their victim for tonight.";
 			break;
 		case WITCH:
-			System.out.println("The witch wakes up. She can use her revive pot to save the werewolves' victim " +
-					"or her deathly pot to make someone die in terrible suffering.");
+			storytelling = "The witch wakes up. She can use her revive pot to save the werewolves' victim " +
+					"or her deathly pot to make someone die in terrible suffering.";
 			break;
 		case WHITE_WOLF:
-			System.out.println("The white wolf wakes up and can select his wolf's victim.");
+			storytelling = "The white wolf wakes up and can select his wolf's victim.";
 			break;
 		case RAVEN:
-			System.out.println("The raven wakes up and can point to the village who he thinks is suspicious.");
+			storytelling = "The raven wakes up and can point to the village who he thinks is suspicious.";
 			break;
 		case FLUTE_PLAYER:
-			System.out.println("The flute player wakes up and can charm two other people in the village.");
+			storytelling = "The flute player wakes up and can charm two other people in the village.";
 			break;
 		case CHARMED:
-			System.out.println("The people charmed by the flute player wake up and gather.");
+			storytelling = "The people charmed by the flute player wake up and gather.";
 			break;
 		case DAY:
-			System.out.println("It is now the day. The village wakes up.");
+			storytelling = "It is now the day. The village wakes up.";
 			break;
 		case VICTIMS_REVELATION:
-			System.out.println("Tonight's victims are revealed.");
+			storytelling = "Tonight's victims are revealed.";
 			break;
 		case VICTIMS_EVENT:
-			System.out.println("Before their last action the victims can try a desperate move.");
+			storytelling = "Before their last action the victims can try a desperate move.";
 			break;
 		case VICTIMS_RESOLUTION:
-			System.out.println("The victims die.");
+			storytelling = "The victims die.";
 			break;
 		case MAYOR_ELECTION:
-			System.out.println("The mayor election can begin. The village needs someone to follow! " +
-					"Choose wisely because the mayor has power.");
+			storytelling = "The mayor election can begin. The village needs someone to follow! " +
+					"Choose wisely because the mayor has power.";
 			break;
 		case HUNG_VOTE:
-			System.out.println("The hanged selection begins. Who will be hung on the place today ?");
+			storytelling = "The hanged selection begins. Who will be hung on the place today ?";
 			break;
 		case HUNG_REVELATION:
-			System.out.println("The hung role's revealed.");
+			storytelling = "The hung role's revealed.";
 			break;
 		case HUNG_EVENT:
-			System.out.println("Before his hunging the hung can try a desperate move.");
+			storytelling = "Before his hunging the hung can try a desperate move.";
 			break;
 		case HUNG_RESOLUTION:
-			System.out.println("The hung is dead.");
+			storytelling = "The hung is dead.";
 			break;
 		default:
 			break;
-		}		
+		}
+		System.out.println(storytelling);
+		msg.storyTelling = storytelling;
+		sendMessageToRegisteredAgents(msg);	
 	}
 	/**
 	 * This method is called by the internal clock when the current phase stops.
@@ -352,6 +435,9 @@ public class AgtStoryteller extends Agent {
 	 * Can be cause by an internal error or because the game is over (there is a winner or everyone is dead).
 	 */
 	public void endGameWithState(GameExitErrorCodes errorCode){
+		mStorytellerPlayer message = new mStorytellerPlayer();
+		message.phase = Global.GamePhases.NONE;
+		message.type = mStorytellerPlayer.mType.END_GAME;
 		this.phaseClock.stopTimer();
 		switch(errorCode){
 		case UNKNOWN_REASON:
@@ -383,6 +469,7 @@ public class AgtStoryteller extends Agent {
 			System.out.println("Laule. I don't even have an error code for that.");
 			break;
 		}
+		sendMessageToRegisteredAgents(message);
 	}
 	
 	/**
@@ -390,39 +477,22 @@ public class AgtStoryteller extends Agent {
 	 * @param messageType The type of message to send (is it a vote, an advice, an action)
 	 * @return
 	 */
-	public void sendMessageForCommunicationAgent(String messageType){
+	public void sendMessageToCommunicationAgent(mStorytellerCommunication message){
 		// TODO: everything
 		// A - Message for Vote: ask for a vote
 		// B - Message for Advice: ask for an advice turn
 		// C - Message for Action: ask for the realization of a phase/action, notify a player's death, the beginning of a game
 	}
-	
 	/**
-	 * Prepare and send a message to a registered agent
-	 * @param messageType
-	 * @param aid AID of targeted agent.
+	 * Initialize a message for all the suscribed players. 
+	 * @param message The message object to serialize and send as content
 	 */
-	public void sendMessageForRegisteredAgents(String messageType, AID aid, String story){
-		// TODO: everything
+	public void sendMessageToRegisteredAgents(mStorytellerPlayer message){
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
-		msg.addReceiver(aid);
-		
-		String Jmsg = "{type : " + messageType;
-		
-		// A - Start a game
-			//nothing else.
-		// B - Roles attribution
-		if(messageType.equals("ATTRIBUTE_ROLE")){
-			Jmsg += ", role : " + playersMap.get(aid);
-			}
-		// C - 
-		if(messageType.equals("STORYTELLING")){
-			Jmsg += ", storytelling : " + story;
+		for(AID aid: playersMap.keySet()){
+			msg.addReceiver(aid);
 		}
-		// D - End of the current game
-			//nothing else
-		
-		Jmsg +=" }";
+		msg.setContent(message.toJson());
 		this.send(msg);
 	}
 }

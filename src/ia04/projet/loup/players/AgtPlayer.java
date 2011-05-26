@@ -19,12 +19,10 @@ public class AgtPlayer extends Agent {
 
 	private AID RoleID, GuiID;
 
-	public AgtPlayer() throws ControllerException{
+	public AgtPlayer() throws ControllerException {
 		super();
 		this.addBehaviour(new BehaviourPlayer());
 		setRoleID(null);
-		Agent strTell = (Agent) this.getContainerController().getAgent("Storyteller");
-		Register(strTell.getAID());
 	}
 
 	/**

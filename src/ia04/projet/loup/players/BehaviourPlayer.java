@@ -57,8 +57,7 @@ public class BehaviourPlayer extends Behaviour {
 				case END_GAME :
 					break;
 				default : break;
-				}
-			
+				}			
 			}
 
 			
