@@ -2,7 +2,6 @@ package ia04.projet.loup.roles;
 
 import ia04.projet.loup.messages.mCommunicationRole;
 import ia04.projet.loup.messages.mMessage;
-import ia04.projet.loup.messages.mCommunicationRole.mType;
 import ia04.projet.loup.messages.mVote;
 import jade.core.AID;
 import jade.core.behaviours.Behaviour;

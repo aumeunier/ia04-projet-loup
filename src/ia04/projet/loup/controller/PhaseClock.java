@@ -13,6 +13,7 @@ import java.util.TimerTask;
  */
 public class PhaseClock {
 	private static final float AVERAGE_SPEED = 0.25f;
+	private static final int PREPARATION_PHASE_DURATION = 5000;
 	/** The timer used to time the phases */
 	private Timer timer;
 	/** Is the clock on ? */
@@ -39,11 +40,22 @@ public class PhaseClock {
 		this.isTimerRunning = false;
 	}	
 
-	public void startTimer(){
+	public void startPreparationTimer(){
+		this.currentPhase = Global.GamePhases.NONE;
+		timer.schedule(new TimerTask(){
+			@Override
+			public void run() {
+				if(!isTimerRunning){
+					storyteller.playersParticipationTimeElapsed();
+				}
+			}			
+		}, PREPARATION_PHASE_DURATION);
+	}
+	public void startGameTimer(){
 		this.nbOfTurns = 0;
 		this.isTimerRunning = true;
 		startNextPhase();
-		//TODO: maybe a problem if timer was stopped before
+		//TODO: maybe a problem if timer was stopped before		
 	}
 	public void stopTimer(){
 		this.isTimerRunning = false;

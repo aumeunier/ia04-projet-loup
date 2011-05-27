@@ -35,11 +35,11 @@ public class StartGame {
 			AgtStoryteller storyteller = new AgtStoryteller();
 			AgentController ac = mc.acceptNewAgent("Storyteller",storyteller);
 			ac.start();
-			storyteller.populate(); 
 			System.out.println("Storyteller agent created...");
 			
-			// Start the game
-			//TODO: should start when they are enough players registered and willing to play
+			// Create players
+			storyteller.populate(storyteller.nbOfRequiredPlayersToStartAGame); 
+			System.out.println("Populated the room with players...");
 		}
 		else {
 			Runtime rt = Runtime.instance();

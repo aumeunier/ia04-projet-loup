@@ -46,6 +46,7 @@ public class BehaviourPlayer extends Behaviour {
 						((AgtPlayer) myAgent).RoleInstance(msgObj.getRole());
 						ACLMessage reply = msg.createReply();
 						reply.setContent(msgObj.toJson());
+						myAgent.send(reply); // Added by Aurelien
 					} catch (StaleProxyException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
