@@ -21,7 +21,6 @@ public class BehaviourStoryteller extends Behaviour {
 		if(msg != null){
 			// Message reception
 			String msgString = msg.getContent();
-			int msgPerformative = msg.getPerformative();
 
 			// A - Message can come from an AgtPlayer:
 			mMessage generalMessage = mMessage.parseJson(msgString, mStorytellerPlayer.class);
@@ -53,7 +52,7 @@ public class BehaviourStoryteller extends Behaviour {
 				// 4. Eventual answers to role attribution
 				// 5. Is the player ready to play (has finished role initialization)
 				else if(message.type.equals(mStorytellerPlayer.mType.ATTRIBUTE_ROLE)) {		
-					//TODO:			
+					//TODO:	answers from role attribution (ex: Thief)
 					System.out.println(msg.getSender().getLocalName()+" now has its role assigned:"+message.role+".");
 					((AgtStoryteller)(this.myAgent)).addRoleToPlayer(message.role, msg.getSender());
 				}
@@ -65,13 +64,13 @@ public class BehaviourStoryteller extends Behaviour {
 				generalMessage = mMessage.parseJson(msgString, mStorytellerCommunication.class);
 				// 1. Answer to an action
 				if(generalMessage !=null){
-					
+					//TODO:
 				}
 				
 				// 2. Answer to a vote
 				else {
 					generalMessage = mMessage.parseJson(msgString, mVote.class);
-					
+					//TODO:
 				}
 			}
 
