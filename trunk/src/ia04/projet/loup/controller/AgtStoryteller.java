@@ -62,10 +62,10 @@ public class AgtStoryteller extends Agent {
 		AgentContainer mc = this.getContainerController();
 		AgentController ac;
 		try {
-			for(int i = 0; i < nbOfPlayers ; ++i){
+			for(int i = 1; i <= nbOfPlayers ; ++i){
 				// Create a new Agent for the player
 				AgtPlayer player = new AgtPlayer();
-				ac = mc.acceptNewAgent("player"+(++i), player);
+				ac = mc.acceptNewAgent("player"+i, player);
 				ac.start();
 				// Register the Agent to this AgtStoryteller
 				player.Register(this.getAID());
@@ -112,6 +112,7 @@ public class AgtStoryteller extends Agent {
 	 * Assign roles to the current players
 	 */
 	protected void assignRoles(){
+		System.out.println("Starting Role assignation");
 		this.lastVictimsRoles.clear();
 		// Remove players who do not participate
 		// TODO: verify there are no problems in the iteration
@@ -212,7 +213,7 @@ public class AgtStoryteller extends Agent {
 		
 		// Now, we want to assign the roles to the players who participate in the game
 		// and wait for their answer (they initialized their Role correctly and are ready to play)
-		if(numberOfPositiveAnswers > this.nbOfRequiredPlayersToStartAGame){
+		if(numberOfPositiveAnswers >= this.nbOfRequiredPlayersToStartAGame){
 			nbWaitingAnswers = numberOfPositiveAnswers;
 			this.assignRoles();
 		}
