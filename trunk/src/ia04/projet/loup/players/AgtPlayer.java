@@ -96,10 +96,14 @@ public class AgtPlayer extends Agent {
 				agtR = new AgtRole();
 			case VILLAGE_SAGE:
 				agtR = new AgtRole();*/
+		default: // Added Aurelien
+			agtR = new AgtRole();
+			agtR.addBehaviour(new BehaviourVillager());
+			break;
 		}
 
 		agtR.addBehaviour(new BehaviourRole());
-		this.getContainerController().acceptNewAgent(this.getAID().toString()+"Role", agtR);
+		this.getContainerController().acceptNewAgent(this.getLocalName()+"Role", agtR); // Modified Aurelien
 		setRoleID(agtR.getAID());
 	}
 
