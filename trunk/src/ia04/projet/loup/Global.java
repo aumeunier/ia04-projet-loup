@@ -66,8 +66,10 @@ public class Global {
 	 *
 	 */
 	public enum Roles {
-		/** A player that is not playing but can watch the game */
+		/** A player who is not playing but can watch the game */
 		DEAD,
+		/** A player who wants to play but whose role hasn't been assigned yet */
+		UNASSIGNED,
 		/** Simple villager (no special action) */
 		VILLAGER,
 		/** Werewolf : a villager that wakes up during the night to eat somebody */

@@ -43,6 +43,7 @@ public class PhaseClock {
 		this.nbOfTurns = 0;
 		this.isTimerRunning = true;
 		startNextPhase();
+		//TODO: maybe a problem if timer was stopped before
 	}
 	public void stopTimer(){
 		this.isTimerRunning = false;
