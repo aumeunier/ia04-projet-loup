@@ -1,26 +1,23 @@
 package ia04.projet.loup.messages;
 
 import java.util.ArrayList;
-
 import ia04.projet.loup.communication.AgtVote;
-import jade.core.AID;
 
 /**
- * This class is used to create a vote message between the AgtVote and the AgtRoles
- * @author paul
+ * This class is used to ask the launch of an election
+ * @author pcervera
  */
-public class mVote extends mMessage{
-	
+public class mRunVote extends mMessage{
+
 	/**
-	 * Type of the election
+	 * Type of the vote to run
 	 */
 	private AgtVote.voteType type;
 	
 	/**
-	 * Number of voices
-	 * Useful when the mayor votes
+	 * List of the electors
 	 */
-	private int numbreOfVoices;
+	private ArrayList<String> electors;
 	
 	/**
 	 * List of the candidates
@@ -28,58 +25,41 @@ public class mVote extends mMessage{
 	private ArrayList<String> candidates;
 	
 	/**
-	 * LocalName of the chosen AgtRole
+	 * Result of the election
 	 */
 	private String choice;
 	
 	/**
-	 * Constructor
+	 * Constructor by default, useful for the serialization
 	 */
-	public mVote(){
-		this.numbreOfVoices = 1;
-	}
+	public mRunVote(){}
 	
 	/**
 	 * Constructor
-	 * @param aType
+	 * @param type
 	 */
-	public mVote(AgtVote.voteType aType){
-		this.type = aType;
-		this.numbreOfVoices = 1;
+	public mRunVote(AgtVote.voteType type){
+		this.type = type;
 	}
 	
 	/**
-	 * Return an instance of mVote build on a JSON string
+	 * Build a mRunVote object by parsing a JSON string, return NULL in case of error
 	 * @param jsonString
-	 * @return mVote
+	 * @return mRunVote
 	 */
-	public static mVote parseJson(String jsonString){
-		return (mVote)mMessage.parseJson(jsonString, mVote.class);
+	public static mRunVote parseJson(String jsonString){
+		return (mRunVote)mMessage.parseJson(jsonString, mRunVote.class);
 	}
 	
 	/**
-	 * @param numbreOfVoices the numbreOfVoices to set
-	 */
-	public void setNumbreOfVoices(int numbreOfVoices) {
-		this.numbreOfVoices = numbreOfVoices;
-	}
-
-	/**
-	 * @return the numbreOfVoices
-	 */
-	public int getNumbreOfVoices() {
-		return numbreOfVoices;
-	}
-
-	/**
-	 * @param type the type to set
+	 * @param type
 	 */
 	public void setType(AgtVote.voteType type) {
 		this.type = type;
 	}
 
 	/**
-	 * @return the type
+	 * @return
 	 */
 	public AgtVote.voteType getType() {
 		return type;
@@ -97,6 +77,20 @@ public class mVote extends mMessage{
 	 */
 	public String getChoice() {
 		return choice;
+	}
+
+	/**
+	 * @param electors the electors to set
+	 */
+	public void setElectors(ArrayList<String> electors) {
+		this.electors = electors;
+	}
+
+	/**
+	 * @return the electors
+	 */
+	public ArrayList<String> getElectors() {
+		return electors;
 	}
 
 	/**
