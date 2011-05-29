@@ -82,19 +82,19 @@ public class AgtPlayer extends Agent {
 				agtR = new AgtRole();
 			case WITCH:
 				agtR = new AgtRole();
-			case WHITE_WOLF:
+			case WHITEWOLF:
 				agtR = new AgtRole();
 			case RAVEN:
 				agtR = new AgtRole();
-			case FLUTE_PLAYER:
+			case FLUTEPLAYER:
 				agtR = new AgtRole();
 			case HUNTER:
 				agtR = new AgtRole();
 			case SCAPEGOAT:
 				agtR = new AgtRole();
-			case VILLAGE_IDIOT:
+			case VILLAGEIDIOT:
 				agtR = new AgtRole();
-			case VILLAGE_SAGE:
+			case VILLAGESAGE:
 				agtR = new AgtRole();*/
 		default: // Added Aurelien
 			agtR = new AgtRole();

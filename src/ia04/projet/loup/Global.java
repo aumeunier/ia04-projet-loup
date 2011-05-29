@@ -32,32 +32,32 @@ public class Global {
 		/** The witch can use a revive pot and a deathly pot */
 		WITCH,
 		/** The white wolf can kill a wolf every two turns */
-		WHITE_WOLF,
+		WHITEWOLF,
 		/** The raven can put two votes on a person before the turn even begins */
 		RAVEN,
 		/** The flute player can charm two people per day */
-		FLUTE_PLAYER,
+		FLUTEPLAYER,
 		/** The charmed players recognize each other */
 		CHARMED,
 		
 		/** Beginning of the day phase */
 		DAY, 
 		/** The people who died during the night are revealed */
-		VICTIMS_REVELATION,
+		VICTIMSREVELATION,
 		/** If the victims have special actions at their death */
-		VICTIMS_EVENT,
+		VICTIMSEVENT,
 		/** The victims die */
-		VICTIMS_RESOLUTION,
+		VICTIMSRESOLUTION,
 		/** Only during the first day: the mayor is elected */
-		MAYOR_ELECTION,
+		MAYORELECTION,
 		/** The village select the villager to hang */
-		HUNG_VOTE,
+		HUNGVOTE,
 		/** The role of the person to be hung is revealed */
-		HUNG_REVELATION,
+		HUNGREVELATION,
 		/** If the hung has a special action at his hanging... */
-		HUNG_EVENT,
+		HUNGEVENT,
 		/** The hung is hung */
-		HUNG_RESOLUTION		
+		HUNGRESOLUTION		
 	}
 	/**
 	 * This enumeration contains the possible roles in the game
@@ -80,13 +80,13 @@ public class Global {
 		GUARDIAN,
 		CLAIRVOYANT,
 		WITCH,
-		WHITE_WOLF,
+		WHITEWOLF,
 		RAVEN,
-		FLUTE_PLAYER,
+		FLUTEPLAYER,
 		HUNTER,
 		SCAPEGOAT,
-		VILLAGE_IDIOT,
-		VILLAGE_SAGE
+		VILLAGEIDIOT,
+		VILLAGESAGE
 	}
 	
 	/**

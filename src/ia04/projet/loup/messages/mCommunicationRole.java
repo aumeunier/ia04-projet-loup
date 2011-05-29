@@ -20,27 +20,4 @@ public class mCommunicationRole extends mMessage {
 		this.voiceNumber = _voiceNumber;
 		this.choice = _choice;
 	}
-	
-	@Override
-	public String toString(){
-		return "";
-	}
-	/**
-	 * Message format is:
-	 * {
-	 * 	type: KILL_PAYSAN, KILL_LG, ELECT_MAYOR, SUCCESSOR
-	 * 	voiceNumber: number of voices the player has
-	 * 	choice: aid of the player's against whom the player voted (optional, blank vote if nothing)
-	 * }
-	 * @return The message in a JSON form
-	 */
-	@Override
-	public String toJson(){
-		return 
-		"{\n" +
-		"\t \"type\":"+type.toString()+",\n"+
-		"\t \"voiceNumber\":"+String.valueOf(voiceNumber)+"\n"+
-		((choice!=null)?("\t \"choice\":"+choice.toString()+",\n"):(""))+
-		"}";
-	}
 }

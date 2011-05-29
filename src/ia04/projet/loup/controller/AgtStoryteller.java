@@ -4,6 +4,7 @@ import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.GamePhases;
 import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.messages.mStorytellerCommunication;
+import ia04.projet.loup.messages.mStorytellerKb;
 import ia04.projet.loup.messages.mStorytellerPlayer;
 import ia04.projet.loup.players.AgtPlayer;
 import jade.core.AID;
@@ -28,6 +29,8 @@ import java.util.Set;
  */
 public class AgtStoryteller extends Agent {
 	// For the GameExitErrorCodes, take a look at the END OF THE GAME section
+	/** Used to know whether we want logs or not */
+	private static final boolean DEBUG_MODE = true;
 	/** Auto generated serial id */
 	private static final long serialVersionUID = -1537520826022941930L;
 	/** The number of people required to start a game */
@@ -40,8 +43,14 @@ public class AgtStoryteller extends Agent {
 	private PhaseClock phaseClock;
 	/** The number of answers the controller is waiting for before going on. */
 	private int nbWaitingAnswers;
+	/** The AID of the AgtKbStoryteller this storyteller agent can use. */
+	private AID kbStoryteller;
 	//TODO: lovers, charmed
+
 	
+////////////////////////////////////////////////////////////////////////////////
+/////////////// 	 INITIALIZATIONS    
+////////////////////////////////////////////////////////////////////////////////
 	/**
 	 * The default constructor. Start an AgtStoryteller.
 	 * Attach its behaviour and initialize the internal clock.
@@ -53,6 +62,34 @@ public class AgtStoryteller extends Agent {
 		this.nbWaitingAnswers = 0;
 	}
 
+	/**
+	 * Initialize the Kb Agent used by the Storyteller agent if it hasn't been done before.
+	 */
+	public void createKbAgent(){		
+		// If the Kb Agent wasn't created, create it
+		if(this.kbStoryteller !=null){
+			return;
+		}
+		
+		// Create and register an agent KB used by this storyteller
+		AgtKbStoryteller agtKbStoryteller = new AgtKbStoryteller();
+		AgentContainer mc = this.getContainerController();
+		AgentController ac;
+		try {
+			ac = mc.acceptNewAgent("AgtKbStoryteller", agtKbStoryteller);
+			ac.start();
+		} catch (StaleProxyException e) {
+			System.out.println("Could not initialize the AgtKbStoryteller.");
+			e.printStackTrace();
+		}
+		
+		// Link the agent KB to this Storyteller agent
+		this.kbStoryteller = agtKbStoryteller.getAID();
+		
+		//TODO: remove - for test purposes only
+		mStorytellerKb msg = new mStorytellerKb(mStorytellerKb.mType.GET_ROLE);
+		this.sendMessageToKbAgent(msg);
+	}
 	/**
 	 * This method will create several players on the same station.
 	 * @param nbOfPlayers The number of players we wish to create
@@ -215,13 +252,14 @@ public class AgtStoryteller extends Agent {
 		// and wait for their answer (they initialized their Role correctly and are ready to play)
 		if(numberOfPositiveAnswers >= this.nbOfRequiredPlayersToStartAGame){
 			nbWaitingAnswers = numberOfPositiveAnswers;
+			//TODO: ask the KB for the roles -> when answered, call assignRoles
 			this.assignRoles();
 		}
 	}
 	/**
 	 * Mark the player as not willing to participate in the next game
 	 */
-	public void playersDoesntParticipate(AID player){
+	public void playerDoesntParticipate(AID player){
 		// Mark the player has answered
 		this.nbWaitingAnswers--;		
 		// Mark the player's role as dead
@@ -291,44 +329,44 @@ public class AgtStoryteller extends Agent {
 		case WITCH: // if someone has the witch role
 			shouldSkip = !roleStillInGame(Roles.WITCH);
 			break;
-		case WHITE_WOLF: // if someone has the white-wolf role
-			shouldSkip = !roleStillInGame(Roles.WHITE_WOLF);
+		case WHITEWOLF: // if someone has the white-wolf role
+			shouldSkip = !roleStillInGame(Roles.WHITEWOLF);
 			break;
 		case RAVEN: // if someone has the raven role
 			shouldSkip = !roleStillInGame(Roles.RAVEN);
 			break;
-		case FLUTE_PLAYER: // if someone has the flute player role
-			shouldSkip = !roleStillInGame(Roles.FLUTE_PLAYER);
+		case FLUTEPLAYER: // if someone has the flute player role
+			shouldSkip = !roleStillInGame(Roles.FLUTEPLAYER);
 			break;
 		case CHARMED: // if someone has been charmed
 			// TODO: charmed
-			shouldSkip = !roleStillInGame(Roles.FLUTE_PLAYER);
+			shouldSkip = !roleStillInGame(Roles.FLUTEPLAYER);
 			break;
-		case VICTIMS_REVELATION: // if someone has been killed during the night
+		case VICTIMSREVELATION: // if someone has been killed during the night
 			shouldSkip = this.lastVictimsRoles.isEmpty();
 			break;
-		case VICTIMS_EVENT: // if there is a lover, hunter or village sage night victim
+		case VICTIMSEVENT: // if there is a lover, hunter or village sage night victim
 			shouldSkip = (this.lastVictimsRoles.contains(Roles.HUNTER)
 					//this.lastVictimsRoles.contains(Roles.LOVERS) //TODO:					
-					|| this.lastVictimsRoles.contains(Roles.VILLAGE_SAGE));
+					|| this.lastVictimsRoles.contains(Roles.VILLAGESAGE));
 			break;
-		case VICTIMS_RESOLUTION:
+		case VICTIMSRESOLUTION:
 			break;
-		case MAYOR_ELECTION: // if it is the first round
+		case MAYORELECTION: // if it is the first round
 			shouldSkip = afterFirstRound;
 			break;
-		case HUNG_VOTE:
+		case HUNGVOTE:
 			break;
-		case HUNG_REVELATION:
+		case HUNGREVELATION:
 			break;
-		case HUNG_EVENT: // if the hung one is a scapegoat, hunter, lover, idiot or sage
+		case HUNGEVENT: // if the hung one is a scapegoat, hunter, lover, idiot or sage
 			shouldSkip = (this.lastVictimsRoles.contains(Roles.SCAPEGOAT)
 					|| this.lastVictimsRoles.contains(Roles.HUNTER)
 					//|| this.lastVictimsRoles.contains(Roles.LOVERS) //TODO:
-					|| this.lastVictimsRoles.contains(Roles.VILLAGE_IDIOT)
-					|| this.lastVictimsRoles.contains(Roles.VILLAGE_SAGE));
+					|| this.lastVictimsRoles.contains(Roles.VILLAGEIDIOT)
+					|| this.lastVictimsRoles.contains(Roles.VILLAGESAGE));
 			break;
-		case HUNG_RESOLUTION: // if someone was hung
+		case HUNGRESOLUTION: // if someone was hung
 			shouldSkip = this.lastVictimsRoles.isEmpty();
 			break;
 		default:
@@ -352,6 +390,9 @@ public class AgtStoryteller extends Agent {
 		case NONE:
 			break;
 		case NIGHT:
+			if(DEBUG_MODE){
+				System.out.println("\n New turn \n");
+			}
 			storytelling = "It is now the night. The village goes to sleep.";
 			break;
 		case CUPID:
@@ -373,16 +414,15 @@ public class AgtStoryteller extends Agent {
 			storytelling = "The werewolves wake up and gather to select their victim for tonight.";
 			break;
 		case WITCH:
-			storytelling = "The witch wakes up. She can use her revive pot to save the werewolves' victim " +
-					"or her deathly pot to make someone die in terrible suffering.";
+			storytelling = "The witch wakes up. She can use her revive pot or her deathly pot.";
 			break;
-		case WHITE_WOLF:
+		case WHITEWOLF:
 			storytelling = "The white wolf wakes up and can select his wolf's victim.";
 			break;
 		case RAVEN:
 			storytelling = "The raven wakes up and can point to the village who he thinks is suspicious.";
 			break;
-		case FLUTE_PLAYER:
+		case FLUTEPLAYER:
 			storytelling = "The flute player wakes up and can charm two other people in the village.";
 			break;
 		case CHARMED:
@@ -391,29 +431,29 @@ public class AgtStoryteller extends Agent {
 		case DAY:
 			storytelling = "It is now the day. The village wakes up.";
 			break;
-		case VICTIMS_REVELATION:
+		case VICTIMSREVELATION:
 			storytelling = "Tonight's victims are revealed.";
 			break;
-		case VICTIMS_EVENT:
+		case VICTIMSEVENT:
 			storytelling = "Before their last action the victims can try a desperate move.";
 			break;
-		case VICTIMS_RESOLUTION:
+		case VICTIMSRESOLUTION:
 			storytelling = "The victims die.";
 			break;
-		case MAYOR_ELECTION:
+		case MAYORELECTION:
 			storytelling = "The mayor election can begin. The village needs someone to follow! " +
 					"Choose wisely because the mayor has power.";
 			break;
-		case HUNG_VOTE:
+		case HUNGVOTE:
 			storytelling = "The hanged selection begins. Who will be hung on the place today ?";
 			break;
-		case HUNG_REVELATION:
+		case HUNGREVELATION:
 			storytelling = "The hung role's revealed.";
 			break;
-		case HUNG_EVENT:
+		case HUNGEVENT:
 			storytelling = "Before his hunging the hung can try a desperate move.";
 			break;
-		case HUNG_RESOLUTION:
+		case HUNGRESOLUTION:
 			storytelling = "The hung is dead.";
 			break;
 		default:
@@ -452,34 +492,34 @@ public class AgtStoryteller extends Agent {
 			break;
 		case WITCH:
 			break;
-		case WHITE_WOLF:
+		case WHITEWOLF:
 			break;
 		case RAVEN:
 			break;
-		case FLUTE_PLAYER:
+		case FLUTEPLAYER:
 			break;
 		case CHARMED:
 			gameIsOver = this.checkGameIsOver();
 			break;
 		case DAY:
 			break;
-		case VICTIMS_REVELATION:
+		case VICTIMSREVELATION:
 			break;
-		case VICTIMS_EVENT:
+		case VICTIMSEVENT:
 			break;
-		case VICTIMS_RESOLUTION:
+		case VICTIMSRESOLUTION:
 			gameIsOver = this.checkGameIsOver();
 			break;
-		case MAYOR_ELECTION:
+		case MAYORELECTION:
 			break;
-		case HUNG_VOTE:
+		case HUNGVOTE:
 			lastVictimsRoles.clear();
 			break;
-		case HUNG_REVELATION:
+		case HUNGREVELATION:
 			break;
-		case HUNG_EVENT:
+		case HUNGEVENT:
 			break;
-		case HUNG_RESOLUTION:
+		case HUNGRESOLUTION:
 			gameIsOver = this.checkGameIsOver();
 			break;
 		default:
@@ -532,7 +572,7 @@ public class AgtStoryteller extends Agent {
 				nWolf++;
 				nMax++;
 				break;
-			case WHITE_WOLF:
+			case WHITEWOLF:
 				nWolf++;
 				nMax++;
 				break;
@@ -573,7 +613,7 @@ public class AgtStoryteller extends Agent {
 				message.storyTelling = "The werewolves win the game!";
 			}
 			// If the white wolf is the only player alive, he wins the game
-			else if(this.playersMap.containsValue(Roles.WHITE_WOLF)){
+			else if(this.playersMap.containsValue(Roles.WHITEWOLF)){
 				message.storyTelling = "The white wolf wins the game!";
 			}
 			// Otherwise, the villagers win the game
@@ -625,18 +665,36 @@ public class AgtStoryteller extends Agent {
 			msg.addReceiver(aid);
 		}
 		msg.setContent(message.toJson());
-		System.out.println(message.storyTelling);
+		if(DEBUG_MODE){
+			System.out.println(message.storyTelling);
+		}
 		this.send(msg);
 	}
 	/**
-	 * Initialize a message to one agent player.
+	 * Initialize a message for one agent player.
+	 * @param aid The AID of the agents to whom we want to send the message
 	 * @param message The message object to serialize and send as content
 	 */
 	public void sendMessageToOneRegisteredAgent(AID aid, mStorytellerPlayer message){
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
 		msg.addReceiver(aid);
 		msg.setContent(message.toJson());
-		System.out.println(message.storyTelling);
+		if(DEBUG_MODE){
+			System.out.println(message.storyTelling);
+		}
 		this.send(msg);
+	}
+	/**
+	 * Initialize a message for the kb agent linked to this AgtStoryteller 
+	 * @param message The message object to serialize and send as content
+	 */
+	public void sendMessageToKbAgent(mStorytellerKb message){
+		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+		msg.addReceiver(this.kbStoryteller);
+		msg.setContent(message.toJson());
+		if(DEBUG_MODE){
+			System.out.println(message.toJson());
+		}
+		this.send(msg);		
 	}
 }

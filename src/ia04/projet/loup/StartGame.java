@@ -31,11 +31,14 @@ public class StartGame {
 			AgentContainer mc = rt.createMainContainer(pf);
 			System.out.println("Main Container created...");
 
-			// First create the toryteller Agent
+			// First create the Storyteller Agent
 			AgtStoryteller storyteller = new AgtStoryteller();
 			AgentController ac = mc.acceptNewAgent("Storyteller",storyteller);
 			ac.start();
 			System.out.println("Storyteller agent created...");
+			
+			// Create a Kb agent linked to the Storyteller Agent
+			storyteller.createKbAgent();
 			
 			// Create players
 			storyteller.populate(storyteller.nbOfRequiredPlayersToStartAGame); 
