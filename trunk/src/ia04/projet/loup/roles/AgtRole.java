@@ -64,4 +64,31 @@ public class AgtRole extends Agent {
 		default: return null;
 		}
 	}
+
+	protected String electMayor(ArrayList<String> candidates){
+		switch (currentStrategy){
+		case RABBIT:
+			Random random = new Random();
+			return candidates.get(random.nextInt(candidates.size()));
+		default: return null;
+		}
+	}
+	
+	protected String nameSuccessor(ArrayList<String> candidates){
+		switch (currentStrategy){
+		case RABBIT:
+			Random random = new Random();
+			return candidates.get(random.nextInt(candidates.size()));
+		default: return null;
+		}
+	}
+
+	protected String resolveEquality(ArrayList<String> candidates){
+		switch (currentStrategy){
+		case RABBIT:
+			Random random = new Random();
+			return candidates.get(random.nextInt(candidates.size()));
+		default: return null;
+		}
+	}
 }
