@@ -1,0 +1,142 @@
+@prefix werewolves:     <http://www.utc.fr/werewolves#> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+	
+werewolves:Role
+	a owl:Class ;
+	rdfs:SubClassOf foaf:Agent ;
+	rdfs:comment "A role in the Werewolves of Millers Hollow game." ;
+	rdfs:label "Role" .
+		
+		
+werewolves:Villager
+	a werewolves:Role ;
+	rdfs:comment "The default role." ;
+	rdfs:label "VILLAGER" .
+	
+werewolves:Werewolf
+	a werewolves:Role ;
+	rdfs:comment "The werewolf role." ;
+	rdfs:label "WEREWOLF" .
+	
+werewolves:Cupid
+	a werewolves:Role ;
+	rdfs:comment "The cupid role who can make two people fall in love." ;
+	rdfs:label "CUPID" .
+	
+werewolves:Thief
+	a werewolves:Role ;
+	rdfs:comment "The thief who can choose between two roles at the beginning of the game." ;
+	rdfs:label "THIEF" .
+	
+werewolves:Guardian
+	a werewolves:Role ;
+	rdfs:comment "The guardian can protect one person every night." ;
+	rdfs:label "GUARDIAN" .
+	
+werewolves:Clairvoyant
+	a werewolves:Role ;
+	rdfs:comment "The clairvoyant can see the role of a player every night." ;
+	rdfs:label "CLAIRVOYANT" .
+	
+werewolves:Witch
+	a werewolves:Role ;
+	rdfs:comment "The witch has two pots: one to revive someone, one to make that person die." ;
+	rdfs:label "WITCH" .
+	
+werewolves:WhiteWolf
+	a werewolves:Role ;
+	rdfs:comment "The white wolf can kill werewolves and villagers." ;
+	rdfs:label "WHITE_WOLF" .
+	
+werewolves:Raven
+	a werewolves:Role ;
+	rdfs:comment "The raven can point someone has suspicious every day." ;
+	rdfs:label "RAVEN" .
+	
+werewolves:FlutePlayer
+	a werewolves:Role ;
+	rdfs:comment "The flute player can charm two players every night." ;
+	rdfs:label "FLUTE_PLAYER" .
+	
+werewolves:Hunter
+	a werewolves:Role ;
+	rdfs:comment "The hunter can kill someone when he dies." ;
+	rdfs:label "HUNTER" .
+	
+werewolves:Scapegoat
+	a werewolves:Role ;
+	rdfs:comment "The scapegoat will be hung instead of someone else if several people have the same number of voices." ;
+	rdfs:label "SCAPEGOAT" .
+	
+werewolves:VillageIdiot
+	a werewolves:Role ;
+	rdfs:comment "The village idiot can not be hung, he is an idiot, he can't be dangerous." ;
+	rdfs:label "VILLAGE_IDIOT" .
+	
+werewolves:VillageSage
+	a werewolves:Role ;
+	rdfs:comment "The sage can survive to one attack of the wolves." ;
+	rdfs:label "VILLAGE_SAGE" .		
+	
+	
+
+werewolves:GameComposition
+	a owl:Class ;
+	rdfs:SubClassOf foaf:Group ;
+	rdfs:comment "A possible composition of a Werewolves of Millers Hollow game." ;
+	rdfs:label "Composition".
+	
+
+werewolves:Composition9A
+	a werewolves:GameComposition ;
+	rdfs:Comment "Une composition a 9 joueurs." ;
+	foaf:knows werewolves:Villager ;
+	foaf:knows werewolves:Villager ;
+	foaf:knows werewolves:Villager ;
+	foaf:knows werewolves:Werewolf ;
+	foaf:knows werewolves:Werewolf ;
+	foaf:knows werewolves:Werewolf ;
+	foaf:knows werewolves:Guardian ;
+	foaf:knows werewolves:Witch ;
+	foaf:knows werewolves:Clairvoyant .
+	
+werewolves:Composition9B
+	a werewolves:GameComposition ;
+	rdfs:Comment "Une composition a 9 joueurs." ;
+	foaf:knows werewolves:Villager ;
+	foaf:knows werewolves:Villager ;
+	foaf:knows werewolves:Hunter ;
+	foaf:knows werewolves:Werewolf ;
+	foaf:knows werewolves:Werewolf ;
+	foaf:knows werewolves:Werewolf ;
+	foaf:knows werewolves:Raven ;
+	foaf:knows werewolves:Witch ;
+	foaf:knows werewolves:Clairvoyant .
+
+werewolves:Composition6A
+	a werewolves:GameComposition ;
+	rdfs:Comment "Une composition a 6 joueurs." ;
+	foaf:knows werewolves:Villager ;
+	foaf:knows werewolves:Villager ;
+	foaf:knows werewolves:Witch ;
+	foaf:knows werewolves:Clairvoyant ;
+	foaf:knows werewolves:Werewolf ;
+	foaf:knows werewolves:Werewolf .
+
+werewolves:Composition7A
+	a werewolves:GameComposition ;
+	rdfs:Comment "Une composition a 7 joueurs." ;
+	foaf:knows werewolves:Villager ;
+	foaf:knows werewolves:Villager ;
+	foaf:knows werewolves:Witch ;
+	foaf:knows werewolves:Clairvoyant ;
+	foaf:knows werewolves:Werewolf ;
+	foaf:knows werewolves:Werewolf ;
+	foaf:knows werewolves:Werewolf .
+	
+	
+	
+	
