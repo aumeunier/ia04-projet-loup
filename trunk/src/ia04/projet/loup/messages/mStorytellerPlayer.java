@@ -20,11 +20,11 @@ public class mStorytellerPlayer extends mMessage {
 		// Following are usually Joueur -> Conteur
 		REGISTER, LEAVE_GAME
 	}
-	public mType type;
-	public Global.Roles role;
-	public Global.GamePhases phase;
-	public boolean participateInGame;
-	public String storyTelling;
+	private mType type;
+	private Global.Roles role;
+	private Global.GamePhases phase;
+	private boolean participateInGame;
+	private String storyTelling;
 
 	public mStorytellerPlayer()
 	{

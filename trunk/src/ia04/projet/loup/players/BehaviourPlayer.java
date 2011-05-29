@@ -37,7 +37,7 @@ public class BehaviourPlayer extends Behaviour {
 				// 5. End of the game
 				
 				mStorytellerPlayer msgObj = (mStorytellerPlayer) mMessage.parseJson(msgString, mStorytellerPlayer.class);
-				switch(msgObj.type){
+				switch(msgObj.getType()){
 				case START_GAME :
 					((AgtPlayer)myAgent).JoinGame(msg, msgObj, true);
 					break;

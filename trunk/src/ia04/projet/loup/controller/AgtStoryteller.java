@@ -1,5 +1,6 @@
 package ia04.projet.loup.controller;
 
+import ia04.projet.loup.Debugger;
 import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.GamePhases;
 import ia04.projet.loup.Global.Roles;
@@ -31,8 +32,6 @@ import java.util.Set;
  */
 public class AgtStoryteller extends Agent {
 	// For the GameExitErrorCodes, take a look at the END OF THE GAME section
-	/** Used to know whether we want logs or not */
-	private static final boolean DEBUG_MODE = true;
 	/** Auto generated serial id */
 	private static final long serialVersionUID = -1537520826022941930L;
 	/** The number of people required to start a game */
@@ -83,8 +82,8 @@ public class AgtStoryteller extends Agent {
 			ac = mc.acceptNewAgent("AgtKbStoryteller", agtKbStoryteller);
 			ac.start();
 		} catch (StaleProxyException e) {
-			System.out.println("Could not initialize the AgtKbStoryteller.");
-			e.printStackTrace();
+			Debugger.println("Could not initialize the AgtKbStoryteller.");
+			Debugger.println(e.toString());
 		}
 		
 		// Link the agent KB to this Storyteller agent
@@ -126,8 +125,8 @@ public class AgtStoryteller extends Agent {
 		// Ask all the players and wait for their answer
 		this.nbWaitingAnswers = this.playersMap.size();
 		mStorytellerPlayer message = new mStorytellerPlayer();
-		message.type = mStorytellerPlayer.mType.START_GAME;
-		message.storyTelling = "Do you want to participate in the new game ?";
+		message.setType(mStorytellerPlayer.mType.START_GAME);
+		message.setStoryTelling("Do you want to participate in the new game ?");
 		this.sendMessageToRegisteredAgents(message);
 		
 		// If it takes too long, cut the preparation phase
@@ -195,7 +194,7 @@ public class AgtStoryteller extends Agent {
 		mStorytellerPlayer message = new mStorytellerPlayer();
 		message.setType(mStorytellerPlayer.mType.ATTRIBUTE_ROLE);
 		message.setRole(role);
-		message.setStoryTelling("Your role for this game is "+message.role);
+		message.setStoryTelling("Your role for this game is "+message.getRole());
 		this.sendMessageToOneRegisteredAgent(player, message);
 		this.nbWaitingAnswers++;
 	}
@@ -390,8 +389,8 @@ public class AgtStoryteller extends Agent {
 	public void willStartPhase(GamePhases phase){	
 		// Initialize a message between using the Storyteller-Player Message template
 		mStorytellerPlayer msg = new mStorytellerPlayer();
-		msg.type = mStorytellerPlayer.mType.STORYTELLING;
-		msg.phase = phase;
+		msg.setType(mStorytellerPlayer.mType.STORYTELLING);
+		msg.setPhase(phase);
 		
 		// Storytelling depends on the phase
 		String storytelling = "";
@@ -399,9 +398,7 @@ public class AgtStoryteller extends Agent {
 		case NONE:
 			break;
 		case NIGHT:
-			if(DEBUG_MODE){
-				System.out.println("\n New turn \n");
-			}
+			Debugger.println("\n New turn \n");
 			storytelling = "It is now the night. The village goes to sleep.";
 			break;
 		case CUPID:
@@ -468,7 +465,7 @@ public class AgtStoryteller extends Agent {
 		default:
 			break;
 		}
-		msg.storyTelling = storytelling;
+		msg.setStoryTelling(storytelling);
 		
 		// Send the message to all the registered agents
 		sendMessageToRegisteredAgents(msg);	
@@ -606,8 +603,8 @@ public class AgtStoryteller extends Agent {
 		
 		// Prepare a message for all the players using the Storyteller-Player Message template
 		mStorytellerPlayer message = new mStorytellerPlayer();
-		message.phase = Global.GamePhases.NONE;
-		message.type = mStorytellerPlayer.mType.END_GAME;
+		message.setPhase(Global.GamePhases.NONE);
+		message.setType(mStorytellerPlayer.mType.END_GAME);
 		
 		// Reason depends on the errorCode
 		switch(errorCode){
@@ -619,31 +616,31 @@ public class AgtStoryteller extends Agent {
 			//TODO: lovers
 			// If any werewolf is alive then the werewolves win the game
 			if(this.playersMap.containsValue(Roles.WEREWOLF)){
-				message.storyTelling = "The werewolves win the game!";
+				message.setStoryTelling("The werewolves win the game!");
 			}
 			// If the white wolf is the only player alive, he wins the game
 			else if(this.playersMap.containsValue(Roles.WHITEWOLF)){
-				message.storyTelling = "The white wolf wins the game!";
+				message.setStoryTelling("The white wolf wins the game!");
 			}
 			// Otherwise, the villagers win the game
 			else {
-				message.storyTelling = "The villagers win the game!";
+				message.setStoryTelling("The villagers win the game!");
 			}
 		}break;
 		case UNKNOWN_REASON:
-			message.storyTelling = "I don't know why the game stopped.";
+			message.setStoryTelling("I don't know why the game stopped.");
 			break;
 		case BUG:
-			message.storyTelling = "Nyeeeee... There is a problem here. Sorry for the inconvenience =(";
+			message.setStoryTelling("Nyeeeee... There is a problem here. Sorry for the inconvenience =(");
 			break;
 		case NO_POSSIBLE_PHASE:
-			message.storyTelling = "There is no possible phase. Weird.";
+			message.setStoryTelling("There is no possible phase. Weird.");
 			break;
 		case TOO_FEW_PLAYERS:
-			message.storyTelling = "Hey guys! We need more people!";
+			message.setStoryTelling("Hey guys! We need more people!");
 			break;
 		default:
-			message.storyTelling = "Laule. I don't even have an error code for that.";
+			message.setStoryTelling("Laule. I don't even have an error code for that.");
 			break;
 		}
 		sendMessageToRegisteredAgents(message);
@@ -674,9 +671,7 @@ public class AgtStoryteller extends Agent {
 			msg.addReceiver(aid);
 		}
 		msg.setContent(message.toJson());
-		if(DEBUG_MODE){
-			System.out.println(message.storyTelling);
-		}
+		Debugger.println(message.getStoryTelling());
 		this.send(msg);
 	}
 	/**
@@ -688,9 +683,7 @@ public class AgtStoryteller extends Agent {
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
 		msg.addReceiver(aid);
 		msg.setContent(message.toJson());
-		if(DEBUG_MODE){
-			System.out.println(message.storyTelling);
-		}
+		Debugger.println(message.getStoryTelling());
 		this.send(msg);
 	}
 	/**
@@ -701,9 +694,7 @@ public class AgtStoryteller extends Agent {
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
 		msg.addReceiver(this.kbStoryteller);
 		msg.setContent(message.toJson());
-		if(DEBUG_MODE){
-			System.out.println(message.toJson());
-		}
+		Debugger.println(message.toJson());
 		this.send(msg);		
 	}
 }

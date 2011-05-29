@@ -42,7 +42,7 @@ public class BehaviourStoryteller extends Behaviour {
 					
 				// 3. Participation in the new game
 				case START_GAME:
-					if(message.participateInGame){
+					if(message.isParticipateInGame()){
 						System.out.println(msg.getSender().getLocalName()+" wants to participate in the game.");
 						((AgtStoryteller)(this.myAgent)).playerWantsToParticipate(msg.getSender());						
 					}
@@ -56,8 +56,8 @@ public class BehaviourStoryteller extends Behaviour {
 				// 5. Is the player ready to play (has finished role initialization)
 				case ATTRIBUTE_ROLE:
 					//TODO:	answers from role attribution (ex: Thief)
-					System.out.println(msg.getSender().getLocalName()+" now has its role assigned:"+message.role+".");
-					((AgtStoryteller)(this.myAgent)).addRoleToPlayer(message.role, msg.getSender());
+					System.out.println(msg.getSender().getLocalName()+" now has its role assigned:"+message.getRole()+".");
+					((AgtStoryteller)(this.myAgent)).addRoleToPlayer(message.getRole(), msg.getSender());
 					break;
 				}
 			}

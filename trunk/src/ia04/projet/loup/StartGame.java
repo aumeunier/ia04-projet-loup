@@ -39,10 +39,11 @@ public class StartGame {
 			
 			// Create a Kb agent linked to the Storyteller Agent
 			storyteller.createKbAgent();
+			System.out.println("StorytellerKB agent created...");
 			
 			// Create players
+			System.out.println("Populating the room with players...");
 			storyteller.populate(storyteller.nbOfRequiredPlayersToStartAGame); 
-			System.out.println("Populated the room with players...");
 		}
 		else {
 			Runtime rt = Runtime.instance();
