@@ -104,7 +104,6 @@ public class BehaviourKbStoryteller extends Behaviour {
 				
 				// Create the query
 				queryString += "\nSELECT ?c ?x ?nV ?nW WHERE { " +
-						"{" +
 						"	?c a werewolves:GameComposition ;" +
 						"		owl:cardinality "+nbPlayers+";" +
 						"		foaf:knows ?x;" +
@@ -112,7 +111,6 @@ public class BehaviourKbStoryteller extends Behaviour {
 						"			owl:cardinality ?nV ];" +
 						"		rdfs:subClassOf [ a werewolves:NbWerewolves;" +
 						"			owl:cardinality ?nW ]." +
-						"}" +
 						"}";
 				result = ((AgtKbStoryteller)myAgent).runExecQuery(queryString);
 

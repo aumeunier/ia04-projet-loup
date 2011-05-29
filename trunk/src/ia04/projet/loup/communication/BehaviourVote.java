@@ -8,6 +8,7 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.wrapper.ControllerException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class BehaviourVote extends CyclicBehaviour {
@@ -22,12 +23,23 @@ public class BehaviourVote extends CyclicBehaviour {
 			String strContent = startMessage.getContent();
 			mRunVote runVote = mRunVote.parseJson(strContent);
 			if (runVote != null) {
-				Debugger.println("Lancement d'une élection du type: "+ runVote.getType().toString());
+				// Initialize the arrays if not done, to avoid NullPointerExceptions later
+				if(runVote.getCandidates() == null){
+					runVote.setCandidates(new ArrayList<String>());
+				}
+				if(runVote.getElectors() == null){
+					runVote.setElectors(new ArrayList<String>());
+				}
+				
+				// Message treatment
+				Debugger.println("Starting election of type: "+ runVote.getType().toString());
 				this.lastVoteResults = election(runVote);
-				Debugger.println("Fin de l'élection du type: "+ runVote.getType().toString());
+				Debugger.println("End of the election of type: "+ runVote.getType().toString());
 				this.setLastVote(runVote);
-				Debugger.println("Le Vainqueur est: "+ this.getWinner());
+				Debugger.println("Winner is: "+ this.getWinner());
 				runVote.setChoice(this.getWinner());
+				
+				// Answer
 				ACLMessage reply = startMessage.createReply();
 				reply.setContent(runVote.toJson());
 				myAgent.send(reply);

@@ -9,7 +9,7 @@ public class AgtVote extends Agent {
 	 * @author pcervera
 	 */
 	public static enum voteType {
-		KILL_PAYSAN, KILL_WW, ELECT_MAYOR, SUCCESSOR 
+		VOTE_PAYSAN, VOTE_WW, ELECT_MAYOR, SUCCESSOR 
 	}
 	
 	public AgtVote(){

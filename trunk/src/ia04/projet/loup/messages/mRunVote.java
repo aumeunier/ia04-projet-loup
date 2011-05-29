@@ -9,27 +9,19 @@ import ia04.projet.loup.communication.AgtVote;
  */
 public class mRunVote extends mMessage{
 
-	/**
-	 * Type of the vote to run
-	 */
+	/** Type of the vote to run */
 	private AgtVote.voteType type;
 	
-	/**
-	 * List of the electors
-	 */
+	/** List of the electors */
 	private ArrayList<String> electors;
 	
-	/**
-	 * List of the candidates
-	 */
+	/** List of the candidates */
 	private ArrayList<String> candidates;
 	
-	/**
-	 * Result of the election
-	 */
+	/** Result of the election */
 	private String choice;
 	
-	/**
+	/** 
 	 * Constructor by default, useful for the serialization
 	 */
 	public mRunVote(){}

@@ -4,7 +4,8 @@ import ia04.projet.loup.Debugger;
 import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.GamePhases;
 import ia04.projet.loup.Global.Roles;
-import ia04.projet.loup.messages.mStorytellerCommunication;
+import ia04.projet.loup.communication.AgtVote;
+import ia04.projet.loup.messages.mRunVote;
 import ia04.projet.loup.messages.mStorytellerKb;
 import ia04.projet.loup.messages.mStorytellerPlayer;
 import ia04.projet.loup.players.AgtPlayer;
@@ -48,6 +49,12 @@ public class AgtStoryteller extends Agent {
 	private int nbWaitingAnswers;
 	/** The AID of the AgtKbStoryteller this storyteller agent can use. */
 	private AID kbStoryteller;
+	/** The AID of the AgtVote this storyteller interacts with */
+	private AID agentVoteAid;
+	/** The AID of the AgtAction this storyteller interacts with */
+	private AID agentActionAid;
+	/** The AID of the AgtAdvice this storyteller interacts with */
+	private AID agentAdviceAid;
 	//TODO: lovers, charmed
 
 	
@@ -88,6 +95,27 @@ public class AgtStoryteller extends Agent {
 		
 		// Link the agent KB to this Storyteller agent
 		this.kbStoryteller = agtKbStoryteller.getAID();
+	}
+	/** 
+	 * Indicates who is the vote agent for this storyteller agent
+	 * @param aid the AID of the vote agent to use
+	 */
+	public void setVoteAgent(AID aid){
+		this.agentVoteAid = aid;
+	}
+	/** 
+	 * Indicates who is the action agent for this storyteller agent
+	 * @param aid the AID of the action agent to use
+	 */
+	public void setActionAgent(AID aid){
+		this.agentActionAid = aid;
+	}
+	/** 
+	 * Indicates who is the advice agent for this storyteller agent
+	 * @param aid the AID of the advice agent to use
+	 */
+	public void setAdviceAgent(AID aid){
+		this.agentAdviceAid = aid;
 	}
 	/**
 	 * This method will create several players on the same station.
@@ -402,64 +430,97 @@ public class AgtStoryteller extends Agent {
 			storytelling = "It is now the night. The village goes to sleep.";
 			break;
 		case CUPID:
+			// TODO: action
 			storytelling = "Cupid wakes up. He can choose two people who will deeply fall in love.";
 			break;
 		case LOVERS:
+			// TODO: action
 			storytelling = "The lovers recognize each other.";
 			break;
 		case THIEF:
+			// TODO: action
 			storytelling = "The thief can choose between two roles.";
 			break;
 		case GUARDIAN:
+			// TODO: action
 			storytelling = "The guardian can protect one person for tonight.";
 			break;
 		case CLAIRVOYANT:
+			// TODO: action
 			storytelling = "The clairvoyant can detect someone's role.";
 			break;
-		case WEREWOLVES:
+			
+		case WEREWOLVES:{
 			storytelling = "The werewolves wake up and gather to select their victim for tonight.";
-			break;
+			
+			// Start a vote between the werewolves
+			mRunVote voteMsg = new mRunVote(AgtVote.voteType.VOTE_WW);
+			this.sendMessageToVoteAgent(voteMsg);
+		}	break;
+			
 		case WITCH:
+			// TODO: action
 			storytelling = "The witch wakes up. She can use her revive pot or her deathly pot.";
 			break;
 		case WHITEWOLF:
+			// TODO: action
 			storytelling = "The white wolf wakes up and can select his wolf's victim.";
 			break;
 		case RAVEN:
+			// TODO: action
 			storytelling = "The raven wakes up and can point to the village who he thinks is suspicious.";
 			break;
 		case FLUTEPLAYER:
+			// TODO: action
 			storytelling = "The flute player wakes up and can charm two other people in the village.";
 			break;
 		case CHARMED:
+			// TODO: ?? action ??
 			storytelling = "The people charmed by the flute player wake up and gather.";
 			break;
 		case DAY:
 			storytelling = "It is now the day. The village wakes up.";
 			break;
 		case VICTIMSREVELATION:
+			// TODO: ?? action ??
 			storytelling = "Tonight's victims are revealed.";
 			break;
 		case VICTIMSEVENT:
+			// TODO: action
 			storytelling = "Before their last action the victims can try a desperate move.";
 			break;
 		case VICTIMSRESOLUTION:
+			// TODO: ?? action ??
 			storytelling = "The victims die.";
 			break;
-		case MAYORELECTION:
+			
+		case MAYORELECTION:{
 			storytelling = "The mayor election can begin. The village needs someone to follow! " +
-					"Choose wisely because the mayor has power.";
-			break;
-		case HUNGVOTE:
+			"Choose wisely because the mayor has power.";
+			
+			// Start a vote for the mayor
+			mRunVote voteMsg = new mRunVote(AgtVote.voteType.ELECT_MAYOR);
+			this.sendMessageToVoteAgent(voteMsg);
+		}break;
+		
+		case HUNGVOTE:{
 			storytelling = "The hanged selection begins. Who will be hung on the place today ?";
-			break;
+			
+			// Start a vote in the village
+			mRunVote voteMsg = new mRunVote(AgtVote.voteType.VOTE_PAYSAN);
+			this.sendMessageToVoteAgent(voteMsg);
+		}	break;
+		
 		case HUNGREVELATION:
+			// TODO: ?? action ??
 			storytelling = "The hung role's revealed.";
 			break;
 		case HUNGEVENT:
+			// TODO: action
 			storytelling = "Before his hunging the hung can try a desperate move.";
 			break;
 		case HUNGRESOLUTION:
+			// TODO: ?? action ??
 			storytelling = "The hung is dead.";
 			break;
 		default:
@@ -552,7 +613,8 @@ public class AgtStoryteller extends Agent {
 	 * @author aurelien
 	 *
 	 */
-	public enum GameExitErrorCodes {
+	public enum GameExitErrorCodes 
+	{
 		/** This would be bad. */
 		UNKNOWN_REASON,
 		/** This should not happening but we knew it could happen. */
@@ -650,16 +712,17 @@ public class AgtStoryteller extends Agent {
 ////////////////////////////////////////////////////////////////////////////////
 /////////////// 	 SEND MESSAGES      
 ////////////////////////////////////////////////////////////////////////////////
+	//TODO:Advice
+	//TODO:Action
 	/**
-	 * Prepare a message for a Communication Agent
-	 * @param messageType The type of message to send (is it a vote, an advice, an action)
-	 * @return
+	 * Initialize a message for the Vote Agent
+	 * @param message The message object to serialize and send as content to the agent
 	 */
-	public void sendMessageToCommunicationAgent(mStorytellerCommunication message){
-		// TODO: everything
-		// A - Message for Vote: ask for a vote
-		// B - Message for Advice: ask for an advice turn
-		// C - Message for Action: ask for the realization of a phase/action, notify a player's death, the beginning of a game
+	public void sendMessageToVoteAgent(mRunVote message){
+		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+		msg.addReceiver(this.agentVoteAid);
+		msg.setContent(message.toJson());
+		this.send(msg);		
 	}
 	/**
 	 * Initialize a message for all the subscribed players. 

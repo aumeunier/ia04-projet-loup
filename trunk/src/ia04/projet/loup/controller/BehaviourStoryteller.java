@@ -1,8 +1,7 @@
 package ia04.projet.loup.controller;
 
-import ia04.projet.loup.Global;
 import ia04.projet.loup.messages.mMessage;
-import ia04.projet.loup.messages.mStorytellerCommunication;
+import ia04.projet.loup.messages.mRunVote;
 import ia04.projet.loup.messages.mStorytellerKb;
 import ia04.projet.loup.messages.mStorytellerPlayer;
 import ia04.projet.loup.messages.mVote;
@@ -85,18 +84,31 @@ public class BehaviourStoryteller extends Behaviour {
 					}
 				}
 				
-				// C - Message can come from an AgtCommunication (Vote / Advice / Action)
+				// C - Message can come from an AgtVote
 				else {
-					generalMessage = mMessage.parseJson(msgString, mStorytellerCommunication.class);
-					// 1. Answer to an action
+					generalMessage = mMessage.parseJson(msgString, mRunVote.class);
 					if(generalMessage !=null){
 						//TODO:
 					}
-					
-					// 2. Answer to a vote
+
+					// D - Message can come from an AgtAction
 					else {
-						generalMessage = mMessage.parseJson(msgString, mVote.class);
+						generalMessage = mMessage.parseJson(msgString, mRunVote.class);
 						//TODO:
+						
+						if(generalMessage!=null){
+							
+						}
+
+						// E - Message can come from an AgtAdvice
+						else {
+							generalMessage = mMessage.parseJson(msgString, mRunVote.class);
+							//TODO:
+							
+							if(generalMessage!=null){
+								
+							}
+						}
 					}
 				}
 			}

@@ -1,5 +1,6 @@
 package ia04.projet.loup;
 
+import ia04.projet.loup.communication.AgtVote;
 import ia04.projet.loup.controller.AgtStoryteller;
 import ia04.projet.loup.players.AgtPlayer;
 import jade.core.Agent;
@@ -10,7 +11,6 @@ import jade.core.Runtime;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.ControllerException;
-import jade.wrapper.StaleProxyException;
 
 public class StartGame {
 	private final static boolean MainComput = true;
@@ -23,6 +23,7 @@ public class StartGame {
 	 * @throws ControllerException 
 	 */
 	public static void main(String[] args) throws ProfileException, ControllerException {
+		Debugger.setOn(true);
 		if(MainComput){
 			Runtime rt = Runtime.instance();
 			Profile pf = new ProfileImpl("./resources/properties.txt");
@@ -40,6 +41,13 @@ public class StartGame {
 			// Create a Kb agent linked to the Storyteller Agent
 			storyteller.createKbAgent();
 			System.out.println("StorytellerKB agent created...");
+			
+			// Create a Vote agent linked to the Storyteller Agent
+			AgtVote vote = new AgtVote();
+			ac = mc.acceptNewAgent("Vote",vote);
+			ac.start();
+			storyteller.setVoteAgent(vote.getAID());
+			System.out.println("Vote agent created...");
 			
 			// Create players
 			System.out.println("Populating the room with players...");
