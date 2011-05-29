@@ -1,91 +1,142 @@
 package ia04.projet.loup.communication;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
+import ia04.projet.loup.Debugger;
 import ia04.projet.loup.messages.mRunVote;
 import ia04.projet.loup.messages.mVote;
+import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.wrapper.ControllerException;
-import jade.core.Agent;
+
+import java.util.HashMap;
 
 public class BehaviourVote extends CyclicBehaviour {
 
-	private HashMap<String, Integer> voteResults = null;
-	private mRunVote runVote = null;
-	
-	public void action(){
+	private static final long serialVersionUID = 1L;
+	private HashMap<String, Integer> lastVoteResults = null;
+	private mRunVote lastVote = null;
+
+	public void action() {
 		ACLMessage startMessage = myAgent.receive();
 		if (startMessage != null) {
 			String strContent = startMessage.getContent();
-			runVote = mRunVote.parseJson(strContent);
-			if(runVote != null){
-				switch(runVote.getType()){
-					case KILL_PAYSAN: this.voteKillPaysan(); break;
-					case KILL_WW: break;
-					case ELECT_MAYOR: break;
-					case SUCCESSOR: break;
-				}
+			mRunVote runVote = mRunVote.parseJson(strContent);
+			if (runVote != null) {
+				Debugger.println("Lancement d'une élection du type: "+ runVote.getType().toString());
+				this.lastVoteResults = election(runVote);
+				Debugger.println("Fin de l'élection du type: "+ runVote.getType().toString());
+				this.setLastVote(runVote);
+				Debugger.println("Le Vainqueur est: "+ this.getWinner());
+				runVote.setChoice(this.getWinner());
+				ACLMessage reply = startMessage.createReply();
+				reply.setContent(runVote.toJson());
+				myAgent.send(reply);
 			}
 		}
 	}
-	
+
 	/**
 	 * Handles the vote to kill a paysan
+	 * 
 	 * @param runVote
 	 */
-	private void voteKillPaysan(){
-		mVote aVote = new mVote(AgtVote.voteType.KILL_PAYSAN);
+	private HashMap<String, Integer> election(mRunVote runVote) {
+		mVote aVote = new mVote(runVote.getType());
 		aVote.setCandidates(runVote.getCandidates());
-		
-		voteResults = new HashMap<String, Integer>();
-		
-		for(int i=0; i<runVote.getCandidates().size(); i++){
+
+		HashMap<String, Integer> voteResults = new HashMap<String, Integer>();
+
+		/*
+		 * Fill the Hashmap containing the result, with all the candidates
+		 */
+		for (int i = 0; i < runVote.getCandidates().size(); i++) {
 			voteResults.put(runVote.getCandidates().get(i), 0);
 		}
-		
-		for(int i=0; i<runVote.getElectors().size(); i++){
-			
+
+		for (int i = 0; i < runVote.getElectors().size(); i++) {
+
 			ACLMessage aMessage = new ACLMessage();
 			Agent r;
 			try {
-				r = (Agent) myAgent.getContainerController().getAgent(runVote.getElectors().get(i));
+				r = (Agent) myAgent.getContainerController().getAgent(
+						runVote.getElectors().get(i));
 				aMessage.addReceiver(r.getAID());
 				aMessage.setContent(aVote.toJson());
 				aMessage.setPerformative(ACLMessage.REQUEST);
 				myAgent.send(aMessage);
-				
+
 				ACLMessage answerMessage = myAgent.blockingReceive();
 				String answerContent = answerMessage.getContent();
+
 				mVote answerVote = mVote.parseJson(answerContent);
-				voteResults.put(answerVote.getChoice(), voteResults.get(answerVote.getChoice()));
-				
+				voteResults.put(answerVote.getChoice(),
+						voteResults.get(answerVote.getChoice()) + 1);
+
 			} catch (ControllerException e) {
 				e.printStackTrace();
 			}
 		}
+
+		if (uniqueWinner(voteResults)) {
+			return voteResults;
+		}
+
+		return election(runVote);
+
 	}
-	
+
 	/**
-	 * @TODO
-	 * TRAITER LES CASE AU IL YA DES CANDIDATES AVEC LES LE MEME DE NOMBRE DE VOIX
-	 * @return the last elected agent
+	 * Check if there is an unique winner
+	 * 
+	 * @param voteResults
+	 * @return boolean
 	 */
-	private String getWinner(){
+	private boolean uniqueWinner(HashMap<String, Integer> voteResults) {
 		int maxVote = 0;
-		ArrayList<String> winners = new ArrayList<String>();
-		
-		for(int i =0; i<this.runVote.getCandidates().size(); i++){
-			if(this.voteResults.get(this.runVote.getCandidates().get(i)) > maxVote){
-				maxVote = this.voteResults.get(this.runVote.getCandidates().get(i));
-				winners.clear();
-				winners.add(this.runVote.getCandidates().get(i));
-			}else if(this.voteResults.get(this.runVote.getCandidates().get(i)) == maxVote){
-				winners.add(this.runVote.getCandidates().get(i));
+
+		for (String aCandidates : voteResults.keySet()) {
+			if (voteResults.get(aCandidates) > maxVote) {
+				maxVote = voteResults.get(aCandidates);
+			} else {
+				if (voteResults.get(aCandidates) > maxVote && maxVote != 0) {
+					return false;
+				}
 			}
 		}
-		
-		return null;
+
+		return true;
+	}
+
+	/**
+	 * Return the localName of the last elected agent
+	 * 
+	 * @return String
+	 */
+	private String getWinner() {
+		int maxVote = 0;
+		String winner = null;
+
+		for (String aCandidates : this.lastVoteResults.keySet()) {
+			if (this.lastVoteResults.get(aCandidates) > maxVote) {
+				maxVote = this.lastVoteResults.get(aCandidates);
+				winner = aCandidates;
+			}
+		}
+		return winner;
+	}
+
+	/**
+	 * @param lastVote
+	 *            the lastVote to set
+	 */
+	public void setLastVote(mRunVote lastVote) {
+		this.lastVote = lastVote;
+	}
+
+	/**
+	 * @return the lastVote
+	 */
+	public mRunVote getLastVote() {
+		return lastVote;
 	}
 }
