@@ -1,5 +1,7 @@
 package ia04.projet.loup.messages;
 
+import ia04.projet.loup.Debugger;
+
 import java.io.StringWriter;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -27,7 +29,7 @@ public abstract class mMessage implements IMessage{
 		}
 		catch(Exception e)
 		{
-			System.out.println("mMessage.parseJson - error : " + e);
+			//Debugger.println("mMessage.parseJson - error : " + e);
 			return null;
 		}
 		
