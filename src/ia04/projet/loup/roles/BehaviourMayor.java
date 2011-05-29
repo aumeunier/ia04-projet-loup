@@ -7,12 +7,13 @@ import jade.core.AID;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 
-public class BehaviourVillager extends Behaviour {
+public class BehaviourMayor extends Behaviour {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -2060328251311657769L;
+	private static final long serialVersionUID = 6216754252215810671L;
+
 
 	/**
 	 * Waits for the day and do the corresponding actions
@@ -32,21 +33,22 @@ public class BehaviourVillager extends Behaviour {
 			
 			/** TODO Checks the source of the message */
 			//if( msgSender == ACTION || ADVICE || VOTE)
-				ACLMessage response = msg.createReply();
 				mVote msgContent = (mVote)mMessage.parseJson(msgString, mCommunicationRole.class);
+				ACLMessage response = msg.createReply();
 				switch (msgContent.getType()){
-				/** TODO beta1 mayor election - Message can come from the AgtAdvice */		
-				case ELECT_MAYOR: 
-					msgContent.setChoice(((AgtRole) myAgent).electMayor(msgContent.getCandidates()));
+				/** elects the next mayor */
+				case SUCCESSOR: 
+					msgContent.setChoice(((AgtRole) myAgent).nameSuccessor(msgContent.getCandidates()));
 					response.setContent(msgContent.toJson());
 					myAgent.send(response);
-					break;
-				/** Votes for the victim of the  day */
-				case KILL_PAYSAN: //TODO set number of voices (mayor)
-					msgContent.setChoice(((AgtRole) myAgent).vote(msgContent.getCandidates()));
+					break;					
+
+				/** Resolves equality */
+				case EQUALITY: 
+					msgContent.setChoice(((AgtRole) myAgent).resolveEquality(msgContent.getCandidates()));
 					response.setContent(msgContent.toJson());
 					myAgent.send(response);
-					break;
+					break;						
 				}
 			}
 			
