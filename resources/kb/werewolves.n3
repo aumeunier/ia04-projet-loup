@@ -2,11 +2,12 @@
 @prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
 @prefix foaf:    <http://xmlns.com/foaf/0.1/> .
 @prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
 	
 werewolves:Role
 	a owl:Class ;
-	rdfs:SubClassOf foaf:Agent ;
+	rdfs:subClassOf foaf:Agent ;
 	rdfs:comment "A role in the Werewolves of Millers Hollow game." ;
 	rdfs:label "Role" .
 		
@@ -79,64 +80,41 @@ werewolves:VillageIdiot
 werewolves:VillageSage
 	a werewolves:Role ;
 	rdfs:comment "The sage can survive to one attack of the wolves." ;
-	rdfs:label "VILLAGE_SAGE" .		
+	rdfs:label "VILLAGE_SAGE" .	
 	
 	
+	
+werewolves:NbVillagers
+	a owl:Property ;
+	rdf:subProperty owl:OntologyProperty .
+	
+werewolves:NbWerewolves
+	a owl:Property ;
+	rdf:subProperty owl:OntologyProperty .
+		
+
 
 werewolves:GameComposition
 	a owl:Class ;
-	rdfs:SubClassOf foaf:Group ;
+	rdfs:subClassOf foaf:Group ;
 	rdfs:comment "A possible composition of a Werewolves of Millers Hollow game." ;
 	rdfs:label "Composition".
 	
-
+	
 werewolves:Composition9A
 	a werewolves:GameComposition ;
-	rdfs:Comment "Une composition a 9 joueurs." ;
+	owl:cardinality 9 ;
+	rdfs:comment "A composition for 9 players with 11 roles for more possibilities and uncertainty.";
 	foaf:knows werewolves:Villager ;
-	foaf:knows werewolves:Villager ;
-	foaf:knows werewolves:Villager ;
+	rdfs:subClassOf [ a werewolves:NbVillagers ;
+		owl:cardinality 3;
+	];
 	foaf:knows werewolves:Werewolf ;
-	foaf:knows werewolves:Werewolf ;
-	foaf:knows werewolves:Werewolf ;
+	rdfs:subClassOf [ a werewolves:NbWerewolves ;
+		owl:cardinality 4;
+	];
 	foaf:knows werewolves:Guardian ;
 	foaf:knows werewolves:Witch ;
+	foaf:knows werewolves:Cupid ;
 	foaf:knows werewolves:Clairvoyant .
-	
-werewolves:Composition9B
-	a werewolves:GameComposition ;
-	rdfs:Comment "Une composition a 9 joueurs." ;
-	foaf:knows werewolves:Villager ;
-	foaf:knows werewolves:Villager ;
-	foaf:knows werewolves:Hunter ;
-	foaf:knows werewolves:Werewolf ;
-	foaf:knows werewolves:Werewolf ;
-	foaf:knows werewolves:Werewolf ;
-	foaf:knows werewolves:Raven ;
-	foaf:knows werewolves:Witch ;
-	foaf:knows werewolves:Clairvoyant .
-
-werewolves:Composition6A
-	a werewolves:GameComposition ;
-	rdfs:Comment "Une composition a 6 joueurs." ;
-	foaf:knows werewolves:Villager ;
-	foaf:knows werewolves:Villager ;
-	foaf:knows werewolves:Witch ;
-	foaf:knows werewolves:Clairvoyant ;
-	foaf:knows werewolves:Werewolf ;
-	foaf:knows werewolves:Werewolf .
-
-werewolves:Composition7A
-	a werewolves:GameComposition ;
-	rdfs:Comment "Une composition a 7 joueurs." ;
-	foaf:knows werewolves:Villager ;
-	foaf:knows werewolves:Villager ;
-	foaf:knows werewolves:Witch ;
-	foaf:knows werewolves:Clairvoyant ;
-	foaf:knows werewolves:Werewolf ;
-	foaf:knows werewolves:Werewolf ;
-	foaf:knows werewolves:Werewolf .
-	
-	
-	
 	
