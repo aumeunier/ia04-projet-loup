@@ -1,11 +1,9 @@
 package ia04.projet.loup.messages;
 
 import ia04.projet.loup.Global;
-import ia04.projet.loup.messages.mCommunicationRole.mType;
-
-import jade.core.AID;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This class is used to create message between the Storyteller its Kb Agent.
@@ -24,7 +22,8 @@ public class mStorytellerKb extends mMessage {
 		GET_FILTER_COMPOSITION
 	}
 	private mType type;
-	private ArrayList<ArrayList<Global.Roles>> compositions = new ArrayList<ArrayList<Global.Roles>>();
+	private int nbPlayers;
+	private HashMap<String,ArrayList<Global.Roles>> compositions = new HashMap<String,ArrayList<Global.Roles>>();
 	private ArrayList<Global.Roles> requiredRoles = new ArrayList<Global.Roles>();
 	private ArrayList<Global.Roles> forbiddenRoles = new ArrayList<Global.Roles>();
 	private ArrayList<Global.Roles> possibleRoles = new ArrayList<Global.Roles>();
@@ -35,11 +34,18 @@ public class mStorytellerKb extends mMessage {
 	public mStorytellerKb(mType _type){
 		this.type = _type;
 	}
+	public mStorytellerKb(mType _type, int _nbPlayers){
+		this.type = _type;
+		this.nbPlayers = _nbPlayers;
+	}
 
 	public void setType(mType _type){
 		this.type = _type;
 	}
-	public void setCompositions(ArrayList<ArrayList<Global.Roles>> _compositions){
+	public void setNbPlayers(int _nbPlayers){
+		this.nbPlayers = _nbPlayers;
+	}
+	public void setCompositions(HashMap<String,ArrayList<Global.Roles>> _compositions){
 		this.compositions = _compositions;
 	}
 	public void setRequiredRole(ArrayList<Global.Roles> _requiredRoles){
@@ -52,8 +58,8 @@ public class mStorytellerKb extends mMessage {
 		this.possibleRoles = _possibleRoles;
 	}
 	
-	public void addComposition(ArrayList<Global.Roles> composition){
-		compositions.add(composition);
+	public void addComposition(String compositionName, ArrayList<Global.Roles> composition){
+		compositions.put(compositionName, composition);
 	}
 	public void addRequiredRole(Global.Roles role){
 		requiredRoles.add(role);
@@ -68,7 +74,10 @@ public class mStorytellerKb extends mMessage {
 	public mType getType(){
 		return this.type;
 	}
-	public ArrayList<ArrayList<Global.Roles>> getCompositions(){
+	public int getNbPlayers(){
+		return this.nbPlayers;
+	}
+	public HashMap<String, ArrayList<Global.Roles>> getCompositions(){
 		return this.compositions;
 	}
 	public ArrayList<Global.Roles> getRequiredRoles(){
