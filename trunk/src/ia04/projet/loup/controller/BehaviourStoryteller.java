@@ -1,5 +1,6 @@
 package ia04.projet.loup.controller;
 
+import ia04.projet.loup.Global;
 import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mStorytellerCommunication;
 import ia04.projet.loup.messages.mStorytellerKb;
@@ -68,12 +69,16 @@ public class BehaviourStoryteller extends Behaviour {
 					System.out.println("Received answer from Kb agent");
 					mStorytellerKb message = (mStorytellerKb)generalMessage;
 					switch(message.getType()){
+					// Get the list of roles registered in the ontology
 					case GET_ROLE:
 						System.out.println(message.getPossibleRoles().toString());
 						break;
+						
+					// If we wanted to get the possible compositions given a number of players, we choose one
 					case GET_GAME_COMPOSITION:
-						//TODO:
+						((AgtStoryteller)myAgent).chooseConfiguration(message.getCompositions(),message.getNbPlayers());
 						break;
+						
 					case GET_FILTER_COMPOSITION:
 						//TODO:
 						break;					

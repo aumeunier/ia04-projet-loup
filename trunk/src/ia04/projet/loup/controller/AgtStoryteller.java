@@ -17,6 +17,8 @@ import jade.wrapper.StaleProxyException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 /**
@@ -41,6 +43,8 @@ public class AgtStoryteller extends Agent {
 	private ArrayList<AID> lastVictimsRoles = new ArrayList<AID>();
 	/** The clock that regulates the game phases and game speed. */
 	private PhaseClock phaseClock;
+	/** The generator used to pick configurations and assign roles randomly */
+    private Random generator = new Random();
 	/** The number of answers the controller is waiting for before going on. */
 	private int nbWaitingAnswers;
 	/** The AID of the AgtKbStoryteller this storyteller agent can use. */
@@ -61,13 +65,13 @@ public class AgtStoryteller extends Agent {
 		this.phaseClock = new PhaseClock(this);
 		this.nbWaitingAnswers = 0;
 	}
-
-	/**
+ 	/**
 	 * Initialize the Kb Agent used by the Storyteller agent if it hasn't been done before.
 	 */
 	public void createKbAgent(){		
 		// If the Kb Agent wasn't created, create it
 		if(this.kbStoryteller !=null){
+			nbWaitingAnswers = 0;
 			return;
 		}
 		
@@ -85,10 +89,6 @@ public class AgtStoryteller extends Agent {
 		
 		// Link the agent KB to this Storyteller agent
 		this.kbStoryteller = agtKbStoryteller.getAID();
-		
-		//TODO: remove - for test purposes only
-		mStorytellerKb msg = new mStorytellerKb(mStorytellerKb.mType.GET_ROLE);
-		this.sendMessageToKbAgent(msg);
 	}
 	/**
 	 * This method will create several players on the same station.
@@ -134,6 +134,48 @@ public class AgtStoryteller extends Agent {
 		this.phaseClock.startPreparationTimer();
 	}
 	/**
+	 * Pick one configuration and assign the roles.
+	 * @param possibleConfigurations The possible configurations
+	 */
+	protected void chooseConfiguration(HashMap<String,ArrayList<Global.Roles>> possibleConfigurations, int nbPlayers){
+		// If no possible configurations, we stop here. Nothing will happen until a new player joins
+		if(possibleConfigurations.isEmpty()){
+			return;
+		}
+		
+		// Pick a configuration randomly
+		int pickedConfiguration = generator.nextInt(possibleConfigurations.size());
+		ArrayList<Global.Roles> rolesToAttribute =  possibleConfigurations.get(
+				possibleConfigurations.keySet().toArray()[pickedConfiguration]);
+		
+		// Start the Roles assignation
+		System.out.println("Starting Roles assignation");
+		System.out.println("Possible Roles:"+rolesToAttribute.toString());
+		this.lastVictimsRoles.clear();
+		
+		// Remove players who do not participate
+		Set<AID> keySet = playersMap.keySet();
+		HashSet<AID> playersAid = new HashSet<AID>();
+		for(AID aid: keySet){
+			if(!playersMap.get(aid).equals(Roles.DEAD)){
+				playersAid.add(aid);
+			}
+		}
+		
+		// For each player
+		for(AID aid: playersAid){
+			// Pick a role randomly
+			int roleIndex = generator.nextInt(rolesToAttribute.size());
+			
+			// Attribute the role to the player
+			this.assignRoleToPlayer(rolesToAttribute.get(roleIndex), aid);
+			
+			// Remove role from list
+			rolesToAttribute.remove(roleIndex);
+		}			
+		System.out.println("Remaining roles:"+rolesToAttribute.toString());
+	}
+	/**
 	 * Method called when a new game should start, after the assignation of the roles to the players.
 	 */
 	private void startGame(){
@@ -146,51 +188,16 @@ public class AgtStoryteller extends Agent {
 /////////////// 	 ROLES     
 ////////////////////////////////////////////////////////////////////////////////
 	/**
-	 * Assign roles to the current players
+	 * Assign a role to a player. Initialize a message to send to that player.
+	 * Storyteller will wait for his answer.
 	 */
-	protected void assignRoles(){
-		System.out.println("Starting Role assignation");
-		this.lastVictimsRoles.clear();
-		// Remove players who do not participate
-		// TODO: verify there are no problems in the iteration
-		Set<AID> keySet = playersMap.keySet();
-		for(AID aid: keySet){
-			if(playersMap.get(aid).equals(Roles.DEAD)){
-				playersMap.remove(aid);
-			}
-		}
-		// TODO: should depend on the number of players
-		// TODO: should use a KB
-		Object[] keys = keySet.toArray();
-		for(int i = 0; i < keys.length ; ++i){
-			mStorytellerPlayer message = new mStorytellerPlayer();
-			message.type = mStorytellerPlayer.mType.ATTRIBUTE_ROLE;
-			switch(i){
-			case 0:
-				message.role = Roles.WEREWOLF;
-				break;
-			case 1:
-				message.role = Roles.WEREWOLF;
-				break;
-			case 2:
-				message.role = Roles.WEREWOLF;
-				break;
-			case 3:
-				message.role = Roles.GUARDIAN;
-				break;
-			case 4:
-				message.role = Roles.WITCH;
-				break;
-			case 5:
-				message.role = Roles.CLAIRVOYANT;
-				break;
-			default:
-				message.role = Roles.VILLAGER;
-				break;
-			}
-			message.storyTelling = "Your role for this game is "+message.role;
-			this.sendMessageToOneRegisteredAgent((AID)keys[i], message);
-		}
+	protected void assignRoleToPlayer(Global.Roles role, AID player){
+		mStorytellerPlayer message = new mStorytellerPlayer();
+		message.setType(mStorytellerPlayer.mType.ATTRIBUTE_ROLE);
+		message.setRole(role);
+		message.setStoryTelling("Your role for this game is "+message.role);
+		this.sendMessageToOneRegisteredAgent(player, message);
+		this.nbWaitingAnswers++;
 	}
 	/**
 	 * Add a player to the party room. The players do not necessarily have to be "playing".
@@ -208,7 +215,7 @@ public class AgtStoryteller extends Agent {
 		}
 	}
 	/**
-	 * Give a role to a player
+	 * Give a role to a player. Called when a player has initialized its role.
 	 * @param role The role to give to the player
 	 * @param player The player to which we want to give the role
 	 */
@@ -248,12 +255,14 @@ public class AgtStoryteller extends Agent {
 			}
 		}
 		
-		// Now, we want to assign the roles to the players who participate in the game
+		// Now, we want to find a configuration with this number of players
+		// Then we will assign the roles to the players who participate in the game
 		// and wait for their answer (they initialized their Role correctly and are ready to play)
 		if(numberOfPositiveAnswers >= this.nbOfRequiredPlayersToStartAGame){
-			nbWaitingAnswers = numberOfPositiveAnswers;
-			//TODO: ask the KB for the roles -> when answered, call assignRoles
-			this.assignRoles();
+			// First we need to find the possible configurations. Ask the KB agent.
+			mStorytellerKb msg = new mStorytellerKb(mStorytellerKb.mType.GET_GAME_COMPOSITION, 
+					numberOfPositiveAnswers);		
+			this.sendMessageToKbAgent(msg);
 		}
 	}
 	/**
