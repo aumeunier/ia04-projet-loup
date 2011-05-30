@@ -5,7 +5,7 @@ import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.GamePhases;
 import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.communication.AgtVote;
-import ia04.projet.loup.messages.mRunVote;
+import ia04.projet.loup.messages.mVoteRun;
 import ia04.projet.loup.messages.mStorytellerKb;
 import ia04.projet.loup.messages.mStorytellerPlayer;
 import ia04.projet.loup.players.AgtPlayer;
@@ -498,7 +498,7 @@ public class AgtStoryteller extends Agent {
 			storytelling = "The werewolves wake up and gather to select their victim for tonight.";
 			
 			// Start a vote between the werewolves
-			mRunVote voteMsg = new mRunVote(AgtVote.voteType.VOTE_WW);
+			mVoteRun voteMsg = new mVoteRun(AgtVote.voteType.VOTE_WW);
 			this.sendMessageToVoteAgent(voteMsg);
 		}	break;
 			
@@ -543,7 +543,7 @@ public class AgtStoryteller extends Agent {
 			"Choose wisely because the mayor has power.";
 			
 			// Start a vote for the mayor
-			mRunVote voteMsg = new mRunVote(AgtVote.voteType.ELECT_MAYOR);
+			mVoteRun voteMsg = new mVoteRun(AgtVote.voteType.ELECT_MAYOR);
 			this.sendMessageToVoteAgent(voteMsg);
 		}break;
 		
@@ -551,7 +551,7 @@ public class AgtStoryteller extends Agent {
 			storytelling = "The hanged selection begins. Who will be hung on the place today ?";
 			
 			// Start a vote in the village
-			mRunVote voteMsg = new mRunVote(AgtVote.voteType.VOTE_PAYSAN);
+			mVoteRun voteMsg = new mVoteRun(AgtVote.voteType.VOTE_PAYSAN);
 			this.sendMessageToVoteAgent(voteMsg);
 		}	break;
 		
@@ -763,7 +763,7 @@ public class AgtStoryteller extends Agent {
 	 * Initialize a message for the Vote Agent
 	 * @param message The message object to serialize and send as content to the agent
 	 */
-	public void sendMessageToVoteAgent(mRunVote message){
+	public void sendMessageToVoteAgent(mVoteRun message){
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
 		msg.addReceiver(this.agentVoteAid);
 		msg.setContent(message.toJson());

@@ -3,8 +3,8 @@ package ia04.projet.loup.communication;
 import ia04.projet.loup.Debugger;
 import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.Roles;
-import ia04.projet.loup.messages.mResultVote;
-import ia04.projet.loup.messages.mRunVote;
+import ia04.projet.loup.messages.mVoteResult;
+import ia04.projet.loup.messages.mVoteRun;
 import ia04.projet.loup.messages.mVote;
 import jade.core.AID;
 import jade.core.Agent;
@@ -41,7 +41,7 @@ public class AgtVote extends Agent {
 	private HashMap<String, Integer> lastElectionResult = new HashMap<String, Integer>();
 
 	/** Last elected person */
-	private mRunVote lastVote = null;
+	private mVoteRun lastVote = null;
 
 	/** Number of electors who haven't vote yet */
 	private int remainingVotes;
@@ -57,7 +57,7 @@ public class AgtVote extends Agent {
 	/**
 	 * Run an election
 	 */
-	public void election(mRunVote runVote, boolean newVote) {
+	public void election(mVoteRun runVote, boolean newVote) {
 		mVote aVote = new mVote(runVote.getType());
 		ACLMessage voteMessage = new ACLMessage(ACLMessage.REQUEST);
 
@@ -177,7 +177,7 @@ public class AgtVote extends Agent {
 
 		/* Inform the electors of the final result */
 		ACLMessage message = new ACLMessage(ACLMessage.INFORM);
-		mResultVote aResultVote = new mResultVote();
+		mVoteResult aResultVote = new mVoteResult();
 		aResultVote.setType(lastVote.getType());
 
 		HashMap<String, mVote> temp = new HashMap<String, mVote>();
@@ -215,14 +215,14 @@ public class AgtVote extends Agent {
 	 * @param lastVote
 	 *            the lastVote to set
 	 */
-	public void setLastVote(mRunVote lastVote) {
+	public void setLastVote(mVoteRun lastVote) {
 		this.lastVote = lastVote;
 	}
 
 	/**
 	 * @return the lastVote
 	 */
-	public mRunVote getLastVote() {
+	public mVoteRun getLastVote() {
 		return lastVote;
 	}
 
