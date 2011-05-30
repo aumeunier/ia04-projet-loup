@@ -57,6 +57,9 @@ public class BehaviourPlayer extends Behaviour {
 					break;
 				case END_GAME :
 					break;
+				case DIE:
+					System.out.println("Oups, I'm dead");
+					break;
 				default : break;
 				}			
 			}

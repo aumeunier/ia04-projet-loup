@@ -32,7 +32,6 @@ import java.util.Set;
  *
  */
 public class AgtStoryteller extends Agent {
-	// For the GameExitErrorCodes, take a look at the END OF THE GAME section
 	/** Auto generated serial id */
 	private static final long serialVersionUID = -1537520826022941930L;
 	/** The number of people required to start a game */
@@ -55,6 +54,8 @@ public class AgtStoryteller extends Agent {
 	private AID agentActionAid;
 	/** The AID of the AgtAdvice this storyteller interacts with */
 	private AID agentAdviceAid;
+	/** The AID of the AgtRole protected by the Guardian this turn */
+	private AID guardianTarget;
 	//TODO: lovers, charmed
 
 	
@@ -209,7 +210,35 @@ public class AgtStoryteller extends Agent {
 		// Start the game phases
 		this.phaseClock.startGameTimer();		
 	}
+	
 
+////////////////////////////////////////////////////////////////////////////////
+/////////////// 	 PLAYERS     
+////////////////////////////////////////////////////////////////////////////////
+	/**
+	 * Add a player to the party room. The players do not necessarily have to be "playing".
+	 * They can watch the game and participate in a game if a new game starts.
+	 * @param player The AID of the new player
+	 */
+	public void addPlayerToParty(AID player){
+		// Add the player list of players in the room of this storyteller
+		// Default Roles value for a player is "Dead" (Observer)
+		this.playersMap.put(player, Roles.DEAD);
+		
+		// If enough players are in the room now, we can ask all the players if they want to start the game
+		if(this.playersMap.size() >= this.nbOfRequiredPlayersToStartAGame && this.nbWaitingAnswers == 0){
+			this.askToStartGame();
+		}
+	}
+	/**
+	 * Remove a player from the party room. 
+	 * @param player The AID of the player
+	 */
+	public void removePlayerFromParty(AID player){
+		// Remove the player from list of players of this storyteller
+		this.playersMap.remove(player);
+	}
+	
 	
 ////////////////////////////////////////////////////////////////////////////////
 /////////////// 	 ROLES     
@@ -225,21 +254,6 @@ public class AgtStoryteller extends Agent {
 		message.setStoryTelling("Your role for this game is "+message.getRole());
 		this.sendMessageToOneRegisteredAgent(player, message);
 		this.nbWaitingAnswers++;
-	}
-	/**
-	 * Add a player to the party room. The players do not necessarily have to be "playing".
-	 * They can watch the game and participate in a game if a new game starts.
-	 * @param player The AID of the new player
-	 */
-	public void addPlayerToParty(AID player){
-		// Add the player list of players in the room of this storyteller
-		// Default Roles value for a player is "Dead" (Observer)
-		this.playersMap.put(player, Roles.DEAD);
-		
-		// If enough players are in the room now, we can ask all the players if they want to start the game
-		if(this.playersMap.size() >= this.nbOfRequiredPlayersToStartAGame && this.nbWaitingAnswers == 0){
-			this.askToStartGame();
-		}
 	}
 	/**
 	 * Give a role to a player. Called when a player has initialized its role.
@@ -332,7 +346,37 @@ public class AgtStoryteller extends Agent {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-/////////////// 	 PHASES      
+/////////////// 	 ANSWERS TO ACTIONS      
+////////////////////////////////////////////////////////////////////////////////
+	/**
+	 * Add a victim to the list of people who should be dying soon
+	 * @param victimAid The new victim
+	 */
+	public void addVictim(AID victimAid){		
+		// If the werewolves' target was the guardian's one, it is saved
+		if(this.phaseClock.getCurrentPhase()!=GamePhases.WEREWOLVES
+				|| !victimAid.equals(this.guardianTarget)){
+			this.lastVictimsRoles.add(victimAid);
+		}
+	}
+	/**
+	 * The victim was saved by a special power and will not die
+	 * @param victimAid The victim who has been saved
+	 */
+	public void removeVictim(AID victimAid){
+		this.lastVictimsRoles.add(victimAid);
+	}
+	/**
+	 * The person that will be protected for this turn by the Guardian
+	 * @param targetAid The target aid
+	 */
+	public void setGuardianTarget(AID targetAid){
+		this.guardianTarget = targetAid;
+	}
+	//TODO: actions reactions
+
+////////////////////////////////////////////////////////////////////////////////
+/////////////// 	 PHASES MANAGEMENT
 ////////////////////////////////////////////////////////////////////////////////
 	/**
 	 * This method is called by the internal clock to know 
@@ -569,6 +613,7 @@ public class AgtStoryteller extends Agent {
 			gameIsOver = this.checkGameIsOver();
 			break;
 		case DAY:
+			this.guardianTarget = null; // The target is not protected anymore
 			break;
 		case VICTIMSREVELATION:
 			break;
