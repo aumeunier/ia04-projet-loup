@@ -1,6 +1,7 @@
 package ia04.projet.loup.players;
 
 import ia04.projet.loup.messages.mMessage;
+import ia04.projet.loup.messages.mPlayerRole;
 import ia04.projet.loup.messages.mStorytellerPlayer;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
@@ -24,10 +25,14 @@ public class BehaviourPlayer extends Behaviour {
 			String msgString = msg.getContent();
 			if(msg.getSender()== ((AgtPlayer) myAgent).getRoleID())
 			{
-
+				// B - Message can come from an AgtRole
+				// 1. Reception of information concerning the db (stats, can be reused in future games)
+				
+				mPlayerRole msgObj = (mPlayerRole) mMessage.parseJson(msgString, mPlayerRole.class);
+				
 			} else if(msg.getSender()== ((AgtPlayer) myAgent).getGuiID())
 			{
-
+				
 			} else {
 				// A - Message can come from an AgtStoryteller:			
 				// 1. Inscription validation
@@ -54,11 +59,10 @@ public class BehaviourPlayer extends Behaviour {
 					
 					break;
 				case STORYTELLING :
+					// transfert gui
 					break;
 				case END_GAME :
-					break;
-				case DIE:
-					System.out.println("Oups, I'm dead");
+					// transfert role
 					break;
 				default : break;
 				}			
@@ -67,8 +71,7 @@ public class BehaviourPlayer extends Behaviour {
 			
 			
 			
-			// B - Message can come from an AgtRole
-			// 1. Reception of information concerning the db (stats, can be reused in future games)
+			
 			
 			// C - Message can come from an AgentGui
 		}
