@@ -33,7 +33,7 @@ public class BehaviourMayor extends Behaviour {
 			
 			/** TODO Checks the source of the message */
 			//if( msgSender == ACTION || ADVICE || VOTE)
-				mVote msgContent = (mVote)mMessage.parseJson(msgString, mCommunicationRole.class);
+				mVote msgContent = (mVote)mMessage.parseJson(msgString, mVote.class);
 				ACLMessage response = msg.createReply();
 				switch (msgContent.getType()){
 				/** elects the next mayor */

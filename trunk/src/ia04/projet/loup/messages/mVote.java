@@ -1,9 +1,9 @@
 package ia04.projet.loup.messages;
 
-import java.util.ArrayList;
-
 import ia04.projet.loup.communication.AgtVote;
-import jade.core.AID;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This class is used to create a vote message between the AgtVote and the AgtRoles
@@ -11,32 +11,27 @@ import jade.core.AID;
  */
 public class mVote extends mMessage{
 	
-	/**
-	 * Type of the election
-	 */
+	/** Type of the election */
 	private AgtVote.voteType type;
 	
-	/**
-	 * Number of voices
-	 * Useful when the mayor votes
-	 */
+	/** Number of voices Useful when the mayor votes */
 	private int numbreOfVoices;
 	
-	/**
-	 * List of the candidates
-	 */
+	/** List of the candidates */
 	private ArrayList<String> candidates;
 	
-	/**
-	 * LocalName of the chosen AgtRole
-	 */
+	/** LocalName of the chosen AgtRole */
 	private String choice;
+	
+	/** The results of the previous election turn */
+	private HashMap<String, mVote> whoVotesForWho;
 	
 	/**
 	 * Constructor
 	 */
 	public mVote(){
 		this.numbreOfVoices = 1;
+		this.candidates = new ArrayList<String>();
 	}
 	
 	/**
@@ -111,5 +106,19 @@ public class mVote extends mMessage{
 	 */
 	public ArrayList<String> getCandidates() {
 		return candidates;
+	}
+
+	/**
+	 * @param whoVotesForWho the whoVotesForWho to set
+	 */
+	public void setWhoVotesForWho(HashMap<String, mVote> whoVotesForWho) {
+		this.whoVotesForWho = whoVotesForWho;
+	}
+
+	/**
+	 * @return the whoVotesForWho
+	 */
+	public HashMap<String, mVote> getWhoVotesForWho() {
+		return whoVotesForWho;
 	}
 }

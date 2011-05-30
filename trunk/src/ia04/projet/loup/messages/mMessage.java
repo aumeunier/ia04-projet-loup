@@ -1,9 +1,6 @@
 package ia04.projet.loup.messages;
 
-import ia04.projet.loup.Debugger;
-
 import java.io.StringWriter;
-
 import org.codehaus.jackson.map.ObjectMapper;
 
 /**
