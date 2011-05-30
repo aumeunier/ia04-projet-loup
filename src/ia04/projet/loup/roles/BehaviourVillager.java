@@ -1,5 +1,6 @@
 package ia04.projet.loup.roles;
 
+import ia04.projet.loup.communication.AgtVote;
 import ia04.projet.loup.messages.mCommunicationRole;
 import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mVote;
@@ -33,7 +34,7 @@ public class BehaviourVillager extends Behaviour {
 			/** TODO Checks the source of the message */
 			//if( msgSender == ACTION || ADVICE || VOTE)
 				ACLMessage response = msg.createReply();
-				mVote msgContent = (mVote)mMessage.parseJson(msgString, mCommunicationRole.class);
+				mVote msgContent = (mVote)mMessage.parseJson(msgString, mVote.class);
 				switch (msgContent.getType()){
 				/** TODO beta1 mayor election - Message can come from the AgtAdvice */		
 				case ELECT_MAYOR: 
@@ -42,7 +43,7 @@ public class BehaviourVillager extends Behaviour {
 					myAgent.send(response);
 					break;
 				/** Votes for the victim of the  day */
-				case KILL_PAYSAN: //TODO set number of voices (mayor)
+				case VOTE_PAYSAN: //TODO set number of voices (mayor)
 					msgContent.setChoice(((AgtRole) myAgent).vote(msgContent.getCandidates()));
 					response.setContent(msgContent.toJson());
 					myAgent.send(response);
