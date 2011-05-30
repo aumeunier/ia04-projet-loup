@@ -1,7 +1,7 @@
 package ia04.projet.loup.controller;
 
 import ia04.projet.loup.messages.mMessage;
-import ia04.projet.loup.messages.mRunVote;
+import ia04.projet.loup.messages.mVoteRun;
 import ia04.projet.loup.messages.mStorytellerKb;
 import ia04.projet.loup.messages.mStorytellerPlayer;
 import ia04.projet.loup.messages.mStorytellerPlayer.mType;
@@ -88,9 +88,9 @@ public class BehaviourStoryteller extends Behaviour {
 
 				// C - Message can come from an AgtVote
 				else {
-					generalMessage = mMessage.parseJson(msgString, mRunVote.class);
+					generalMessage = mMessage.parseJson(msgString, mVoteRun.class);
 					if(generalMessage !=null){
-						mRunVote message = (mRunVote)generalMessage;
+						mVoteRun message = (mVoteRun)generalMessage;
 						switch(message.getType()){
 						case VOTE_PAYSAN: {
 							if(message.getChoice()!=null){
@@ -116,7 +116,7 @@ public class BehaviourStoryteller extends Behaviour {
 
 					// D - Message can come from an AgtAction
 					else {
-						generalMessage = mMessage.parseJson(msgString, mRunVote.class);
+						generalMessage = mMessage.parseJson(msgString, mVoteRun.class);
 						//TODO:
 
 						if(generalMessage!=null){
@@ -125,7 +125,7 @@ public class BehaviourStoryteller extends Behaviour {
 
 						// E - Message can come from an AgtAdvice
 						else {
-							generalMessage = mMessage.parseJson(msgString, mRunVote.class);
+							generalMessage = mMessage.parseJson(msgString, mVoteRun.class);
 							//TODO:
 
 							if(generalMessage!=null){

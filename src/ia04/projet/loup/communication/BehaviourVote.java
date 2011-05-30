@@ -1,6 +1,6 @@
 package ia04.projet.loup.communication;
 
-import ia04.projet.loup.messages.mRunVote;
+import ia04.projet.loup.messages.mVoteRun;
 import ia04.projet.loup.messages.mVote;
 import ia04.projet.loup.messages.mVoteRegister;
 import jade.core.behaviours.CyclicBehaviour;
@@ -26,7 +26,7 @@ public class BehaviourVote extends CyclicBehaviour {
 						aVoteRegister.getRole());
 				break;
 			case ACLMessage.REQUEST:
-				mRunVote runVote = mRunVote
+				mVoteRun runVote = mVoteRun
 						.parseJson(startMessage.getContent());
 				if (runVote != null) {
 					this.agtVote.setStoryTeller(startMessage.getSender());
