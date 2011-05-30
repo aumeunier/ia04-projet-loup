@@ -30,11 +30,8 @@ public class BehaviourPlayer extends Behaviour {
 				
 				mPlayerRole msgObj = (mPlayerRole) mMessage.parseJson(msgString, mPlayerRole.class);
 				
-			} else if(msg.getSender()== ((AgtPlayer) myAgent).getGuiID())
-			{
-				
 			} else {
-				// A - Message can come from an AgtStoryteller:			
+				// C - Message can come from an AgtStoryteller:			
 				// 1. Inscription validation
 				// 2. Beginning of a game, participation request
 				// 3. Role attribution
@@ -59,21 +56,12 @@ public class BehaviourPlayer extends Behaviour {
 					
 					break;
 				case STORYTELLING :
-					// transfert gui
-					break;
-				case END_GAME :
-					// transfert role
+					((AgtPlayer) myAgent).StoryTransfertToGui(msg);
 					break;
 				default : break;
 				}			
 			}
 
-			
-			
-			
-			
-			
-			// C - Message can come from an AgentGui
 		}
 	}
 	

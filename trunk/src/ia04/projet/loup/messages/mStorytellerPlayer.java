@@ -14,7 +14,7 @@ public class mStorytellerPlayer extends mMessage {
 	 */
 	public static enum mType {
 		// Following are usually Conteur -> Joueur
-		DIE, ACCEPT_PLAYER, END_GAME, ATTRIBUTE_ROLE, STORYTELLING, 
+		DIE, ACCEPT_PLAYER, ATTRIBUTE_ROLE, STORYTELLING, 
 		// Following are used both ways
 		START_GAME,
 		// Following are usually Joueur -> Conteur
