@@ -1,7 +1,105 @@
 package ia04.projet.loup.communication;
 
+import ia04.projet.loup.Debugger;
+import ia04.projet.loup.Global.Roles;
+import ia04.projet.loup.messages.mAction;
+import ia04.projet.loup.messages.mActionRequest;
+import jade.core.AID;
 import jade.core.Agent;
+import jade.lang.acl.ACLMessage;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
+/**
+ * Agent who handles the action of the special characters
+ * 
+ * @author paul
+ */
 public class AgtAction extends Agent {
+
+	private static final long serialVersionUID = 1L;
+	/** Map of the registered players */
+	private HashMap<AID, Roles> playersMap = new HashMap<AID, Roles>();
+	/** AID of the AgtStoryteller */
+	private AID agtStoryteller;
+	/** Number of actions in progress */
+	private int nbActionsInProgress;
+	/** Last Action Requested */
+	private mActionRequest lastActionRequest;
+
+	/**
+	 * Constructor
+	 */
+	public AgtAction() {
+		super();
+		this.addBehaviour(new BehaviourAction());
+	}
+
+	/**
+	 * Add a player to the players map
+	 * 
+	 * @param sender
+	 * @param role
+	 */
+	public void addPlayer(AID sender, Roles role) {
+		playersMap.put(sender, role);
+	}
+
+	/**
+	 * Ask the concerned Role to perform their action
+	 * 
+	 * @param anActionRequest
+	 */
+	public void performAction(mActionRequest anActionRequest) {
+		lastActionRequest = anActionRequest;
+		ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
+		mAction anAction = new mAction();
+		message.setContent(anAction.toJson());
+
+		nbActionsInProgress = 0;
+
+		for (Entry<AID, Roles> entry : playersMap.entrySet()) {
+			if (entry.getValue() == lastActionRequest.getRole()) {
+				message.addReceiver(entry.getKey());
+				nbActionsInProgress++;
+			}
+		}
+
+		this.send(message);
+	}
+
+	/**
+	 * 
+	 * @param anAction
+	 */
+	public void addAction(mAction anAction) {
+		nbActionsInProgress--;
+		if (nbActionsInProgress < 0)
+			Debugger.println("Should Never Happened: More Actions than expected.");
+		else {
+			if (nbActionsInProgress == 0) {
+				ACLMessage message = new ACLMessage(ACLMessage.INFORM);
+				message.setContent(lastActionRequest.toJson());
+				message.addReceiver(agtStoryteller);
+				this.send(message);
+			}
+		}
+
+	}
+
+	/**
+	 * @param agtStoryteller
+	 *            the agtStoryteller to set
+	 */
+	public void setAgtStoryteller(AID agtStoryteller) {
+		this.agtStoryteller = agtStoryteller;
+	}
+
+	/**
+	 * @return the agtStoryteller
+	 */
+	public AID getAgtStoryteller() {
+		return agtStoryteller;
+	}
 
 }

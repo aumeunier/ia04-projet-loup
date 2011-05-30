@@ -2,11 +2,15 @@ package ia04.projet.loup.messages;
 
 import jade.core.AID;
 
+/**
+ * ==================> PLEASE USE mVote instead <===================
+ * @deprecated
+ * @author paul
+ */
 public class mCommunicationRole extends mMessage {
 	/**
 	 * Message types we can send using this class
 	 * @author aurelien
-	 *
 	 */
 	enum mType {
 		KILL_PAYSAN, KILL_WEREWOLF, ELECT_MAYOR, NAME_SUCCESSOR
