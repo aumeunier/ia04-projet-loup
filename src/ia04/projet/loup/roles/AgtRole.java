@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import javax.xml.bind.annotation.XmlElementDecl.GLOBAL;
+
 import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.Strategies;
 import ia04.projet.loup.messages.mVote;
@@ -23,6 +25,8 @@ public class AgtRole extends Agent {
 	 * 
 	 */
 	private static final long serialVersionUID = 1226925844951644365L;
+	/** role of the agent */
+	protected Global.Roles role;
 	/** The strategy in use */
 	protected Global.Strategies currentStrategy = Strategies.RABBIT;
 	/** Array of the players */
@@ -37,12 +41,17 @@ public class AgtRole extends Agent {
 	 */
 	public AgtRole() {
 		super();
+		initializeRole();
+		this.addBehaviour(new BehaviourRegister());
 		this.addBehaviour(new BehaviourRole());
 		this.addBehaviour(new BehaviourVillager());
 		initializeConfidenceLevel();
 		//TODO get the GUI
 	}
-	
+	/** initialize the role of the agent */
+	protected void initializeRole(){
+		role = Global.Roles.VILLAGER;
+	}
 	/**
 	 * Initializes the different level of confidence at the beginning of a new game.
 	 * alpha - no confidence level
@@ -99,10 +108,17 @@ public class AgtRole extends Agent {
 			if (lastVote.get(elector).getChoice().equals(this.getLocalName())){
 				confidenceLevel.get(elector).update(ConfidenceLevel.VOTEFORME);
 			}
+			//TODO update confidence lvl according to the victim's role
 		}
 	}
 
 	public void setLastVote(HashMap<String, mVote> lastVote) {
 		this.lastVote = lastVote;
+	}
+	public Global.Roles getRole() {
+		return role;
+	}
+	public void setRole(Global.Roles role) {
+		this.role = role;
 	}
 }

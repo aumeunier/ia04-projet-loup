@@ -4,12 +4,13 @@ import ia04.projet.loup.messages.mVoteRegister;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 
-public class BehaviourRole extends Behaviour {
+public class BehaviourRegister extends Behaviour {
+
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 707900326212180696L;
+	private static final long serialVersionUID = -6789903342996110835L;
 
 	/**
 	 * Deals with common messages : beginning/end of the game, players death...
@@ -19,22 +20,15 @@ public class BehaviourRole extends Behaviour {
 	@Override
 	public void action() {
 		/** launched at the beginning of the game */
-		ACLMessage msg = myAgent.receive();
-		if(msg != null){
-			// Message reception
-			String msgString = msg.getContent();
-			int msgPerformative = msg.getPerformative();			
-			
-			/** TODO if the player died, remove every behavior and add the deadBehaviour */
-			
-			/** TODO wait for the end of the game */
-		}
+		ACLMessage msg = new ACLMessage(ACLMessage.SUBSCRIBE);
+		msg.setContent(new mVoteRegister(((AgtRole)myAgent).getRole()).toJson());
+		myAgent.send(msg);
 	}
 
 	@Override
 	public boolean done() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 }
