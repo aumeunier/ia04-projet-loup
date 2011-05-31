@@ -3,13 +3,15 @@ package ia04.projet.loup.GUI;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-public class BotPlayerGui extends JFrame {
+public class BotPlayerGui extends JFrame implements ActionListener{
 
 	/**
 	 * 
@@ -21,9 +23,12 @@ public class BotPlayerGui extends JFrame {
 	JTextArea role;
 	JTextArea StoryView;
 	JTextArea PlayerList;
+	GuiAgtPlayer MyPlayerAgent;
 	
-	public BotPlayerGui(String arg0) throws HeadlessException {
+	
+	public BotPlayerGui(String arg0, GuiAgtPlayer agt) throws HeadlessException {
 		super(arg0);
+		this.MyPlayerAgent = agt;
 		initialize(arg0);
 		output();
 	}
@@ -31,7 +36,6 @@ public class BotPlayerGui extends JFrame {
 	private void output() {
 		setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
 		setSize(640, 480);
-		setVisible(true);
 	}
 	
 	private void initialize(String arg0) {
@@ -103,4 +107,55 @@ public class BotPlayerGui extends JFrame {
 		mainPanel.add(StoryView,cStoryView);
 		mainPanel.add(PlayerList,cPlayerList);
 	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO
+		/*if(e.getSource()== x){
+			GuiEvent ge = new GuiEvent(this, GuiAgtPlayer.EVENT);
+			MyAgent.postGuiEvent(ge);
+		}*/
+	}
+	
+	public String getName() {
+		return name.getText();
+	}
+
+	public void setName(String nam) {
+		this.name.setText(nam);
+	}
+
+	public String getStat() {
+		return stat.getText();
+	}
+	
+	public void setStat(String state) {
+			this.stat.setText(state);
+		}
+	
+	public String getRole() {
+		return role.getText();
+	}
+	
+	public void setRole(String rol) {
+		this.role.setText(rol);
+	}
+		
+	public String getStoryView() {
+		return StoryView.getText();
+	}
+
+	public void setStoryView(String str) {
+		StoryView.append("\n"+str);
+	}
+
+	public String getPlayerList() {
+		return PlayerList.getText();
+	}
+
+	public void setPlayerList(String str) {
+		PlayerList.append("\n"+str);
+	}
+
+	
 }
