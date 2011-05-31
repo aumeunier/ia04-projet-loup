@@ -5,6 +5,7 @@ public class ConfidenceLevel{
 	public static int VOTEFORME = -10;
 	public static int VOTEFORMYROLE = -5;
 	public static int VOTEFOROPPONENT = +5;
+	public static int FRIENDWANTSTOEATHIM = -5;
 	
 	public ConfidenceLevel(){
 		level = 50;
