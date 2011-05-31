@@ -4,6 +4,7 @@ import ia04.projet.loup.communication.AgtVote;
 import ia04.projet.loup.messages.mCommunicationRole;
 import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mVote;
+import ia04.projet.loup.messages.mVoteResult;
 import jade.core.AID;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
@@ -47,6 +48,9 @@ public class BehaviourVillager extends Behaviour {
 					msgContent.setChoice(((AgtRole) myAgent).vote(msgContent.getCandidates()));
 					response.setContent(msgContent.toJson());
 					myAgent.send(response);
+					msg = myAgent.receive();
+					mVoteResult msgResultContent = (mVoteResult)mMessage.parseJson(msgString, mVoteResult.class);
+					((AgtRole) myAgent).setLastVote(msgResultContent.getWhoVotesForWho());
 					break;
 				}
 			}

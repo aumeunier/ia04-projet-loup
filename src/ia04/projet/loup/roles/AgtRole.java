@@ -6,6 +6,7 @@ import java.util.Random;
 
 import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.Strategies;
+import ia04.projet.loup.messages.mVote;
 import jade.core.AID;
 import jade.core.Agent;
 
@@ -27,8 +28,9 @@ public class AgtRole extends Agent {
 	/** Array of the players */
 	protected java.util.List<AID> players = new ArrayList<AID>();
 	/** Map of the players with the corresponding confidence level */
-	protected HashMap<AID, Integer> confidenceLevel = new HashMap<AID, Integer>();
-	
+	protected HashMap<String, ConfidenceLevel> confidenceLevel = new HashMap<String, ConfidenceLevel>();
+	/** Map containing the last vote results */
+	protected HashMap<String, mVote> lastVote;
 	/**
 	 * The default constructor. Starts the agent and attach its behaviors (core + villager).
 	 * Gets an access to his player's GUI
@@ -90,5 +92,17 @@ public class AgtRole extends Agent {
 			return candidates.get(random.nextInt(candidates.size()));
 		default: return null;
 		}
+	}
+	
+	protected void updateConfidenceVotePaysan(String victimName, Global.Roles victimRole){
+		for (String elector : this.lastVote.keySet()) {
+			if (lastVote.get(elector).getChoice().equals(this.getLocalName())){
+				confidenceLevel.get(elector).update(ConfidenceLevel.VOTEFORME);
+			}
+		}
+	}
+
+	public void setLastVote(HashMap<String, mVote> lastVote) {
+		this.lastVote = lastVote;
 	}
 }

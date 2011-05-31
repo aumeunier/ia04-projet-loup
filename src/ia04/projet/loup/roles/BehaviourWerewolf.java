@@ -28,7 +28,7 @@ public class BehaviourWerewolf extends Behaviour {
 			
 			//TODO check who sent the message (DF) if( msgSender == ACTION || ADVICE || VOTE)
 				mVote msgContent = (mVote)mMessage.parseJson(msgString, mCommunicationRole.class);
-				if (msgContent.getType() == AgtVote.voteType.KILL_WW){
+				if (msgContent.getType() == AgtVote.voteType.VOTE_WW){
 					/** Votes for the victim of the night */
 					msgContent.setChoice(((AgtWerewolf) myAgent).eatSomebody(msgContent.getCandidates()));
 					ACLMessage response = msg.createReply();
