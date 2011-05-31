@@ -44,7 +44,8 @@ public class BehaviourVillager extends Behaviour {
 					myAgent.send(response);
 					break;
 				/** Votes for the victim of the  day */
-				case VOTE_PAYSAN: //TODO set number of voices (mayor)
+				case VOTE_PAYSAN: 
+					msgContent.setNumbreOfVoices(((AgtRole)myAgent).getVoices());
 					msgContent.setChoice(((AgtRole) myAgent).vote(msgContent.getCandidates()));
 					response.setContent(msgContent.toJson());
 					myAgent.send(response);

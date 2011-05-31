@@ -22,6 +22,8 @@ public class BehaviourMayor extends Behaviour {
 	 */
 	@Override
 	public void action() {
+		/** The mayor has two voices during a vote */
+		((AgtRole)myAgent).setVoices(2);
 		/** Waits the sunrise */
 
 		ACLMessage msg = myAgent.receive();

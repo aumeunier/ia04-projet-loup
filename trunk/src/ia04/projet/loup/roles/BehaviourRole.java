@@ -1,6 +1,5 @@
 package ia04.projet.loup.roles;
 
-import ia04.projet.loup.messages.mVoteRegister;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 
@@ -26,14 +25,17 @@ public class BehaviourRole extends Behaviour {
 			int msgPerformative = msg.getPerformative();			
 			
 			/** TODO if the player died, remove every behavior and add the deadBehaviour */
-			
+			for(Behaviour aBehaviour: ((AgtRole)myAgent).behaviours){
+				myAgent.removeBehaviour(aBehaviour);
+			}
+			myAgent.addBehaviour(new BehaviourDead());
 			/** TODO wait for the end of the game */
 		}
 	}
 
 	@Override
 	public boolean done() {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 

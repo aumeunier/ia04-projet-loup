@@ -1,5 +1,7 @@
 package ia04.projet.loup;
 
+import java.util.HashMap;
+
 /**
  * This class contains variables and methods that can be used anywhere in the program
  * @author aurelien
@@ -87,6 +89,26 @@ public class Global {
 		SCAPEGOAT,
 		VILLAGEIDIOT,
 		VILLAGESAGE
+	}
+	
+	public final static HashMap<Roles, Roles> BASICROLECORRESONDANCE = new HashMap<Roles, Roles>();
+	static
+	{
+ 		BASICROLECORRESONDANCE.put(Roles.VILLAGER, 		Roles.VILLAGER);
+ 		BASICROLECORRESONDANCE.put(Roles.VILLAGEIDIOT, 	Roles.VILLAGER);
+ 		BASICROLECORRESONDANCE.put(Roles.VILLAGESAGE, 	Roles.VILLAGER);
+ 		BASICROLECORRESONDANCE.put(Roles.CLAIRVOYANT, 	Roles.VILLAGER);
+ 		BASICROLECORRESONDANCE.put(Roles.CUPID, 		Roles.VILLAGER);
+ 		BASICROLECORRESONDANCE.put(Roles.GUARDIAN, 		Roles.VILLAGER);
+ 		BASICROLECORRESONDANCE.put(Roles.HUNTER, 		Roles.VILLAGER);
+ 		BASICROLECORRESONDANCE.put(Roles.RAVEN, 		Roles.VILLAGER);
+ 		BASICROLECORRESONDANCE.put(Roles.SCAPEGOAT, 	Roles.VILLAGER);
+ 		BASICROLECORRESONDANCE.put(Roles.WITCH, 		Roles.VILLAGER);
+ 		
+	 	BASICROLECORRESONDANCE.put(Roles.WEREWOLF, 		Roles.WEREWOLF);
+	 	BASICROLECORRESONDANCE.put(Roles.WHITEWOLF,		Roles.WEREWOLF);
+	 	
+	 	BASICROLECORRESONDANCE.put(Roles.FLUTEPLAYER,	Roles.FLUTEPLAYER);
 	}
 	
 	/**
