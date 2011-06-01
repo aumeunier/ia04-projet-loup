@@ -61,10 +61,14 @@ public class AgtVote extends Agent {
 	 * Registers its service into the DF
 	 */
 	public void registerServiceToDf(){
+		/*
+		// TODO: DFInterface problems...
 		ServiceDescription sd = new ServiceDescription();
 		sd.setType("AgtVote");
 		sd.setName(this.getLocalName());
 		DFInterface.registerService(this, sd);
+		System.out.println("AgtVote registered to DF");
+		*/
 	}
 
 	/**

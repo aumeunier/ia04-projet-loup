@@ -1,5 +1,6 @@
 package ia04.projet.loup.roles;
 
+import ia04.projet.loup.messages.mMessage;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 
@@ -20,10 +21,9 @@ public class BehaviourRole extends Behaviour {
 		/** launched at the beginning of the game */
 		ACLMessage msg = myAgent.receive();
 		if(msg != null){
-			// Message reception
-			String msgString = msg.getContent();
-			int msgPerformative = msg.getPerformative();			
-			
+			if(true){
+				return; // I don't want to remove the behaviours at each tick of action() ..
+			}
 			/** TODO if the player died, remove every behavior and add the deadBehaviour */
 			for(Behaviour aBehaviour: ((AgtRole)myAgent).behaviours){
 				myAgent.removeBehaviour(aBehaviour);
@@ -35,7 +35,6 @@ public class BehaviourRole extends Behaviour {
 
 	@Override
 	public boolean done() {
-		
 		return false;
 	}
 

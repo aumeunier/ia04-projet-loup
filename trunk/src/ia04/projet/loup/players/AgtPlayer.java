@@ -3,13 +3,12 @@ package ia04.projet.loup.players;
 import ia04.projet.loup.Global;
 import ia04.projet.loup.messages.mStorytellerPlayer;
 import ia04.projet.loup.roles.AgtRole;
-import ia04.projet.loup.roles.BehaviourRole;
-import ia04.projet.loup.roles.BehaviourVillager;
-import ia04.projet.loup.roles.BehaviourWerewolf;
+import ia04.projet.loup.roles.AgtWerewolf;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
-import jade.wrapper.ControllerException;
+import jade.wrapper.AgentContainer;
+import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
 
 
@@ -19,7 +18,7 @@ public class AgtPlayer extends Agent {
 
 	private AID RoleID, GuiID;
 
-	public AgtPlayer() throws ControllerException {
+	public AgtPlayer() {
 		super();
 		this.addBehaviour(new BehaviourPlayer());
 		setRoleID(null);
@@ -52,7 +51,7 @@ public class AgtPlayer extends Agent {
 		mObj.setParticipateInGame(value);
 		String Jmsg = mObj.toJson();
 		response.setContent(Jmsg);
-		this.send(response);
+		this.send(response);						
 	}
 
 	/**
@@ -62,16 +61,15 @@ public class AgtPlayer extends Agent {
 	 * @author Guillaume
 	 * **/
 	public void RoleInstance(Global.Roles role) throws StaleProxyException{
-		//RoleAgent instantiation
-
+		// RoleAgent instantiation, behaviours are added in the roles	
 		AgtRole agtR = null;
 		switch(role){
 		case VILLAGER:
-			agtR = new AgtRole();	
-			agtR.addBehaviour(new BehaviourVillager());
-		case WEREWOLF:
 			agtR = new AgtRole();
-			agtR.addBehaviour(new BehaviourWerewolf());
+			break;
+		case WEREWOLF:			
+			agtR = new AgtWerewolf();
+			break;
 			/*case CUPID:
 				agtR = new AgtRole();
 			case THIEF:
@@ -95,18 +93,16 @@ public class AgtPlayer extends Agent {
 			case VILLAGEIDIOT:
 				agtR = new AgtRole();
 			case VILLAGESAGE:
-				agtR = new AgtRole();*/
+				agtR = new AgtRole(); 
+				*/
 		default:
 			agtR = new AgtRole();
-			agtR.addBehaviour(new BehaviourVillager());
 			break;
 		}
-
-		// Every role should have this default behaviour
-		agtR.addBehaviour(new BehaviourRole());
 		
 		// Create the role on the platform and register it
-		this.getContainerController().acceptNewAgent(this.getLocalName()+"Role", agtR);
+		AgentContainer mc = this.getContainerController();
+		this.getContainerController().acceptNewAgent(this.getLocalName()+"Role", agtR).start();
 		agtR.registerToCommunicationAgents();
 		setRoleID(agtR.getAID());
 	}

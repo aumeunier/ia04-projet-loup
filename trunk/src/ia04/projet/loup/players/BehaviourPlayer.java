@@ -53,7 +53,6 @@ public class BehaviourPlayer extends Behaviour {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					
 					break;
 				case STORYTELLING :
 					((AgtPlayer) myAgent).StoryTransfertToGui(msg);

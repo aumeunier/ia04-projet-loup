@@ -1,12 +1,13 @@
 package ia04.projet.loup.roles;
 
+import ia04.projet.loup.communication.AgtVote;
 import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mVote;
 import ia04.projet.loup.messages.mVoteResult;
 import jade.core.AID;
+import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
-import ia04.projet.loup.communication.AgtVote;
 
 public class BehaviourWerewolf extends Behaviour {
 
@@ -14,11 +15,10 @@ public class BehaviourWerewolf extends Behaviour {
 	 * 
 	 */
 	private static final long serialVersionUID = -5093693108424533789L;
-
+	
 	@Override
 	public void action() {
 		/** Waits the nightfall */
-
 		ACLMessage msg = myAgent.receive();
 		if(msg != null){
 			// Message reception
@@ -57,7 +57,6 @@ public class BehaviourWerewolf extends Behaviour {
 
 	@Override
 	public boolean done() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
