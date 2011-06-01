@@ -96,14 +96,18 @@ public class AgtPlayer extends Agent {
 				agtR = new AgtRole();
 			case VILLAGESAGE:
 				agtR = new AgtRole();*/
-		default: // Added Aurelien
+		default:
 			agtR = new AgtRole();
 			agtR.addBehaviour(new BehaviourVillager());
 			break;
 		}
 
+		// Every role should have this default behaviour
 		agtR.addBehaviour(new BehaviourRole());
-		this.getContainerController().acceptNewAgent(this.getLocalName()+"Role", agtR); // Modified Aurelien
+		
+		// Create the role on the platform and register it
+		this.getContainerController().acceptNewAgent(this.getLocalName()+"Role", agtR);
+		agtR.registerToCommunicationAgents();
 		setRoleID(agtR.getAID());
 	}
 

@@ -46,8 +46,12 @@ public class StartGame {
 			AgtVote vote = new AgtVote();
 			ac = mc.acceptNewAgent("Vote",vote);
 			ac.start();
-			storyteller.setVoteAgent(vote.getAID());
+			vote.registerServiceToDf();
 			System.out.println("Vote agent created...");
+			
+			// Link the agents to the storyteller
+			// TODO: use the DF ? Vote find storyteller and register itself to the storyteller using a message
+			storyteller.setVoteAgent(vote.getAID());
 			
 			// Create players
 			System.out.println("Populating the room with players...");

@@ -1,16 +1,20 @@
 package ia04.projet.loup.controller;
 
+import ia04.projet.loup.DFInterface;
 import ia04.projet.loup.Debugger;
 import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.GamePhases;
 import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.communication.AgtVote;
-import ia04.projet.loup.messages.mVoteRun;
+import ia04.projet.loup.messages.mActionRequest;
+import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mStorytellerKb;
 import ia04.projet.loup.messages.mStorytellerPlayer;
+import ia04.projet.loup.messages.mVoteRun;
 import ia04.projet.loup.players.AgtPlayer;
 import jade.core.AID;
 import jade.core.Agent;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
@@ -71,6 +75,15 @@ public class AgtStoryteller extends Agent {
 		this.addBehaviour(new BehaviourStoryteller(this));
 		this.phaseClock = new PhaseClock(this);
 		this.nbWaitingAnswers = 0;
+	}	
+	/**
+	 * Registers its service into the DF
+	 */
+	public void registerServiceToDf(){
+		ServiceDescription sd = new ServiceDescription();
+		sd.setType("AgtStoryteller");
+		sd.setName(this.getLocalName());
+		DFInterface.registerService(this, sd);
 	}
  	/**
 	 * Initialize the Kb Agent used by the Storyteller agent if it hasn't been done before.
@@ -711,7 +724,8 @@ public class AgtStoryteller extends Agent {
 		// Prepare a message for all the players using the Storyteller-Player Message template
 		mStorytellerPlayer message = new mStorytellerPlayer();
 		message.setPhase(Global.GamePhases.NONE);
-		message.setType(mStorytellerPlayer.mType.END_GAME);
+		//message.setType(mStorytellerPlayer.mType.END_GAME);
+		//TODO: what to do ?
 		
 		// Reason depends on the errorCode
 		switch(errorCode){
@@ -750,15 +764,35 @@ public class AgtStoryteller extends Agent {
 			message.setStoryTelling("Laule. I don't even have an error code for that.");
 			break;
 		}
-		sendMessageToRegisteredAgents(message);
+		//TODO: send or not?
+		//sendMessageToRegisteredAgents(message);
 	}
 
 	
 ////////////////////////////////////////////////////////////////////////////////
 /////////////// 	 SEND MESSAGES      
 ////////////////////////////////////////////////////////////////////////////////
-	//TODO:Advice
-	//TODO:Action
+	/**
+	 * Initialize a message for the Advice Agent
+	 * @param message The message object to serialize and send as content to the agent
+	 */
+	public void sendMessageToAdviceAgent(mMessage message){
+		//TODO: mMessage -> mAdvice or whatever
+		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+		msg.addReceiver(this.agentAdviceAid);
+		msg.setContent(message.toJson());
+		this.send(msg);		
+	}
+	/**
+	 * Initialize a message for the Action Agent
+	 * @param message The message object to serialize and send as content to the agent
+	 */
+	public void sendMessageToActionAgent(mActionRequest message){
+		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+		msg.addReceiver(this.agentActionAid);
+		msg.setContent(message.toJson());
+		this.send(msg);		
+	}
 	/**
 	 * Initialize a message for the Vote Agent
 	 * @param message The message object to serialize and send as content to the agent

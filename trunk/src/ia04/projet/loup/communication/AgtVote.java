@@ -1,14 +1,17 @@
 package ia04.projet.loup.communication;
 
+import ia04.projet.loup.DFInterface;
 import ia04.projet.loup.Debugger;
 import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.Roles;
+import ia04.projet.loup.messages.mVote;
 import ia04.projet.loup.messages.mVoteResult;
 import ia04.projet.loup.messages.mVoteRun;
-import ia04.projet.loup.messages.mVote;
 import jade.core.AID;
 import jade.core.Agent;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
+
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -51,7 +54,17 @@ public class AgtVote extends Agent {
 	 */
 	public AgtVote() {
 		super();
-		this.addBehaviour(new BehaviourVote());
+		this.addBehaviour(new BehaviourVote(this));
+	}
+	
+	/**
+	 * Registers its service into the DF
+	 */
+	public void registerServiceToDf(){
+		ServiceDescription sd = new ServiceDescription();
+		sd.setType("AgtVote");
+		sd.setName(this.getLocalName());
+		DFInterface.registerService(this, sd);
 	}
 
 	/**

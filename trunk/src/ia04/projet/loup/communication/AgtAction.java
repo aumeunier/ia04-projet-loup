@@ -1,11 +1,13 @@
 package ia04.projet.loup.communication;
 
+import ia04.projet.loup.DFInterface;
 import ia04.projet.loup.Debugger;
 import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.messages.mAction;
 import ia04.projet.loup.messages.mActionRequest;
 import jade.core.AID;
 import jade.core.Agent;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -32,7 +34,17 @@ public class AgtAction extends Agent {
 	 */
 	public AgtAction() {
 		super();
-		this.addBehaviour(new BehaviourAction());
+		this.addBehaviour(new BehaviourAction(this));
+	}
+	
+	/**
+	 * Registers its service into the DF
+	 */
+	public void registerServiceToDf(){
+		ServiceDescription sd = new ServiceDescription();
+		sd.setType("AgtAction");
+		sd.setName(this.getLocalName());
+		DFInterface.registerService(this, sd);
 	}
 
 	/**

@@ -20,7 +20,7 @@ public class DFInterface {
         try {  
             DFService.register(a, dfd );  
         }
-        catch (FIPAException fe) { fe.printStackTrace(); }		
+        catch (FIPAException fe) { fe.printStackTrace(); }	
 	}
 	/**
 	 * Service research in the DF services list
@@ -35,8 +35,9 @@ public class DFInterface {
         dfd.addServices(sd);
         try {
             DFAgentDescription[] result = DFService.search(a, dfd);
-            if (result.length>0)
+            if (result.length>0){
                 return result[0].getName() ;
+            }
         }
         catch (FIPAException fe) { fe.printStackTrace(); }
         return null;

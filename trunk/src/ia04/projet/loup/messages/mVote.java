@@ -18,13 +18,13 @@ public class mVote extends mMessage{
 	private int numbreOfVoices;
 	
 	/** List of the candidates */
-	private ArrayList<String> candidates;
+	private ArrayList<String> candidates = new ArrayList<String>();
 	
 	/** LocalName of the chosen AgtRole */
 	private String choice;
 	
 	/** The results of the previous election turn */
-	private HashMap<String, mVote> whoVotesForWho;
+	private HashMap<String, mVote> whoVotesForWho = new HashMap<String, mVote>();
 	
 	/**
 	 * Constructor
