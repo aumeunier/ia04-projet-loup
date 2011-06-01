@@ -91,6 +91,7 @@ public class BehaviourStoryteller extends Behaviour {
 					generalMessage = mMessage.parseJson(msgString, mVoteRun.class);
 					if(generalMessage !=null){
 						mVoteRun message = (mVoteRun)generalMessage;
+						System.out.println(message.toJson());
 						switch(message.getType()){
 						case VOTE_PAYSAN: {
 							if(message.getChoice()!=null){
@@ -136,6 +137,7 @@ public class BehaviourStoryteller extends Behaviour {
 				}
 			}
 		}
+		// TODO: order the A B C D such that the most frequent messages go first
 	}
 
 	@Override

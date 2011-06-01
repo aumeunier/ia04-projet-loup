@@ -1,8 +1,10 @@
 package ia04.projet.loup.communication;
 
-import ia04.projet.loup.messages.mVoteRun;
+import ia04.projet.loup.Debugger;
 import ia04.projet.loup.messages.mVote;
 import ia04.projet.loup.messages.mVoteRegister;
+import ia04.projet.loup.messages.mVoteRun;
+import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 
@@ -11,7 +13,8 @@ public class BehaviourVote extends CyclicBehaviour {
 	private static final long serialVersionUID = 1L;
 	private AgtVote agtVote = null;
 
-	public BehaviourVote() {
+	public BehaviourVote(Agent _myAgent) {
+		super(_myAgent);
 		this.agtVote = (AgtVote) myAgent;
 	}
 

@@ -1,18 +1,20 @@
 package ia04.projet.loup.roles;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
-
-import javax.xml.bind.annotation.XmlElementDecl.GLOBAL;
-
+import ia04.projet.loup.DFInterface;
 import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.Strategies;
-import ia04.projet.loup.controller.BehaviourStoryteller;
+import ia04.projet.loup.messages.mActionRegister;
+import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mVote;
+import ia04.projet.loup.messages.mVoteRegister;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
+import jade.lang.acl.ACLMessage;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
 
 /**
  * This agent is the core of a role. Each role agent has to be a subclass of AgtRole.
@@ -59,6 +61,34 @@ public class AgtRole extends Agent {
 		addAndSaveBehaviour(new BehaviourVillager());
 		initializeConfidenceLevel();
 		//TODO get the GUI
+	}
+	/**
+	 * Here the agent registers to the Communication agents such that he can receive 
+	 * all the messages regarding the game being played
+	 */
+	public void registerToCommunicationAgents(){
+		// Register to AgtVote
+		AID voteAid = DFInterface.getService(this, "AgtVote");
+		mVoteRegister mVote = new mVoteRegister(this.getRole());
+		this.initializeMessageToCommunicationAgent(mVote, voteAid);	
+
+		// Register to AgtAction
+		AID actionAid = DFInterface.getService(this, "AgtAction");
+		mActionRegister mAction = new mActionRegister(this.getRole());
+		this.initializeMessageToCommunicationAgent(mAction, actionAid);	
+
+		// TODO: Register to AgtAdvice
+	}
+	/**
+	 * Send a message to a communication agent in order to suscribe to its messages
+	 * @param message
+	 * @param agentAid
+	 */
+	private void initializeMessageToCommunicationAgent(mMessage message, AID agentAid){
+		ACLMessage msg = new ACLMessage(ACLMessage.SUBSCRIBE);
+		msg.addReceiver(agentAid);
+		msg.setContent(message.toJson());
+		this.send(msg);				
 	}
 	/** initialize the role of the agent */
 	protected void initializeRole(){

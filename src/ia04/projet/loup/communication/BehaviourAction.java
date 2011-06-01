@@ -16,8 +16,8 @@ public class BehaviourAction extends CyclicBehaviour {
 	/**
 	 * Constructor
 	 */
-	public BehaviourAction(){
-		super();
+	public BehaviourAction(AgtAction _myAgent){
+		super(_myAgent);
 		this.agtAction = (AgtAction)myAgent;
 	}
 	
