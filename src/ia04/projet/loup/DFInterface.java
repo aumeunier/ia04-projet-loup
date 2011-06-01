@@ -18,7 +18,8 @@ public class DFInterface {
         dfd.setName(a.getAID());
         dfd.addServices(sd);
         try {  
-            DFService.register(a, dfd );  
+        	//FIXME: sometimes stuck here ?
+            DFService.register(a, dfd);
         }
         catch (FIPAException fe) { fe.printStackTrace(); }	
 	}

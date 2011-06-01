@@ -1,7 +1,6 @@
 package ia04.projet.loup.roles;
 
-import ia04.projet.loup.communication.AgtVote;
-import ia04.projet.loup.messages.mCommunicationRole;
+import ia04.projet.loup.messages.mAction;
 import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mVote;
 import ia04.projet.loup.messages.mVoteResult;
@@ -31,11 +30,14 @@ public class BehaviourVillager extends Behaviour {
 			String msgString = msg.getContent();
 			AID msgSender = msg.getSender();
 			int msgPerformative = msg.getPerformative();
-			
+
 			/** TODO Checks the source of the message */
 			//if( msgSender == ACTION || ADVICE || VOTE)
-				ACLMessage response = msg.createReply();
-				mVote msgContent = (mVote)mMessage.parseJson(msgString, mVote.class);
+			ACLMessage response = msg.createReply();
+			mMessage message = mMessage.parseJson(msgString, mVote.class);
+			// if msgSender == Vote
+			if(message!=null){
+				mVote msgContent = (mVote)message;
 				switch (msgContent.getType()){
 				/** TODO beta1 mayor election - Message can come from the AgtAdvice */		
 				case ELECT_MAYOR: 
@@ -43,7 +45,7 @@ public class BehaviourVillager extends Behaviour {
 					response.setContent(msgContent.toJson());
 					myAgent.send(response);
 					break;
-				/** Votes for the victim of the  day */
+					/** Votes for the victim of the  day */
 				case VOTE_PAYSAN: 
 					msgContent.setNumbreOfVoices(((AgtRole)myAgent).getVoices());
 					msgContent.setChoice(((AgtRole) myAgent).vote(msgContent.getCandidates()));
@@ -55,14 +57,24 @@ public class BehaviourVillager extends Behaviour {
 					break;
 				}
 			}
-			
+			else {
+				message = mMessage.parseJson(msgString, mAction.class);
+				
+				// if msgSender == ACTION
+				if(message!=null){
+					mAction msgContent = (mAction)message;
+					// TODO:
+				}
+				else {
+					// TODO: advice
+				}
+			}
 		}
-			
+	}
 
 	@Override
 	public boolean done() {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
 }

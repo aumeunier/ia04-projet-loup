@@ -18,7 +18,6 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
-import jade.wrapper.ControllerException;
 import jade.wrapper.StaleProxyException;
 
 import java.util.ArrayList;
@@ -50,6 +49,8 @@ public class AgtStoryteller extends Agent {
     private Random generator = new Random();
 	/** The number of answers the controller is waiting for before going on. */
 	private int nbWaitingAnswers;
+	/** Remember when a request has been sent and not answered */
+	private boolean hasSentRequestToKb = false;
 	/** The AID of the AgtKbStoryteller this storyteller agent can use. */
 	private AID kbStoryteller;
 	/** The AID of the AgtVote this storyteller interacts with */
@@ -140,7 +141,7 @@ public class AgtStoryteller extends Agent {
 		AgentContainer mc = this.getContainerController();
 		AgentController ac;
 		try {
-			for(int i = 1; i <= nbOfPlayers ; ++i){
+			for(int i = 1; i <= nbOfPlayers; ++i){
 				// Create a new Agent for the player
 				AgtPlayer player = new AgtPlayer();
 				ac = mc.acceptNewAgent("player"+i, player);
@@ -150,9 +151,7 @@ public class AgtStoryteller extends Agent {
 			}			
 		} catch (StaleProxyException e) {
 			e.printStackTrace();
-		} catch (ControllerException e) {
-			e.printStackTrace();
-		}		
+		} 	
 	}
 
 	
@@ -301,6 +300,12 @@ public class AgtStoryteller extends Agent {
 	 * The game will only start if enough players are willing to participate.
 	 */
 	private void playersAllAnsweredParticipationCall(){	
+		// Timer call while all players have already answered
+		if(hasSentRequestToKb){
+			return;
+		}
+		hasSentRequestToKb = false;
+		
 		// Get the number of players who answered yes
 		int numberOfPositiveAnswers = 0;
 		for(Roles role: this.playersMap.values()){
@@ -838,5 +843,6 @@ public class AgtStoryteller extends Agent {
 		msg.setContent(message.toJson());
 		Debugger.println(message.toJson());
 		this.send(msg);		
+		hasSentRequestToKb = true;
 	}
 }

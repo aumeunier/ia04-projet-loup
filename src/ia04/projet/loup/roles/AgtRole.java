@@ -56,7 +56,7 @@ public class AgtRole extends Agent {
 	public AgtRole() {
 		super();
 		initializeRole();
-		this.addBehaviour(new BehaviourRegister());
+		addBehaviour(new BehaviourRegister()); //TODO: useless for now
 		addAndSaveBehaviour(new BehaviourRole());
 		addAndSaveBehaviour(new BehaviourVillager());
 		initializeConfidenceLevel();
@@ -68,13 +68,15 @@ public class AgtRole extends Agent {
 	 */
 	public void registerToCommunicationAgents(){
 		// Register to AgtVote
-		AID voteAid = DFInterface.getService(this, "AgtVote");
-		mVoteRegister mVote = new mVoteRegister(this.getRole());
+		//AID voteAid = DFInterface.getService(this, "AgtVote");
+		AID voteAid = new AID("AgtVote",AID.ISLOCALNAME);
+		mVoteRegister mVote = new mVoteRegister(getRole());
 		this.initializeMessageToCommunicationAgent(mVote, voteAid);	
 
 		// Register to AgtAction
-		AID actionAid = DFInterface.getService(this, "AgtAction");
-		mActionRegister mAction = new mActionRegister(this.getRole());
+		//AID actionAid = DFInterface.getService(this, "AgtAction");
+		AID actionAid = new AID("AgtAction",AID.ISLOCALNAME);
+		mActionRegister mAction = new mActionRegister(getRole());
 		this.initializeMessageToCommunicationAgent(mAction, actionAid);	
 
 		// TODO: Register to AgtAdvice
