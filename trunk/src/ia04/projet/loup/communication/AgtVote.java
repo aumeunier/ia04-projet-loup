@@ -99,8 +99,16 @@ public class AgtVote extends Agent {
 				voteMessage.addReceiver(aid);
 				this.remainingVotes++;
 			}
-
 			break;
+			case ELECT_MAYOR:
+				for (Entry<AID, Roles> entry : this.playersMap.entrySet()) {
+					AID aid = entry.getKey();
+					aVote.getCandidates().add(aid.getLocalName());
+					lastElectionResult.put(aid.getLocalName(), 0);
+					voteMessage.addReceiver(aid);
+					this.remainingVotes++;
+				}
+				break;
 		case VOTE_WW:
 			for (Entry<AID, Roles> entry : this.playersMap.entrySet()) {
 				AID aid = entry.getKey();
