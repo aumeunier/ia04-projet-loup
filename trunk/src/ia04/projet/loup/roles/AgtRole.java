@@ -1,6 +1,7 @@
 package ia04.projet.loup.roles;
 
 import ia04.projet.loup.DFInterface;
+import ia04.projet.loup.Debugger;
 import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.Strategies;
 import ia04.projet.loup.messages.mActionRegister;
@@ -15,6 +16,8 @@ import jade.lang.acl.ACLMessage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 /**
  * This agent is the core of a role. Each role agent has to be a subclass of AgtRole.
@@ -43,6 +46,9 @@ public class AgtRole extends Agent {
 	protected int voices=1;
 	/** list of all the behaviours of the agent */
 	protected ArrayList<Behaviour> behaviours = new ArrayList<Behaviour>();
+	/** generate random int for the rabbit strategy */
+	protected Random random = new Random();
+	
 	public int getVoices() {
 		return voices;
 	}
@@ -119,8 +125,11 @@ public class AgtRole extends Agent {
 	protected String vote(ArrayList<String> candidates){
 		switch (currentStrategy){
 		case RABBIT:
-			Random random = new Random();
+			Debugger.println("AgtRole: vote-RABBIT");
 			return candidates.get(random.nextInt(candidates.size()));
+		case BASIC:
+			Debugger.println("AgtRole: vote-BASIC");
+			return getLowestConfidence(candidates);
 		default: return null;
 		}
 	}
@@ -128,8 +137,11 @@ public class AgtRole extends Agent {
 	protected String electMayor(ArrayList<String> candidates){
 		switch (currentStrategy){
 		case RABBIT:
-			Random random = new Random();
+			Debugger.println("AgtRole: electMayor-RABBIT");
 			return candidates.get(random.nextInt(candidates.size()));
+		case BASIC:
+			Debugger.println("AgtRole: electMayor-BASIC");
+			return getHighestConfidence(candidates);
 		default: return null;
 		}
 	}
@@ -137,8 +149,11 @@ public class AgtRole extends Agent {
 	protected String nameSuccessor(ArrayList<String> candidates){
 		switch (currentStrategy){
 		case RABBIT:
-			Random random = new Random();
+			Debugger.println("AgtRole: nameSuccessor-RABBIT");
 			return candidates.get(random.nextInt(candidates.size()));
+		case BASIC: 
+			Debugger.println("AgtRole: nameSuccessor-BASIC");
+			return getHighestConfidence(candidates);
 		default: return null;
 		}
 	}
@@ -146,8 +161,11 @@ public class AgtRole extends Agent {
 	protected String resolveEquality(ArrayList<String> candidates){
 		switch (currentStrategy){
 		case RABBIT:
-			Random random = new Random();
+			Debugger.println("AgtRole: resolveEquality-RABBIT");
 			return candidates.get(random.nextInt(candidates.size()));
+		case BASIC:
+			Debugger.println("AgtRole: resolveEquality-BASIC");
+			return getLowestConfidence(candidates);
 		default: return null;
 		}
 	}
@@ -165,6 +183,24 @@ public class AgtRole extends Agent {
 				/** this elector voted for a player in the opposite side */
 			confidenceLevel.get(elector).update(ConfidenceLevel.VOTEFOROPPONENT);
 		}
+	}
+	/** get the name of the player with the highest confidence level in a list of players */
+	protected String getHighestConfidence(ArrayList<String> players){
+		String max=null;
+		for(String player : players){
+			if(max.equals(null)||(confidenceLevel.get(player).getLevel()>confidenceLevel.get(max).getLevel()))
+				max=player;
+		}
+		return max;
+	}
+	/** get the name of the player with the lowest confidence level in a list of players */
+	protected String getLowestConfidence(ArrayList<String> players){
+		String min=null;
+		for(String player : players){
+			if(min.equals(null)||(confidenceLevel.get(player).getLevel()<confidenceLevel.get(min).getLevel()))
+				min=player;
+		}
+		return min;
 	}
 
 	public void setLastVote(HashMap<String, mVote> lastVote) {

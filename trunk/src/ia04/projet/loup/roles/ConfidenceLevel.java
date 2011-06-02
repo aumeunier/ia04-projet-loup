@@ -14,4 +14,9 @@ public class ConfidenceLevel{
 	public void update(int value){
 		level += value;
 	}
+
+	public int getLevel() {
+		return level;
+	}
+
 }

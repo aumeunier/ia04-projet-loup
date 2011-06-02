@@ -28,8 +28,10 @@ public class AgtWerewolf extends AgtRole {
 		switch (currentStrategy){
 		case RABBIT:
 			Debugger.println("AgtWerewofl: eatSomedy-RABBIT");
-			Random random = new Random();
 			return candidates.get(random.nextInt(candidates.size()));
+		case BASIC:
+			Debugger.println("AgtWerewofl: eatSomedy-BASIC");
+			return getLowestConfidence(candidates);
 		default: return null;
 		}
 	}
