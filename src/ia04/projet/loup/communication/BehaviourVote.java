@@ -1,5 +1,6 @@
 package ia04.projet.loup.communication;
 
+import ia04.projet.loup.Debugger;
 import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mPlayerDied;
 import ia04.projet.loup.messages.mStartGame;

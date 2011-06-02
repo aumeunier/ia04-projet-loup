@@ -15,4 +15,9 @@ public class BehaviourDead extends RoleBehaviour {
 		// TODO Dead stuff
 
 	}
+	
+	@Override
+	public boolean done(){
+		return false;
+	}
 }

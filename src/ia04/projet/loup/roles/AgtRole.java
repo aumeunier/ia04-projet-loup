@@ -12,6 +12,7 @@ import ia04.projet.loup.messages.mVoteRegister;
 import ia04.projet.loup.messages.mStorytellerPlayer.mType;
 import jade.core.AID;
 import jade.core.Agent;
+import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 
 import java.util.ArrayList;
@@ -129,10 +130,10 @@ public class AgtRole extends Agent {
 	protected String vote(ArrayList<String> candidates){
 		switch (currentStrategy){
 		case RABBIT:
-			Debugger.println("AgtRole: vote-RABBIT");
+			//Debugger.println("AgtRole: vote-RABBIT");
 			return candidates.get(random.nextInt(candidates.size()));
 		case BASIC:
-			Debugger.println("AgtRole: vote-BASIC");
+			//Debugger.println("AgtRole: vote-BASIC");
 			return getLowestConfidence(candidates);
 		default: return null;
 		}
@@ -141,10 +142,10 @@ public class AgtRole extends Agent {
 	protected String electMayor(ArrayList<String> candidates){
 		switch (currentStrategy){
 		case RABBIT:
-			Debugger.println("AgtRole: electMayor-RABBIT");
+			//Debugger.println("AgtRole: electMayor-RABBIT");
 			return candidates.get(random.nextInt(candidates.size()));
 		case BASIC:
-			Debugger.println("AgtRole: electMayor-BASIC");
+			//Debugger.println("AgtRole: electMayor-BASIC");
 			return getHighestConfidence(candidates);
 		default: return null;
 		}
@@ -165,10 +166,10 @@ public class AgtRole extends Agent {
 	protected String resolveEquality(ArrayList<String> candidates){
 		switch (currentStrategy){
 		case RABBIT:
-			Debugger.println("AgtRole: resolveEquality-RABBIT");
+			//Debugger.println("AgtRole: resolveEquality-RABBIT");
 			return candidates.get(random.nextInt(candidates.size()));
 		case BASIC:
-			Debugger.println("AgtRole: resolveEquality-BASIC");
+			//Debugger.println("AgtRole: resolveEquality-BASIC");
 			return getLowestConfidence(candidates);
 		default: return null;
 		}
@@ -218,14 +219,30 @@ public class AgtRole extends Agent {
 	}
 	
 	/** Send a message to AgtVote saying that the role is dead */
-	public void iAmDead(){
-		mPlayerDied message = new mPlayerDied();
-		message.setDeadName(this.getLocalName());
+	public void iAmDead(ACLMessage query){
+		// Remove the behaviours
+		for(RoleBehaviour aBehaviour: behaviours){
+			aBehaviour.setIsDone();
+			//removeBehaviour(aBehaviour);
+		}
+		addBehaviour(new BehaviourDead());
 		
+		// Send message to Vote
+		mPlayerDied message = new mPlayerDied();
+		message.setDeadName(this.getLocalName());		
 		AID voteAid = new AID(Global.LOCALNAME_VOTE,AID.ISLOCALNAME);
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 		msg.addReceiver(voteAid);
 		msg.setContent(message.toJson());
 		this.send(msg);
+		
+		// Send message to player to say its over
+		mPlayerDied msgcontent = new mPlayerDied();
+		msgcontent.setIsOver(true);
+		msgcontent.setDeadName(getLocalName());
+		ACLMessage messageForPlayer = query.createReply();
+		messageForPlayer.setPerformative(ACLMessage.INFORM);
+		messageForPlayer.setContent(msgcontent.toJson());
+		this.send(messageForPlayer);
 	}
 }
