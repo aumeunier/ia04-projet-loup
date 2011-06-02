@@ -11,7 +11,6 @@ import ia04.projet.loup.messages.mVoteRun;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -27,11 +26,14 @@ public class AgtVote extends Agent {
 
 	/** Possible types of vote */
 	public static enum voteType {
-		VOTE_PAYSAN, VOTE_WW, ELECT_MAYOR, SUCCESSOR
+		VOTE_PAYSAN, VOTE_WW, ELECT_MAYOR, SUCCESSOR, EQUALITY
 	}
 
 	/** Map of the registered players */
 	private HashMap<AID, Roles> playersMap = new HashMap<AID, Roles>();
+	
+	/** AID of the Mayor */
+	private AID mayor;
 
 	/** AID of the StoryTeller */
 	private AID storyTeller;
@@ -129,6 +131,20 @@ public class AgtVote extends Agent {
 				}
 			}
 		}	break;
+		case SUCCESSOR:{
+			for (Entry<AID, Roles> entry : this.playersMap.entrySet()) {
+				AID aid = entry.getKey();
+				Roles role = entry.getValue();
+				if(aid.getLocalName() != mayor.getLocalName()){
+					if(role != Roles.DEAD){
+						aVote.getCandidates().add(aid.getLocalName());
+					}
+				}
+			}
+			this.remainingVotes++;
+			voteMessage.addReceiver(mayor);
+			break;
+		}
 		default:
 			break;
 			//throw new NotImplementedException();
@@ -153,12 +169,59 @@ public class AgtVote extends Agent {
 				if (uniqueWinner(lastElectionResult)) {
 					endOfVote(lastElectionResult);
 				} else {
-					election(lastVote, false);
+					// There is no unique winner
+					switch(lastVote.getType()){
+						// If it is a vote to kill a were wolf, the mayor will choose one among the winners
+						case VOTE_PAYSAN : 
+							tieATie();
+							break;
+						// Otherwise, another turn will be run
+						default: 
+							election(lastVote, false);
+							break;
+					}
 				}
 			}
 		}
 	}
-
+	
+	/**
+	 * Ask the mayor to tie a tie
+	 */
+	private void tieATie() {
+		mVote tieVote = new mVote();
+		int maxVote = 0;
+		
+		tieVote.setType(AgtVote.voteType.EQUALITY);
+		tieVote.setCandidates(this.getWinners());
+		
+		ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
+		message.setContent(tieVote.toJson());
+		message.addReceiver(this.mayor);
+		this.send(message);
+	}
+	
+	private ArrayList<String> getWinners(){
+		ArrayList<String> winners = new ArrayList<String>();
+		int maxVote = 0;
+		
+		for (String aCandidates : lastElectionResult.keySet()) {
+			if (lastElectionResult.get(aCandidates) > maxVote) {
+				maxVote = lastElectionResult.get(aCandidates);
+				winners.clear();
+				winners.add(aCandidates);
+			}
+			else if(lastElectionResult.get(aCandidates) == maxVote){
+				winners.add(aCandidates);
+			}
+		}
+		
+		return winners;
+	}
+	
+	/*
+	 * Calculate the results of this last election
+	 */
 	private void calculateResults() {
 		for (Entry<AID, mVote> entry : this.whoVotesForWho.entrySet()) {
 			int previousScore = lastElectionResult.get(entry.getValue().getChoice());
@@ -207,6 +270,35 @@ public class AgtVote extends Agent {
 			}
 		}
 
+		switch(lastVote.getType()){
+			case ELECT_MAYOR: 
+				this.mayor = new AID(winner, AID.ISLOCALNAME); 
+				break;
+			case SUCCESSOR:
+				this.mayor = new AID(winner, AID.ISLOCALNAME); 
+				break;
+		}
+		
+		this.informFinalResult(winner);
+	}
+	
+	/**
+	 * Get the choice of the mayor in case of equality in the vote of the paysans
+	 * @param aVote
+	 */
+	public void endOfEquality(mVote aVote) {
+		
+		int oldScore = this.lastElectionResult.get(aVote.getChoice());
+		this.lastElectionResult.put(aVote.getChoice(), oldScore + 1);
+		
+		this.informFinalResult(aVote.getChoice());
+	}
+	
+	/**
+	 * Inform the electors the final results
+	 * @param winner
+	 */
+	private void informFinalResult(String winner){
 		/* Inform the electors of the final result */
 		ACLMessage message = new ACLMessage(ACLMessage.INFORM);
 		mVoteResult aResultVote = new mVoteResult();

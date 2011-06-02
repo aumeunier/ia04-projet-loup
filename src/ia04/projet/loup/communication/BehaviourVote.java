@@ -1,7 +1,5 @@
 package ia04.projet.loup.communication;
 
-import ia04.projet.loup.Debugger;
-import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mPlayerDied;
 import ia04.projet.loup.messages.mStartGame;
 import ia04.projet.loup.messages.mVote;
@@ -9,7 +7,7 @@ import ia04.projet.loup.messages.mVoteRegister;
 import ia04.projet.loup.messages.mVoteRun;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
-import jade.lang.acl.ACLMessage;
+import jade.lang.acl.ACLMessage; 
 
 public class BehaviourVote extends CyclicBehaviour {
 
@@ -40,7 +38,14 @@ public class BehaviourVote extends CyclicBehaviour {
 			case ACLMessage.INFORM:
 				mVote aVote = mVote.parseJson(startMessage.getContent());
 				if (aVote != null) {
-					this.agtVote.addVote(startMessage.getSender(), aVote);
+					switch(aVote.getType()){
+						case EQUALITY: 
+							this.agtVote.endOfEquality(aVote); 
+							break;
+						default: 
+							this.agtVote.addVote(startMessage.getSender(), aVote); 
+							break;
+					}
 				}
 				else {
 					mPlayerDied aDeath = mPlayerDied.parseJson(startMessage.getContent());
