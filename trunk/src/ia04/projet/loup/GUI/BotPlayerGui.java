@@ -1,4 +1,4 @@
-package ia04.projet.loup.GUI;
+package ia04.projet.loup.gui;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
