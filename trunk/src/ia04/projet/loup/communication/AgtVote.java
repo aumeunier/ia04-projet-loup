@@ -1,21 +1,19 @@
 package ia04.projet.loup.communication;
 
-import ia04.projet.loup.DFInterface;
 import ia04.projet.loup.Debugger;
 import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.Roles;
+import ia04.projet.loup.messages.mStartGame;
 import ia04.projet.loup.messages.mVote;
 import ia04.projet.loup.messages.mVoteResult;
 import ia04.projet.loup.messages.mVoteRun;
 import jade.core.AID;
 import jade.core.Agent;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Agent which handles all the elections
@@ -116,7 +114,8 @@ public class AgtVote extends Agent {
 
 			break;
 		default:
-			throw new NotImplementedException();
+			break;
+			//throw new NotImplementedException();
 		}
 
 		voteMessage.setContent(aVote.toJson());
@@ -215,6 +214,23 @@ public class AgtVote extends Agent {
 		this.lastVote.setChoice(winner.replace(Global.LOCALNAME_SUFFIX_ROLE, ""));
 		message.setContent(this.lastVote.toJson());
 		message.addReceiver(this.storyTeller);
+		this.send(message);
+	}
+	
+	/** 
+	 * Send the start message to the role agents with the names of the other players
+	 */
+	public void startGame(){
+		ACLMessage message = new ACLMessage(ACLMessage.INFORM);
+		mStartGame mContent = new mStartGame();
+		mContent.setStartGame(true);
+		ArrayList<String> names = new ArrayList<String>();
+		for(AID aid: this.playersMap.keySet()){
+			names.add(aid.getLocalName());
+			message.addReceiver(aid);
+		}
+		mContent.setLocalNames(names);
+		message.setContent(mContent.toJson());
 		this.send(message);
 	}
 

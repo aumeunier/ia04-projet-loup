@@ -8,10 +8,11 @@ import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.communication.AgtVote;
 import ia04.projet.loup.messages.mActionRequest;
 import ia04.projet.loup.messages.mMessage;
+import ia04.projet.loup.messages.mStartGame;
 import ia04.projet.loup.messages.mStorytellerKb;
 import ia04.projet.loup.messages.mStorytellerPlayer;
-import ia04.projet.loup.messages.mVoteRun;
 import ia04.projet.loup.messages.mStorytellerPlayer.mType;
+import ia04.projet.loup.messages.mVoteRun;
 import ia04.projet.loup.players.AgtPlayer;
 import jade.core.AID;
 import jade.core.Agent;
@@ -221,7 +222,15 @@ public class AgtStoryteller extends Agent {
 	 */
 	private void startGame(){
 		// Start the game phases
-		this.phaseClock.startGameTimer();		
+		this.phaseClock.startGameTimer();	
+		
+		// Notify the roles through the Vote agent
+		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+		msg.addReceiver(this.agentVoteAid);
+		mStartGame startGameMessage = new mStartGame();		
+		startGameMessage.setStartGame(true);
+		msg.setContent(startGameMessage.toJson());
+		this.send(msg);		
 	}
 	
 
@@ -832,7 +841,7 @@ public class AgtStoryteller extends Agent {
 	 * Initialize a message for the Action Agent
 	 * @param message The message object to serialize and send as content to the agent
 	 */
-	public void sendMessageToActionAgent(mActionRequest message){
+	public void sendMessageToActionAgent(mMessage message){
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
 		msg.addReceiver(this.agentActionAid);
 		msg.setContent(message.toJson());
@@ -842,7 +851,7 @@ public class AgtStoryteller extends Agent {
 	 * Initialize a message for the Vote Agent
 	 * @param message The message object to serialize and send as content to the agent
 	 */
-	public void sendMessageToVoteAgent(mVoteRun message){
+	public void sendMessageToVoteAgent(mMessage message){
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
 		msg.addReceiver(this.agentVoteAid);
 		msg.setContent(message.toJson());
