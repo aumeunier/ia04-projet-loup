@@ -9,6 +9,9 @@ public class mVoteResult extends mMessage{
 	/** Type of the election */
 	private AgtVote.voteType type;
 	
+	/** Difference from the */
+	private boolean isFinalElection;
+	
 	/** The results of the previous election turn */
 	private HashMap<String, mVote> whoVotesForWho;
 
@@ -48,5 +51,12 @@ public class mVoteResult extends mMessage{
 	public HashMap<String, mVote> getWhoVotesForWho() {
 		return whoVotesForWho;
 	}
-
+	
+	public void setIsFinalElection(boolean flag){
+		this.isFinalElection = flag;
+	}
+	
+	public boolean getIsFinalElection(){
+		return isFinalElection;
+	}
 }

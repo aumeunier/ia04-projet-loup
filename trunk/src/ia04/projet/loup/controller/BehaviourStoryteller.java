@@ -94,16 +94,27 @@ public class BehaviourStoryteller extends Behaviour {
 								AID victimAid = new AID(message.getChoice(), AID.ISLOCALNAME);
 								myAgt.paysansEndedWithChoice(victimAid);
 							}
+							else {
+								myAgt.paysansEndedWithChoice(null);
+							}
 						}	break;
 						case VOTE_WW:{
 							if(message.getChoice()!=null){
 								AID victimAid = new AID(message.getChoice(), AID.ISLOCALNAME);
 								myAgt.werewolvesEndedWithChoice(victimAid);
 							}
+							else {
+								myAgt.werewolvesEndedWithChoice(null);
+							}
 						}	break;
 						case ELECT_MAYOR:
-							//TODO: notify all the roles about who the new mayor is
-							//TODO: agent storyteller will be able to nextPhase when clock ticks
+							if(message.getChoice()!=null){
+								AID mayorAid = new AID(message.getChoice(), AID.ISLOCALNAME);
+								myAgt.mayorElectionEndedWithChoice(mayorAid);
+							}
+							else {
+								myAgt.mayorElectionEndedWithChoice(null);
+							}
 							break;
 						case SUCCESSOR:
 							//TODO: notify all the roles about who the new mayor is

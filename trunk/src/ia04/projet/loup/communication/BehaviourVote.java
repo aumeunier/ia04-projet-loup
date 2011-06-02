@@ -25,14 +25,12 @@ public class BehaviourVote extends CyclicBehaviour {
 		if (startMessage != null) {
 			switch (startMessage.getPerformative()) {
 			case ACLMessage.SUBSCRIBE:
-				mVoteRegister aVoteRegister = mVoteRegister
-						.parseJson(startMessage.getContent());
+				mVoteRegister aVoteRegister = mVoteRegister.parseJson(startMessage.getContent());
 				this.agtVote.addPlayer(startMessage.getSender(),
 						aVoteRegister.getRole());
 				break;
 			case ACLMessage.REQUEST:
-				mVoteRun runVote = mVoteRun
-						.parseJson(startMessage.getContent());
+				mVoteRun runVote = mVoteRun.parseJson(startMessage.getContent());
 				if (runVote != null) {
 					this.agtVote.setStoryTeller(startMessage.getSender());
 					this.agtVote.election(runVote, true);
@@ -48,12 +46,12 @@ public class BehaviourVote extends CyclicBehaviour {
 					if(aDeath != null){
 						this.agtVote.deaths(aDeath);
 					}
-				else {
-					mStartGame generalMessage = mStartGame.parseJson(startMessage.getContent());
-					if(generalMessage != null){
-						this.agtVote.startGame();
+					else {
+						mStartGame generalMessage = mStartGame.parseJson(startMessage.getContent());
+						if(generalMessage != null){
+							this.agtVote.startGame();
+						}
 					}
-				}
 				}
 				break;
 			}
