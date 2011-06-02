@@ -11,6 +11,7 @@ import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mStorytellerKb;
 import ia04.projet.loup.messages.mStorytellerPlayer;
 import ia04.projet.loup.messages.mVoteRun;
+import ia04.projet.loup.messages.mStorytellerPlayer.mType;
 import ia04.projet.loup.players.AgtPlayer;
 import jade.core.AID;
 import jade.core.Agent;
@@ -394,6 +395,32 @@ public class AgtStoryteller extends Agent {
 	//TODO: actions reactions
 
 ////////////////////////////////////////////////////////////////////////////////
+/////////////// 	 ANSWERS TO VOTES      
+////////////////////////////////////////////////////////////////////////////////
+	/**
+	 * Treatment of the werewolves' vote results
+	 * @param choice The target
+	 */
+	public void werewolvesEndedWithChoice(AID choice){
+		Debugger.println("Werewolves target: "+choice.getLocalName());
+		if(choice!=null){
+			this.addVictim(choice);
+		}
+		this.nbWaitingAnswers=0;
+	}
+	/**
+	 * Treatment of the paysans' vote results
+	 * @param choice The target
+	 */
+	public void paysansEndedWithChoice(AID choice){
+		Debugger.println("Future hung: "+choice.getLocalName());
+		if(choice!=null){
+			this.addVictim(choice);
+		}
+		this.nbWaitingAnswers=0;		
+	}
+	
+////////////////////////////////////////////////////////////////////////////////
 /////////////// 	 PHASES MANAGEMENT
 ////////////////////////////////////////////////////////////////////////////////
 	/**
@@ -644,12 +671,19 @@ public class AgtStoryteller extends Agent {
 		case VICTIMSEVENT:
 			break;
 		case VICTIMSRESOLUTION:
+			for(AID aid: this.lastVictimsRoles){
+				mStorytellerPlayer message = new mStorytellerPlayer();
+				message.setPhase(phase);
+				message.setType(mType.DIE);
+				message.setStoryTelling(aid.getLocalName()+", you are dead. Goodbye.");
+				sendMessageToOneRegisteredAgent(aid, message);
+			}
 			gameIsOver = this.checkGameIsOver();
+			lastVictimsRoles.clear();
 			break;
 		case MAYORELECTION:
 			break;
 		case HUNGVOTE:
-			lastVictimsRoles.clear();
 			break;
 		case HUNGREVELATION:
 			break;

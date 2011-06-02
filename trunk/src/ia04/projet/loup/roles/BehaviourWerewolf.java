@@ -26,28 +26,26 @@ public class BehaviourWerewolf extends RoleBehaviour {
 		AID msgSender = msg.getSender();
 		int msgPerformative = msg.getPerformative();	
 
-		System.out.println("Wolf receives message");
-
 		//TODO check who sent the message (DF) if( msgSender == ACTION || ADVICE || VOTE)
 		switch(msgPerformative){
 		case ACLMessage.INFORM: 
 			/** Gets votes of all the werewolves */
-			Debugger.println("BehaviourWerewolf: get the result of the vote");
+			//Debugger.println("BehaviourWerewolf: get the result of the vote");
 			mVoteResult msgResultContent = (mVoteResult)mMessage.parseJson(msgString, mVoteResult.class);
 			if (msgResultContent.getType() == AgtVote.voteType.VOTE_WW){
 				((AgtWerewolf)myAgent).setLastVote(msgResultContent.getWhoVotesForWho());
-				((AgtWerewolf)myAgent).updateConfidenceVoteWerewolf();
+				//((AgtWerewolf)myAgent).updateConfidenceVoteWerewolf();
 			}
 			break;
 		case ACLMessage.REQUEST: 
 			/** Votes for the victim of the night */
-			Debugger.println("BehaviourWerewolf: vote to eat somebody");
+			//Debugger.println("BehaviourWerewolf: vote to eat somebody");
 			mVote msgContent = (mVote)mMessage.parseJson(msgString, mVote.class);
 			if (msgContent.getType() == AgtVote.voteType.VOTE_WW){
 				/** if this isn't the first turn updates the confidence levels */
 				if(msgContent.getWhoVotesForWho()==null){
 					((AgtWerewolf)myAgent).setLastVote(msgContent.getWhoVotesForWho());
-					((AgtWerewolf)myAgent).updateConfidenceVoteWerewolf();
+					//((AgtWerewolf)myAgent).updateConfidenceVoteWerewolf();
 				}
 				msgContent.setChoice(((AgtWerewolf) myAgent).eatSomebody(msgContent.getCandidates()));
 				ACLMessage response = msg.createReply();

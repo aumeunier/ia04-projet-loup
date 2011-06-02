@@ -1,5 +1,6 @@
 package ia04.projet.loup.players;
 
+import ia04.projet.loup.Debugger;
 import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mPlayerRole;
 import ia04.projet.loup.messages.mStorytellerPlayer;
@@ -37,7 +38,7 @@ public class BehaviourPlayer extends Behaviour {
 				// 3. Role attribution
 				// 4. Eventual additional messages concerning the role attribution
 				// 5. End of the game
-				
+
 				mStorytellerPlayer msgObj = (mStorytellerPlayer) mMessage.parseJson(msgString, mStorytellerPlayer.class);
 				switch(msgObj.getType()){
 				case START_GAME :
@@ -48,14 +49,15 @@ public class BehaviourPlayer extends Behaviour {
 						((AgtPlayer) myAgent).RoleInstance(msgObj.getRole());
 						ACLMessage reply = msg.createReply();
 						reply.setContent(msgObj.toJson());
-						myAgent.send(reply); // Added by Aurelien
+						myAgent.send(reply);
 					} catch (StaleProxyException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					break;
 				case STORYTELLING :
 					((AgtPlayer) myAgent).StoryTransfertToGui(msg);
+					break;
+				case DIE:
 					break;
 				default : break;
 				}			

@@ -18,7 +18,6 @@ public class BehaviourRole extends RoleBehaviour {
 	 */
 	@Override
 	public void roleAction(ACLMessage msg) {
-		System.out.println("Role received message");
 		if(true){
 			return; // I don't want to remove the behaviours at each tick of action() ..
 		}
