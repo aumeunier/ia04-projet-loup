@@ -2,6 +2,7 @@ package ia04.projet.loup.roles;
 
 import ia04.projet.loup.messages.mAction;
 import ia04.projet.loup.messages.mMessage;
+import ia04.projet.loup.messages.mPlayerDied;
 import ia04.projet.loup.messages.mStartGame;
 import ia04.projet.loup.messages.mVote;
 import ia04.projet.loup.messages.mVoteResult;
@@ -37,16 +38,23 @@ public class BehaviourRole extends RoleBehaviour {
 			for(String player : msgContent.getLocalNames()){
 				((AgtRole)myAgent).confidenceLevel.put(player, new ConfidenceLevel());
 			}
+		} else {
+			message = mMessage.parseJson(msgString, mPlayerDied.class);
+			if(message != null){
+				mPlayerDied msgontent = (mPlayerDied)message;
+				((AgtRole)myAgent).iAmDead();
+				for(Behaviour aBehaviour: ((AgtRole)myAgent).behaviours){
+					myAgent.removeBehaviour(aBehaviour);
+				}
+				myAgent.addBehaviour(new BehaviourDead());
+				msgontent.setIsOver(true);
+				msgontent.setDeadName(myAgent.getLocalName());
+				response.setPerformative(ACLMessage.INFORM);
+				myAgent.send(response);
+				
+			}
 		}
-		
-		if(true){
-			return; // I don't want to remove the behaviours at each tick of action() ..
-		}
-		/** TODO if the player died, remove every behavior and add the deadBehaviour */
-		for(Behaviour aBehaviour: ((AgtRole)myAgent).behaviours){
-			myAgent.removeBehaviour(aBehaviour);
-		}
-		myAgent.addBehaviour(new BehaviourDead());
 		/** TODO wait for the end of the game */
+
 	}
 }

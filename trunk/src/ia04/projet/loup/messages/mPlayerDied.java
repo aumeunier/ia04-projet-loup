@@ -3,24 +3,21 @@ package ia04.projet.loup.messages;
 import java.util.ArrayList;
 
 public class mPlayerDied extends mMessage {
-	private int nbPeopleDead;
-	private ArrayList<String> deadNames = new ArrayList<String>();
+	private boolean isOver = false;
+	private String deadName;
 	
-	public int getNbPeopleDead(){
-		return nbPeopleDead;
+	public boolean getIsOver(){
+		return isOver;
 	}
-	public void setNbPeopleDead(int nb){
-		this.nbPeopleDead = nb;
+	public void setIsOver(Boolean state){
+		this.isOver = state;
 	}
 	
-	public ArrayList<String> getDeadNames(){
-		return deadNames;
+	public String getDeadName(){
+		return deadName;
 	}
-	public void setDeadNames(ArrayList<String> _deadNames){
-		this.deadNames = _deadNames;
-	}
-	public void addDead(String deadName){
-		this.deadNames.add(deadName);
+	public void setDeadName(String _deadName){
+		this.deadName = _deadName;
 	}
 		
 	/**
