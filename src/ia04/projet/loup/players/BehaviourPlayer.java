@@ -1,9 +1,9 @@
 package ia04.projet.loup.players;
 
-import ia04.projet.loup.Debugger;
 import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mPlayerRole;
 import ia04.projet.loup.messages.mStorytellerPlayer;
+import ia04.projet.loup.messages.mToGui.mType;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 import jade.wrapper.StaleProxyException;
@@ -30,7 +30,7 @@ public class BehaviourPlayer extends Behaviour {
 				// 1. Reception of information concerning the db (stats, can be reused in future games)
 				
 				mPlayerRole msgObj = (mPlayerRole) mMessage.parseJson(msgString, mPlayerRole.class);
-				
+				System.out.println("reçu" + msgObj.type);
 			} else {
 				// C - Message can come from an AgtStoryteller:			
 				// 1. Inscription validation
@@ -42,7 +42,7 @@ public class BehaviourPlayer extends Behaviour {
 				mStorytellerPlayer msgObj = (mStorytellerPlayer) mMessage.parseJson(msgString, mStorytellerPlayer.class);
 				switch(msgObj.getType()){
 				case START_GAME :
-					((AgtPlayer)myAgent).JoinGame(msg, msgObj, true);
+					((AgtPlayer)myAgent).JoinGame(msg, msgObj);
 					break;
 				case ATTRIBUTE_ROLE :
 					try {
@@ -53,9 +53,10 @@ public class BehaviourPlayer extends Behaviour {
 					} catch (StaleProxyException e) {
 						e.printStackTrace();
 					}
+					((AgtPlayer) myAgent).TransfertToGui(mType.ROLE,msgObj.getRole().toString());
 					break;
 				case STORYTELLING :
-					((AgtPlayer) myAgent).StoryTransfertToGui(msg);
+					((AgtPlayer) myAgent).TransfertToGui(mType.STORYTELLING,msgObj.getStoryTelling());
 					break;
 				case DIE:
 					break;

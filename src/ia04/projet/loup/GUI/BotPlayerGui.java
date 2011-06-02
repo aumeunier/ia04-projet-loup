@@ -1,5 +1,7 @@
 package ia04.projet.loup.gui;
 
+import jade.core.AID;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
@@ -23,10 +25,10 @@ public class BotPlayerGui extends JFrame implements ActionListener{
 	JTextArea role;
 	JTextArea StoryView;
 	JTextArea PlayerList;
-	GuiAgtPlayer MyPlayerAgent;
+	AID MyPlayerAgent;
 	
 	
-	public BotPlayerGui(String arg0, GuiAgtPlayer agt) throws HeadlessException {
+	public BotPlayerGui(String arg0, AID agt) throws HeadlessException {
 		super(arg0);
 		this.MyPlayerAgent = agt;
 		initialize(arg0);
@@ -106,6 +108,8 @@ public class BotPlayerGui extends JFrame implements ActionListener{
 		mainPanel.add(role,cRole);
 		mainPanel.add(StoryView,cStoryView);
 		mainPanel.add(PlayerList,cPlayerList);
+		
+		this.add(mainPanel);
 	}
 	
 	@Override
