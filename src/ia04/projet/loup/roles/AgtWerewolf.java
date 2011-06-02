@@ -16,7 +16,6 @@ public class AgtWerewolf extends AgtRole {
 	
 	public AgtWerewolf () {
 		super();
-		Debugger.println("AgtWerewofl: constructor");
 		addAndSaveBehaviour(new BehaviourWerewolf());
 	}
 	/** initialize the role of the agent */

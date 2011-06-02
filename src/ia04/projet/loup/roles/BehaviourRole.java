@@ -21,6 +21,7 @@ public class BehaviourRole extends Behaviour {
 		/** launched at the beginning of the game */
 		ACLMessage msg = myAgent.receive();
 		if(msg != null){
+			System.out.println("Role received message");
 			if(true){
 				return; // I don't want to remove the behaviours at each tick of action() ..
 			}

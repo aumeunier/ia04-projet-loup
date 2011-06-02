@@ -27,6 +27,8 @@ public class PhaseClock {
 	private AgtStoryteller storyteller;
 	/** The current phase of the timer */
 	private Global.GamePhases currentPhase = Global.GamePhases.NONE;
+	/** How long should the phase be ? */
+	private int previousPhaseDuration;
 
 	/**
 	 * Default constructor to use.  
@@ -100,17 +102,17 @@ public class PhaseClock {
 		this.currentPhase = clockPhase;
 
 		// PhaseClock operations
-		int lengthOfPhase = 0;
+		int phaseDuration = 0;
 		switch(currentPhase){
 		case NONE:
 			startNextPhase();
 			return;
 		case NIGHT:
 			nbOfTurns++;
-			lengthOfPhase = (int) (5000*AVERAGE_SPEED);
+			phaseDuration = (int) (5000*AVERAGE_SPEED);
 			break;
 		default:
-			lengthOfPhase = (int) (5000*AVERAGE_SPEED);
+			phaseDuration = (int) (5000*AVERAGE_SPEED);
 			break;				
 		}
 		
@@ -118,13 +120,26 @@ public class PhaseClock {
 		storyteller.willStartPhase(currentPhase);
 		
 		// Start a timer for the phase if necessary
-		if(lengthOfPhase > 0 && this.isTimerRunning){
+		if(phaseDuration > 0 && this.isTimerRunning){
 			timer.schedule(new TimerTask(){
 				@Override
 				public void run() {
 					storyteller.endOfPhase(currentPhase);
 				}			
-			}, lengthOfPhase);
+			}, phaseDuration);
+			this.previousPhaseDuration = phaseDuration;
 		}
+	}
+	
+	/**
+	 * Used to give more time to the current phase
+	 */
+	public void restartPhaseTimer(){
+		timer.schedule(new TimerTask(){
+			@Override
+			public void run() {
+				storyteller.endOfPhase(currentPhase);
+			}			
+		}, previousPhaseDuration);
 	}
 }

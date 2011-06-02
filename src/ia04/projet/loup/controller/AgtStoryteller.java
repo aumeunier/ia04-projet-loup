@@ -73,7 +73,7 @@ public class AgtStoryteller extends Agent {
 	 */
 	public AgtStoryteller(){
 		super();
-		this.addBehaviour(new BehaviourStoryteller(this));
+		this.addBehaviour(new BehaviourStoryteller());
 		this.phaseClock = new PhaseClock(this);
 		this.nbWaitingAnswers = 0;
 	}	
@@ -518,6 +518,7 @@ public class AgtStoryteller extends Agent {
 			// Start a vote between the werewolves
 			mVoteRun voteMsg = new mVoteRun(AgtVote.voteType.VOTE_WW);
 			this.sendMessageToVoteAgent(voteMsg);
+			this.nbWaitingAnswers = 1;
 		}	break;
 			
 		case WITCH:
@@ -600,6 +601,11 @@ public class AgtStoryteller extends Agent {
 	 */
 	public void endOfPhase(GamePhases phase){
 		boolean gameIsOver = false;
+		// Give more time
+		if(this.nbWaitingAnswers > 0){
+			phaseClock.restartPhaseTimer();
+			return;
+		}
 		// TODO: lots of stuff to do
 		switch(phase){
 		case NONE:
