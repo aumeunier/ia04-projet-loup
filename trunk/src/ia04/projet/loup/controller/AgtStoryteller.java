@@ -6,7 +6,6 @@ import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.GamePhases;
 import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.communication.AgtVote;
-import ia04.projet.loup.messages.mActionRequest;
 import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mPlayerDied;
 import ia04.projet.loup.messages.mStartGame;
@@ -150,6 +149,7 @@ public class AgtStoryteller extends Agent {
 				AgtPlayer player = new AgtPlayer();
 				ac = mc.acceptNewAgent("player"+i, player);
 				ac.start();
+				player.GuiCreation();
 				// Register the Agent to this AgtStoryteller
 				player.Register(this.getAID());
 			}			

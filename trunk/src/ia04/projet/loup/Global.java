@@ -13,6 +13,7 @@ public class Global {
 	public static final String LOCALNAME_ACTION = "Action";
 	public static final String LOCALNAME_ADVICE = "Advice";
 	public static final String LOCALNAME_SUFFIX_ROLE = "Role";
+	public static final String LOCALNAME_SUFFIX_GUI = "Gui";
 	/**
 	 * This enumeration contains the different game phases we have in the game.
 	 * These phases are used to modify the player's interface.

@@ -1,5 +1,6 @@
 package ia04.projet.loup.gui;
 
+import ia04.projet.loup.Global;
 import ia04.projet.loup.messages.mToGui;
 import jade.core.AID;
 import jade.gui.GuiAgent;
@@ -14,11 +15,10 @@ public class GuiAgtPlayer extends GuiAgent {
 	AID myAgt, roleAgt;
 	
 
-	public GuiAgtPlayer(AID id, AID role) {
+	public GuiAgtPlayer(AID id) {
 		super();
 		myAgt = id;
-		roleAgt = role;
-		myGui = new BotPlayerGui(id.getLocalName(),this);
+		myGui = new BotPlayerGui(id.getLocalName(),id);
 		myGui.setVisible(true);
 		
 		this.addBehaviour(new BehavGuiAgtPlyer());
@@ -38,14 +38,15 @@ public class GuiAgtPlayer extends GuiAgent {
 			break;
 		case ROLE:
 			myGui.setRole(msgObj.getRole().toString());
+			roleAgt = new AID(myAgt.getLocalName()+Global.LOCALNAME_SUFFIX_ROLE,AID.ISLOCALNAME);
 			break;
-		case PHASE_ACTION :
-			myGui.setStoryView(msgObj.getStoryTelling());
+		case STORYTELLING :
+			myGui.setStoryView(msgObj.getValue());
 			break;
 		default: break;
 		
 		}
-		
+		myGui.repaint();
 	}
 	//getters and setters
 	public BotPlayerGui getMyGui() {

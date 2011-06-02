@@ -1,5 +1,6 @@
 package ia04.projet.loup.gui;
 
+import ia04.projet.loup.Debugger;
 import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mToGui;
 import jade.core.behaviours.Behaviour;
@@ -19,6 +20,7 @@ public class BehavGuiAgtPlyer extends Behaviour {
 			String msgString = msg.getContent();
 			mToGui msgObj = (mToGui) mMessage.parseJson(msgString, mToGui.class);
 			((GuiAgtPlayer) myAgent).guiMaj(msgObj);
+			Debugger.println(myAgent.getAID().getLocalName().toString()+" reçoit "+ msgString);
 		}
 	}
 

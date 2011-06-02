@@ -1,14 +1,16 @@
 package ia04.projet.loup.players;
 
+import ia04.projet.loup.Debugger;
 import ia04.projet.loup.Global;
+import ia04.projet.loup.gui.GuiAgtPlayer;
 import ia04.projet.loup.messages.mStorytellerPlayer;
+import ia04.projet.loup.messages.mToGui;
 import ia04.projet.loup.roles.AgtRole;
 import ia04.projet.loup.roles.AgtWerewolf;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
 import jade.wrapper.AgentContainer;
-import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
 
 
@@ -18,7 +20,7 @@ public class AgtPlayer extends Agent {
 
 	private AID RoleID, GuiID;
 
-	public AgtPlayer() {
+	public AgtPlayer() throws StaleProxyException {
 		super();
 		this.addBehaviour(new BehaviourPlayer());
 		setRoleID(null);
@@ -39,16 +41,22 @@ public class AgtPlayer extends Agent {
 		this.send(msg);
 	}
 
+	public void GuiCreation() throws StaleProxyException{
+		GuiAgtPlayer guiAgt = new GuiAgtPlayer(this.getAID());
+		GuiID = guiAgt.getAID();
+		AgentContainer mc = this.getContainerController();
+		mc.acceptNewAgent(this.getLocalName()+Global.LOCALNAME_SUFFIX_GUI, guiAgt).start();
+	}
 	/**
 	 * Answer to storyTeller request to join a game
 	 * @param msg Request from the StoryTeller
 	 * @param value This player answer value.
 	 * @author Guillaume
 	 * **/
-	public void JoinGame(ACLMessage msg, mStorytellerPlayer mObj, boolean value){
+	public void JoinGame(ACLMessage msg, mStorytellerPlayer mObj){
 		//Accept to join the beginning game
 		ACLMessage response = msg.createReply();
-		mObj.setParticipateInGame(value);
+		mObj.setParticipateInGame(true);
 		String Jmsg = mObj.toJson();
 		response.setContent(Jmsg);
 		this.send(response);						
@@ -102,7 +110,7 @@ public class AgtPlayer extends Agent {
 		
 		// Create the role on the platform and register it
 		AgentContainer mc = this.getContainerController();
-		this.getContainerController().acceptNewAgent(this.getLocalName()+Global.LOCALNAME_SUFFIX_ROLE, agtR).start();
+		mc.acceptNewAgent(this.getLocalName()+Global.LOCALNAME_SUFFIX_ROLE, agtR).start();
 		agtR.registerToCommunicationAgents();
 		setRoleID(agtR.getAID());
 	}
@@ -112,9 +120,13 @@ public class AgtPlayer extends Agent {
 	 * @param msg Informative message from storyTeller
 	 * @author Guillaume
 	 * **/
-	public void StoryTransfertToGui(ACLMessage msg){
+	public void TransfertToGui(mToGui.mType type, String val){
 		ACLMessage toGui = new ACLMessage(ACLMessage.INFORM);
-		toGui.setContent(msg.getContent());
+		mToGui msg = new mToGui();
+		msg.setType(type);
+		msg.setValue(val);
+		toGui.setContent(msg.toJson());
+		toGui.addReceiver(GuiID);
 		this.send(toGui);
 	}
 

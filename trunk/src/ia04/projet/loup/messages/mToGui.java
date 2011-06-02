@@ -14,7 +14,7 @@ public class mToGui extends mMessage {
 		// Following are usually player/gui exchange
 		STATUS, PLAYERS_LIST, ROLE, LEAVE_GAME, 
 		// Following are used both ways
-		PHASE_ACTION,
+		STORYTELLING,
 		// Following are usually role/gui exchange
 		VOTE_TO, 
 	}
@@ -22,7 +22,6 @@ public class mToGui extends mMessage {
 	private mType type;
 	private Global.Roles role;
 	private Global.GamePhases phase;
-	private String storyTelling;
 	private String value;
 	
 	public mToGui (){
@@ -51,14 +50,6 @@ public class mToGui extends mMessage {
 
 	public void setPhase(Global.GamePhases phase) {
 		this.phase = phase;
-	}
-
-	public String getStoryTelling() {
-		return storyTelling;
-	}
-
-	public void setStoryTelling(String storyTelling) {
-		this.storyTelling = storyTelling;
 	}
 
 	public String getValue() {
