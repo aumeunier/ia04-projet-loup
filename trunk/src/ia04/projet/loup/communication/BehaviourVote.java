@@ -1,6 +1,7 @@
 package ia04.projet.loup.communication;
 
 import ia04.projet.loup.messages.mMessage;
+import ia04.projet.loup.messages.mPlayerDied;
 import ia04.projet.loup.messages.mStartGame;
 import ia04.projet.loup.messages.mVote;
 import ia04.projet.loup.messages.mVoteRegister;
@@ -43,10 +44,16 @@ public class BehaviourVote extends CyclicBehaviour {
 					this.agtVote.addVote(startMessage.getSender(), aVote);
 				}
 				else {
+					mPlayerDied aDeath = mPlayerDied.parseJson(startMessage.getContent());
+					if(aDeath != null){
+						this.agtVote.deaths(aDeath);
+					}
+				else {
 					mStartGame generalMessage = mStartGame.parseJson(startMessage.getContent());
 					if(generalMessage != null){
 						this.agtVote.startGame();
 					}
+				}
 				}
 				break;
 			}
