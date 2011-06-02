@@ -1,5 +1,6 @@
 package ia04.projet.loup.roles;
 
+import ia04.projet.loup.Debugger;
 import ia04.projet.loup.communication.AgtVote;
 import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mVote;
@@ -8,6 +9,7 @@ import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 
 public class BehaviourWerewolf extends Behaviour {
 
@@ -30,6 +32,7 @@ public class BehaviourWerewolf extends Behaviour {
 			switch(msgPerformative){
 			case ACLMessage.INFORM: 
 				/** Gets votes of all the werewolves */
+				Debugger.println("BehaviourWerewolf: get the result of the vote");
 				mVoteResult msgResultContent = (mVoteResult)mMessage.parseJson(msgString, mVoteResult.class);
 				if (msgResultContent.getType() == AgtVote.voteType.VOTE_WW){
 					((AgtWerewolf)myAgent).setLastVote(msgResultContent.getWhoVotesForWho());
@@ -38,6 +41,7 @@ public class BehaviourWerewolf extends Behaviour {
 				break;
 			case ACLMessage.REQUEST: 
 				/** Votes for the victim of the night */
+				Debugger.println("BehaviourWerewolf: vote to eat somebody");
 				mVote msgContent = (mVote)mMessage.parseJson(msgString, mVote.class);
 				if (msgContent.getType() == AgtVote.voteType.VOTE_WW){
 					/** if this isn't the first turn updates the confidence levels */
