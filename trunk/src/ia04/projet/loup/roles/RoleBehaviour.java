@@ -4,6 +4,11 @@ import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 
 public class RoleBehaviour extends Behaviour {
+	private boolean isDone=false;
+	
+	public void setIsDone(){
+		isDone = true;
+	}
 
 	@Override
 	public void action() {
@@ -19,6 +24,6 @@ public class RoleBehaviour extends Behaviour {
 
 	@Override
 	public boolean done() {
-		return false;
+		return isDone;
 	}
 }

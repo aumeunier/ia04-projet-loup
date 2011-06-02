@@ -273,7 +273,7 @@ public class AgtStoryteller extends Agent {
 		message.setType(mStorytellerPlayer.mType.ATTRIBUTE_ROLE);
 		message.setRole(role);
 		message.setStoryTelling("Your role for this game is "+message.getRole());
-		this.sendMessageToOneRegisteredAgent(player, message);
+		this.sendMessageToOneRegisteredAgent(player, message, ACLMessage.REQUEST);
 		this.nbWaitingAnswers++;
 	}
 	/**
@@ -406,14 +406,23 @@ public class AgtStoryteller extends Agent {
 	 * The communication agent is notified about that.
 	 */
 	public void killVictims(){
-		Global.GamePhases phase = this.phaseClock.getCurrentPhase();
 		for(AID victim: this.lastVictimsRoles){
-			mStorytellerPlayer message = new mStorytellerPlayer();
-			message.setPhase(phase);
-			message.setType(mType.DIE);
-			message.setStoryTelling(victim.getLocalName()+", you are dead. Goodbye.");
-			sendMessageToOneRegisteredAgent(victim, message);
+			this.playersMap.put(victim, Global.Roles.DEAD);
+			mPlayerDied message = new mPlayerDied();
+			message.setIsOver(false);
+			message.setDeadName(victim.getLocalName());
+			sendMessageToOneRegisteredAgent(victim, message, ACLMessage.INFORM);
+			Debugger.println(victim.getLocalName()+" died.");
 		}
+		
+		// Wait for the players to clean their role
+		this.nbWaitingAnswers = this.lastVictimsRoles.size();
+	}
+	/**
+	 * A player finished his 'iAmDead' stuff
+	 */
+	public void playerFinishedBeingKilled(){
+		this.nbWaitingAnswers--;
 	}
 	//TODO: actions reactions
 
@@ -898,11 +907,10 @@ public class AgtStoryteller extends Agent {
 	 * @param aid The AID of the agents to whom we want to send the message
 	 * @param message The message object to serialize and send as content
 	 */
-	public void sendMessageToOneRegisteredAgent(AID aid, mStorytellerPlayer message){
-		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+	public void sendMessageToOneRegisteredAgent(AID aid, mMessage message, int messageType){
+		ACLMessage msg = new ACLMessage(messageType);
 		msg.addReceiver(aid);
 		msg.setContent(message.toJson());
-		Debugger.println(message.getStoryTelling());
 		this.send(msg);
 	}
 	/**

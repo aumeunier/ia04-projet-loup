@@ -45,6 +45,7 @@ public class BehaviourWerewolf extends RoleBehaviour {
 			//Debugger.println("BehaviourWerewolf: vote to eat somebody");
 			mVote msgContent = (mVote)mMessage.parseJson(msgString, mVote.class);
 			if (msgContent.getType() == AgtVote.voteType.VOTE_WW){
+				System.out.println(msgContent.getCandidates().toString());
 				/** if this isn't the first turn updates the confidence levels */
 				if(msgContent.getWhoVotesForWho()==null){
 					((AgtWerewolf)myAgent).setLastVote(msgContent.getWhoVotesForWho());

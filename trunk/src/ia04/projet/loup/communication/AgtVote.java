@@ -83,7 +83,9 @@ public class AgtVote extends Agent {
 		} else {
 			HashMap<String, mVote> temp = new HashMap<String, mVote>();
 			for (Entry<AID, mVote> entry : this.whoVotesForWho.entrySet()) {
-				temp.put(entry.getKey().getLocalName(), entry.getValue());
+				mVote tempVote = entry.getValue();
+				tempVote.setWhoVotesForWho(null);
+				temp.put(entry.getKey().getLocalName(), tempVote);
 			}
 			aVote.setWhoVotesForWho(temp);
 		}
@@ -94,28 +96,33 @@ public class AgtVote extends Agent {
 		case VOTE_PAYSAN:
 			for (Entry<AID, Roles> entry : this.playersMap.entrySet()) {
 				AID aid = entry.getKey();
-				aVote.getCandidates().add(aid.getLocalName());
-				lastElectionResult.put(aid.getLocalName(), 0);
+				if(entry.getValue() != Roles.DEAD){
+					aVote.getCandidates().add(aid.getLocalName());
+					lastElectionResult.put(aid.getLocalName(), 0);
+					this.remainingVotes++;
+				}
 				voteMessage.addReceiver(aid);
-				this.remainingVotes++;
 			}
 			break;
 		case ELECT_MAYOR:
 			for (Entry<AID, Roles> entry : this.playersMap.entrySet()) {
 				AID aid = entry.getKey();
-				aVote.getCandidates().add(aid.getLocalName());
-				lastElectionResult.put(aid.getLocalName(), 0);
+				if(entry.getValue() != Roles.DEAD){
+					aVote.getCandidates().add(aid.getLocalName());
+					lastElectionResult.put(aid.getLocalName(), 0);
+					this.remainingVotes++;
+				}
 				voteMessage.addReceiver(aid);
-				this.remainingVotes++;
 			}
 			break;
 		case VOTE_WW:
 			for (Entry<AID, Roles> entry : this.playersMap.entrySet()) {
 				AID aid = entry.getKey();
+				voteMessage.addReceiver(aid);
 				if (entry.getValue() == Global.Roles.WEREWOLF) {
 					voteMessage.addReceiver(aid);
 					this.remainingVotes++;
-				} else {
+				} else if(entry.getValue() != Roles.DEAD){
 					aVote.getCandidates().add(aid.getLocalName());
 					lastElectionResult.put(aid.getLocalName(), 0);
 				}
@@ -200,8 +207,6 @@ public class AgtVote extends Agent {
 				winner = aCandidates;
 			}
 		}
-		
-		Debugger.println("Winner:"+winner);
 
 		/* Inform the electors of the final result */
 		ACLMessage message = new ACLMessage(ACLMessage.INFORM);
@@ -253,23 +258,22 @@ public class AgtVote extends Agent {
 	 * @param deathMessage the mPlayerDied sent to this agent
 	 */
 	public void deaths(mPlayerDied deathMessage){
-		ArrayList<String> deathNames = deathMessage.getDeadNames();
-		for(String death: deathNames){
-			AID deathAid = new AID(death,AID.ISLOCALNAME);
-			this.playersMap.put(deathAid, Global.Roles.DEAD);
-		}
+		// Change the player's role in the map
+		String deadPlayer = deathMessage.getDeadName();
+		AID deathAid = new AID(deadPlayer,AID.ISLOCALNAME);
+		this.playersMap.put(deathAid, Global.Roles.DEAD);
+		
+		// Notify the other players
+		/*
 		ACLMessage message = new ACLMessage(ACLMessage.INFORM);
 		message.setContent(deathMessage.toJson());
 		for(AID aid: playersMap.keySet()){
-			message.addReceiver(aid);
-		}
-		Debugger.println("AgtVote received death message");
-		if(Debugger.isOn()){
-			for(Entry<AID,Roles> entry: playersMap.entrySet()){
-				Debugger.println(entry.getKey().getLocalName()+" "+entry.getValue());
+			if(aid != deathAid){
+				message.addReceiver(aid);
 			}
 		}
 		this.send(message);
+		*/
 	}
 	/**
 	 * Add a player to the playerMap
