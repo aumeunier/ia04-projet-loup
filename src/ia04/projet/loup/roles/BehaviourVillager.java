@@ -51,21 +51,25 @@ public class BehaviourVillager extends RoleBehaviour {
 				response.setPerformative(ACLMessage.INFORM);
 				myAgent.send(response);
 				msg = myAgent.receive();
-				mVoteResult msgResultContent = (mVoteResult)mMessage.parseJson(msgString, mVoteResult.class);
-				((AgtRole) myAgent).setLastVote(msgResultContent.getWhoVotesForWho());
+				
 				break;
 			}
 		}
-		else {
-			message = mMessage.parseJson(msgString, mAction.class);
-
-			// if msgSender == ACTION
+		else 
+			message = mMessage.parseJson(msgString, mVoteResult.class);
 			if(message!=null){
-				mAction msgContent = (mAction)message;
-				// TODO:
-			}
-			else {
-				// TODO: advice
+				mVoteResult msgContent = (mVoteResult)message;
+				((AgtRole) myAgent).setLastVote(msgContent.getWhoVotesForWho());
+		}
+			else{
+				message = mMessage.parseJson(msgString, mAction.class);
+				// if msgSender == ACTION
+				if(message!=null){
+					mAction msgContent = (mAction)message;
+					// TODO:
+				}
+				else {
+					// TODO: advice
 			}
 		}
 	}
