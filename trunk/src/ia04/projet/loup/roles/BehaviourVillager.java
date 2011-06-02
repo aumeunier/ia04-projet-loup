@@ -41,6 +41,7 @@ public class BehaviourVillager extends Behaviour {
 				switch (msgContent.getType()){
 				/** TODO beta1 mayor election - Message can come from the AgtAdvice */		
 				case ELECT_MAYOR: 
+					msg.setPerformative(ACLMessage.INFORM);
 					msgContent.setChoice(((AgtRole) myAgent).electMayor(msgContent.getCandidates()));
 					response.setContent(msgContent.toJson());
 					myAgent.send(response);
@@ -50,6 +51,7 @@ public class BehaviourVillager extends Behaviour {
 					msgContent.setNumbreOfVoices(((AgtRole)myAgent).getVoices());
 					msgContent.setChoice(((AgtRole) myAgent).vote(msgContent.getCandidates()));
 					response.setContent(msgContent.toJson());
+					response.setPerformative(ACLMessage.INFORM);
 					myAgent.send(response);
 					msg = myAgent.receive();
 					mVoteResult msgResultContent = (mVoteResult)mMessage.parseJson(msgString, mVoteResult.class);

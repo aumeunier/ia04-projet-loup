@@ -47,6 +47,7 @@ public class BehaviourWerewolf extends Behaviour {
 					}
 					msgContent.setChoice(((AgtWerewolf) myAgent).eatSomebody(msgContent.getCandidates()));
 					ACLMessage response = msg.createReply();
+					response.setPerformative(ACLMessage.INFORM);
 					response.setContent(msgContent.toJson());
 					myAgent.send(response);
 				}

@@ -56,7 +56,7 @@ public class AgtRole extends Agent {
 	public AgtRole() {
 		super();
 		initializeRole();
-		addBehaviour(new BehaviourRegister()); //TODO: useless for now
+		//addBehaviour(new BehaviourRegister()); //TODO: useless for now
 		addAndSaveBehaviour(new BehaviourRole());
 		addAndSaveBehaviour(new BehaviourVillager());
 		initializeConfidenceLevel();
