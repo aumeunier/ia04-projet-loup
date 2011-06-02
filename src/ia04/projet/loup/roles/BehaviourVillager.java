@@ -8,7 +8,7 @@ import jade.core.AID;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 
-public class BehaviourVillager extends Behaviour {
+public class BehaviourVillager extends RoleBehaviour {
 
 	/**
 	 * 
@@ -21,62 +21,52 @@ public class BehaviourVillager extends Behaviour {
 	 * @author claquette
 	 */
 	@Override
-	public void action() {
+	public void roleAction(ACLMessage msg) {
 		/** Waits the sunrise */
+		// Message reception
+		String msgString = msg.getContent();
+		AID msgSender = msg.getSender();
+		int msgPerformative = msg.getPerformative();
 
-		ACLMessage msg = myAgent.receive();
-		if(msg != null){
-			// Message reception
-			String msgString = msg.getContent();
-			AID msgSender = msg.getSender();
-			int msgPerformative = msg.getPerformative();
-
-			/** TODO Checks the source of the message */
-			//if( msgSender == ACTION || ADVICE || VOTE)
-			ACLMessage response = msg.createReply();
-			mMessage message = mMessage.parseJson(msgString, mVote.class);
-			// if msgSender == Vote
-			if(message!=null){
-				mVote msgContent = (mVote)message;
-				switch (msgContent.getType()){
-				/** TODO beta1 mayor election - Message can come from the AgtAdvice */		
-				case ELECT_MAYOR: 
-					msg.setPerformative(ACLMessage.INFORM);
-					msgContent.setChoice(((AgtRole) myAgent).electMayor(msgContent.getCandidates()));
-					response.setContent(msgContent.toJson());
-					myAgent.send(response);
-					break;
-					/** Votes for the victim of the  day */
-				case VOTE_PAYSAN: 
-					msgContent.setNumbreOfVoices(((AgtRole)myAgent).getVoices());
-					msgContent.setChoice(((AgtRole) myAgent).vote(msgContent.getCandidates()));
-					response.setContent(msgContent.toJson());
-					response.setPerformative(ACLMessage.INFORM);
-					myAgent.send(response);
-					msg = myAgent.receive();
-					mVoteResult msgResultContent = (mVoteResult)mMessage.parseJson(msgString, mVoteResult.class);
-					((AgtRole) myAgent).setLastVote(msgResultContent.getWhoVotesForWho());
-					break;
-				}
-			}
-			else {
-				message = mMessage.parseJson(msgString, mAction.class);
-				
-				// if msgSender == ACTION
-				if(message!=null){
-					mAction msgContent = (mAction)message;
-					// TODO:
-				}
-				else {
-					// TODO: advice
-				}
+		/** TODO Checks the source of the message */
+		//if( msgSender == ACTION || ADVICE || VOTE)
+		ACLMessage response = msg.createReply();
+		mMessage message = mMessage.parseJson(msgString, mVote.class);
+		// if msgSender == Vote
+		if(message!=null){
+			mVote msgContent = (mVote)message;
+			switch (msgContent.getType()){
+			/** TODO beta1 mayor election - Message can come from the AgtAdvice */		
+			case ELECT_MAYOR: 
+				msg.setPerformative(ACLMessage.INFORM);
+				msgContent.setChoice(((AgtRole) myAgent).electMayor(msgContent.getCandidates()));
+				response.setContent(msgContent.toJson());
+				myAgent.send(response);
+				break;
+				/** Votes for the victim of the  day */
+			case VOTE_PAYSAN: 
+				msgContent.setNumbreOfVoices(((AgtRole)myAgent).getVoices());
+				msgContent.setChoice(((AgtRole) myAgent).vote(msgContent.getCandidates()));
+				response.setContent(msgContent.toJson());
+				response.setPerformative(ACLMessage.INFORM);
+				myAgent.send(response);
+				msg = myAgent.receive();
+				mVoteResult msgResultContent = (mVoteResult)mMessage.parseJson(msgString, mVoteResult.class);
+				((AgtRole) myAgent).setLastVote(msgResultContent.getWhoVotesForWho());
+				break;
 			}
 		}
-	}
+		else {
+			message = mMessage.parseJson(msgString, mAction.class);
 
-	@Override
-	public boolean done() {
-		// TODO Auto-generated method stub
-		return false;
+			// if msgSender == ACTION
+			if(message!=null){
+				mAction msgContent = (mAction)message;
+				// TODO:
+			}
+			else {
+				// TODO: advice
+			}
+		}
 	}
 }
