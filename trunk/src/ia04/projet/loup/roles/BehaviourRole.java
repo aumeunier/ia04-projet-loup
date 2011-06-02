@@ -1,6 +1,11 @@
 package ia04.projet.loup.roles;
 
+import ia04.projet.loup.messages.mAction;
 import ia04.projet.loup.messages.mMessage;
+import ia04.projet.loup.messages.mStartGame;
+import ia04.projet.loup.messages.mVote;
+import ia04.projet.loup.messages.mVoteResult;
+import jade.core.AID;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 
@@ -18,6 +23,22 @@ public class BehaviourRole extends RoleBehaviour {
 	 */
 	@Override
 	public void roleAction(ACLMessage msg) {
+		String msgString = msg.getContent();
+		AID msgSender = msg.getSender();
+		int msgPerformative = msg.getPerformative();
+
+		/** TODO Checks the source of the message */
+		//if( msgSender == ACTION || ADVICE || VOTE)
+		ACLMessage response = msg.createReply();
+		mMessage message = mMessage.parseJson(msgString, mStartGame.class);
+		// if msgSender == Vote
+		if(message!=null){
+			mStartGame msgContent = (mStartGame)message;
+			for(String player : msgContent.getLocalNames()){
+				((AgtRole)myAgent).confidenceLevel.put(player, new ConfidenceLevel());
+			}
+		}
+		
 		if(true){
 			return; // I don't want to remove the behaviours at each tick of action() ..
 		}
