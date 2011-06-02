@@ -55,7 +55,7 @@ public class BehaviourVillager extends RoleBehaviour {
 				break;
 			}
 		}
-		else 
+		else {
 			message = mMessage.parseJson(msgString, mVoteResult.class);
 			if(message!=null){
 				mVoteResult msgContent = (mVoteResult)message;
@@ -69,7 +69,8 @@ public class BehaviourVillager extends RoleBehaviour {
 					// TODO:
 				}
 				else {
-					// TODO: advice
+					// TODO: advice	
+				}
 			}
 		}
 	}
