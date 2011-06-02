@@ -102,7 +102,7 @@ public class AgtPlayer extends Agent {
 		
 		// Create the role on the platform and register it
 		AgentContainer mc = this.getContainerController();
-		this.getContainerController().acceptNewAgent(this.getLocalName()+"Role", agtR).start();
+		this.getContainerController().acceptNewAgent(this.getLocalName()+Global.LOCALNAME_SUFFIX_ROLE, agtR).start();
 		agtR.registerToCommunicationAgents();
 		setRoleID(agtR.getAID());
 	}

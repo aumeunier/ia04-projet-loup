@@ -8,6 +8,11 @@ import java.util.HashMap;
  *
  */
 public class Global {
+	public static final String LOCALNAME_STORYTELLER = "Storyteller";
+	public static final String LOCALNAME_VOTE = "Vote";
+	public static final String LOCALNAME_ACTION = "Action";
+	public static final String LOCALNAME_ADVICE = "Advice";
+	public static final String LOCALNAME_SUFFIX_ROLE = "Role";
 	/**
 	 * This enumeration contains the different game phases we have in the game.
 	 * These phases are used to modify the player's interface.

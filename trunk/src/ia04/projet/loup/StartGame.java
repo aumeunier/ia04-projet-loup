@@ -34,7 +34,7 @@ public class StartGame {
 
 			// First create the Storyteller Agent
 			AgtStoryteller storyteller = new AgtStoryteller();
-			AgentController ac = mc.acceptNewAgent("Storyteller",storyteller);
+			AgentController ac = mc.acceptNewAgent(Global.LOCALNAME_STORYTELLER,storyteller);
 			ac.start();
 			System.out.println("Storyteller agent created...");
 			
@@ -44,7 +44,7 @@ public class StartGame {
 			
 			// Create a Vote agent linked to the Storyteller Agent
 			AgtVote vote = new AgtVote();
-			ac = mc.acceptNewAgent("Vote",vote);
+			ac = mc.acceptNewAgent(Global.LOCALNAME_VOTE,vote);
 			ac.start();
 			vote.registerServiceToDf();
 			System.out.println("Vote agent created...");

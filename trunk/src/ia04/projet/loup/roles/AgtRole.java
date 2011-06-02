@@ -75,15 +75,15 @@ public class AgtRole extends Agent {
 	public void registerToCommunicationAgents(){
 		// Register to AgtVote
 		//AID voteAid = DFInterface.getService(this, "AgtVote");
-		AID voteAid = new AID("AgtVote",AID.ISLOCALNAME);
+		AID voteAid = new AID(Global.LOCALNAME_VOTE,AID.ISLOCALNAME);
 		mVoteRegister mVote = new mVoteRegister(getRole());
 		this.initializeMessageToCommunicationAgent(mVote, voteAid);	
 
 		// Register to AgtAction
 		//AID actionAid = DFInterface.getService(this, "AgtAction");
-		AID actionAid = new AID("AgtAction",AID.ISLOCALNAME);
+		AID actionAid = new AID(Global.LOCALNAME_ACTION,AID.ISLOCALNAME);
 		mActionRegister mAction = new mActionRegister(getRole());
-		this.initializeMessageToCommunicationAgent(mAction, actionAid);	
+		//this.initializeMessageToCommunicationAgent(mAction, actionAid);	
 
 		// TODO: Register to AgtAdvice
 	}
@@ -96,7 +96,7 @@ public class AgtRole extends Agent {
 		ACLMessage msg = new ACLMessage(ACLMessage.SUBSCRIBE);
 		msg.addReceiver(agentAid);
 		msg.setContent(message.toJson());
-		this.send(msg);				
+		this.send(msg);			
 	}
 	/** initialize the role of the agent */
 	protected void initializeRole(){

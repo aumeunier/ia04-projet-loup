@@ -1,5 +1,6 @@
 package ia04.projet.loup.controller;
 
+import ia04.projet.loup.Debugger;
 import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mVoteRun;
 import ia04.projet.loup.messages.mStorytellerKb;
@@ -11,10 +12,6 @@ import jade.lang.acl.ACLMessage;
 
 public class BehaviourStoryteller extends Behaviour {
 	private static final long serialVersionUID = 1058995384097785392L;
-
-	public BehaviourStoryteller(AgtStoryteller a){
-		super(a);
-	}
 
 	@Override
 	public void action() {
@@ -32,13 +29,13 @@ public class BehaviourStoryteller extends Behaviour {
 
 				// 1. Player's registration
 				case REGISTER:
-					System.out.println(msg.getSender().getLocalName()+" registered.");
+					Debugger.println(msg.getSender().getLocalName()+" registered.");
 					myAgt.addPlayerToParty(msg.getSender());
 					break;
 
 				// 2. Player's unregistration
 				case LEAVE_GAME:
-					System.out.println(msg.getSender().getLocalName()+" unregistered.");
+					Debugger.println(msg.getSender().getLocalName()+" unregistered.");
 					myAgt.removePlayerFromParty(msg.getSender());
 					// TODO: notify everyone that agent died
 					// TODO: be sure it won't crash
@@ -47,11 +44,11 @@ public class BehaviourStoryteller extends Behaviour {
 				// 3. Participation in the new game
 				case START_GAME:
 					if(message.isParticipateInGame()){
-						System.out.println(msg.getSender().getLocalName()+" wants to participate in the game.");
+						Debugger.println(msg.getSender().getLocalName()+" wants to participate in the game.");
 						myAgt.playerWantsToParticipate(msg.getSender());						
 					}
 					else {
-						System.out.println(msg.getSender().getLocalName()+" doesn't want to participate in the game.");
+						Debugger.println(msg.getSender().getLocalName()+" doesn't want to participate in the game.");
 						myAgt.playerDoesntParticipate(msg.getSender());
 					}
 					break;
@@ -60,7 +57,7 @@ public class BehaviourStoryteller extends Behaviour {
 				// 5. Is the player ready to play (has finished role initialization)
 				case ATTRIBUTE_ROLE:
 					//TODO:	answers from role attribution (ex: Thief)
-					System.out.println(msg.getSender().getLocalName()+" now has its role assigned:"+message.getRole()+".");
+					Debugger.println(msg.getSender().getLocalName()+" now has its role assigned:"+message.getRole()+".");
 					myAgt.addRoleToPlayer(message.getRole(), msg.getSender());
 					break;
 				}
@@ -70,7 +67,7 @@ public class BehaviourStoryteller extends Behaviour {
 			else {
 				generalMessage = mMessage.parseJson(msgString, mStorytellerKb.class);
 				if(generalMessage != null){
-					System.out.println("Received answer from Kb agent");
+					Debugger.println("Received answer from Kb agent");
 					mStorytellerKb message = (mStorytellerKb)generalMessage;
 					switch(message.getType()){
 					// Get the list of roles registered in the ontology
@@ -91,7 +88,7 @@ public class BehaviourStoryteller extends Behaviour {
 					generalMessage = mMessage.parseJson(msgString, mVoteRun.class);
 					if(generalMessage !=null){
 						mVoteRun message = (mVoteRun)generalMessage;
-						System.out.println(message.toJson());
+						Debugger.println(message.toJson());
 						switch(message.getType()){
 						case VOTE_PAYSAN: {
 							if(message.getChoice()!=null){

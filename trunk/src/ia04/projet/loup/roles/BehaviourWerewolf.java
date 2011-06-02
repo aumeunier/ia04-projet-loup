@@ -26,7 +26,9 @@ public class BehaviourWerewolf extends Behaviour {
 			// Message reception
 			String msgString = msg.getContent();
 			AID msgSender = msg.getSender();
-			int msgPerformative = msg.getPerformative();			
+			int msgPerformative = msg.getPerformative();	
+			
+			System.out.println("Wolf receives message");
 			
 			//TODO check who sent the message (DF) if( msgSender == ACTION || ADVICE || VOTE)
 			switch(msgPerformative){
