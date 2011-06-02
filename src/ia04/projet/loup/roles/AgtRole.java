@@ -5,8 +5,11 @@ import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.Strategies;
 import ia04.projet.loup.messages.mActionRegister;
 import ia04.projet.loup.messages.mMessage;
+import ia04.projet.loup.messages.mPlayerDied;
+import ia04.projet.loup.messages.mStorytellerPlayer;
 import ia04.projet.loup.messages.mVote;
 import ia04.projet.loup.messages.mVoteRegister;
+import ia04.projet.loup.messages.mStorytellerPlayer.mType;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
@@ -212,5 +215,18 @@ public class AgtRole extends Agent {
 	}
 	public void setRole(Global.Roles role) {
 		this.role = role;
+	}
+	
+	/** Send a message to AgtVote saying that the role is dead */
+	public void iAmDead(){
+		mPlayerDied message = new mPlayerDied();
+		message.setNbPeopleDead(1);
+		message.addDead(this.getLocalName());
+		
+		AID voteAid = new AID(Global.LOCALNAME_VOTE,AID.ISLOCALNAME);
+		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+		msg.addReceiver(voteAid);
+		msg.setContent(message.toJson());
+		this.send(msg);
 	}
 }

@@ -1,5 +1,8 @@
 package ia04.projet.loup.roles;
 
+import com.hp.hpl.jena.sparql.procedure.library.debug;
+
+import ia04.projet.loup.Debugger;
 import ia04.projet.loup.messages.mAction;
 import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mVote;
@@ -38,12 +41,10 @@ public class BehaviourVillager extends RoleBehaviour {
 			switch (msgContent.getType()){
 			/** TODO beta1 mayor election - Message can come from the AgtAdvice */		
 			case ELECT_MAYOR: 
-				/*
-				msg.setPerformative(ACLMessage.INFORM);
 				msgContent.setChoice(((AgtRole) myAgent).electMayor(msgContent.getCandidates()));
 				response.setContent(msgContent.toJson());
+				response.setPerformative(ACLMessage.INFORM);
 				myAgent.send(response);
-				*/
 				break;
 				/** Votes for the victim of the  day */
 			case VOTE_PAYSAN: 
@@ -52,9 +53,7 @@ public class BehaviourVillager extends RoleBehaviour {
 				msgContent.setChoice(((AgtRole) myAgent).vote(msgContent.getCandidates()));
 				response.setContent(msgContent.toJson());
 				response.setPerformative(ACLMessage.INFORM);
-				myAgent.send(response);
-				msg = myAgent.receive();
-				
+				myAgent.send(response);				
 				break;
 			}
 		}
