@@ -38,14 +38,17 @@ public class BehaviourVillager extends RoleBehaviour {
 			switch (msgContent.getType()){
 			/** TODO beta1 mayor election - Message can come from the AgtAdvice */		
 			case ELECT_MAYOR: 
+				/*
 				msg.setPerformative(ACLMessage.INFORM);
 				msgContent.setChoice(((AgtRole) myAgent).electMayor(msgContent.getCandidates()));
 				response.setContent(msgContent.toJson());
 				myAgent.send(response);
+				*/
 				break;
 				/** Votes for the victim of the  day */
 			case VOTE_PAYSAN: 
 				msgContent.setNumbreOfVoices(((AgtRole)myAgent).getVoices());
+				System.out.println(msgContent.getCandidates().toString());
 				msgContent.setChoice(((AgtRole) myAgent).vote(msgContent.getCandidates()));
 				response.setContent(msgContent.toJson());
 				response.setPerformative(ACLMessage.INFORM);

@@ -8,6 +8,7 @@ import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.communication.AgtVote;
 import ia04.projet.loup.messages.mActionRequest;
 import ia04.projet.loup.messages.mMessage;
+import ia04.projet.loup.messages.mPlayerDied;
 import ia04.projet.loup.messages.mStartGame;
 import ia04.projet.loup.messages.mStorytellerKb;
 import ia04.projet.loup.messages.mStorytellerPlayer;
@@ -25,6 +26,7 @@ import jade.wrapper.StaleProxyException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 
@@ -225,12 +227,9 @@ public class AgtStoryteller extends Agent {
 		this.phaseClock.startGameTimer();	
 		
 		// Notify the roles through the Vote agent
-		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-		msg.addReceiver(this.agentVoteAid);
 		mStartGame startGameMessage = new mStartGame();		
 		startGameMessage.setStartGame(true);
-		msg.setContent(startGameMessage.toJson());
-		this.send(msg);		
+		this.sendMessageToVoteAgent(startGameMessage, ACLMessage.INFORM);
 	}
 	
 
@@ -374,7 +373,7 @@ public class AgtStoryteller extends Agent {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-/////////////// 	 ANSWERS TO ACTIONS      
+/////////////// 	 ACTIONS      
 ////////////////////////////////////////////////////////////////////////////////
 	/**
 	 * Add a victim to the list of people who should be dying soon
@@ -401,10 +400,31 @@ public class AgtStoryteller extends Agent {
 	public void setGuardianTarget(AID targetAid){
 		this.guardianTarget = targetAid;
 	}
+	/**
+	 * The victims are actually killed. 
+	 * The killed players are notified about their death.
+	 * The communication agent is notified about that.
+	 */
+	public void killVictims(){
+		ArrayList<String> victimNames = new ArrayList<String>();
+		Global.GamePhases phase = this.phaseClock.getCurrentPhase();
+		for(AID victim: this.lastVictimsRoles){
+			victimNames.add(victim.getLocalName());
+			mStorytellerPlayer message = new mStorytellerPlayer();
+			message.setPhase(phase);
+			message.setType(mType.DIE);
+			message.setStoryTelling(victim.getLocalName()+", you are dead. Goodbye.");
+			sendMessageToOneRegisteredAgent(victim, message);
+		}
+		mPlayerDied message = new mPlayerDied();
+		message.setNbPeopleDead(this.lastVictimsRoles.size());
+		message.setDeadNames(victimNames);
+		this.sendMessageToVoteAgent(message, ACLMessage.INFORM);
+	}
 	//TODO: actions reactions
 
 ////////////////////////////////////////////////////////////////////////////////
-/////////////// 	 ANSWERS TO VOTES      
+/////////////// 	 VOTES      
 ////////////////////////////////////////////////////////////////////////////////
 	/**
 	 * Treatment of the werewolves' vote results
@@ -525,6 +545,11 @@ public class AgtStoryteller extends Agent {
 			break;
 		case NIGHT:
 			Debugger.println("\n New turn \n");
+			if(Debugger.isOn() && this.phaseClock.getNbOfTurns() > 1){
+				for(Entry<AID,Roles> player: this.playersMap.entrySet()){
+					Debugger.println(player.getKey().getLocalName()+" has role: "+player.getValue());
+				}
+			}
 			storytelling = "It is now the night. The village goes to sleep.";
 			break;
 		case CUPID:
@@ -553,7 +578,7 @@ public class AgtStoryteller extends Agent {
 			
 			// Start a vote between the werewolves
 			mVoteRun voteMsg = new mVoteRun(AgtVote.voteType.VOTE_WW);
-			this.sendMessageToVoteAgent(voteMsg);
+			this.sendMessageToVoteAgent(voteMsg, ACLMessage.REQUEST);
 			this.nbWaitingAnswers = 1;
 		}	break;
 			
@@ -589,7 +614,7 @@ public class AgtStoryteller extends Agent {
 			storytelling = "Before their last action the victims can try a desperate move.";
 			break;
 		case VICTIMSRESOLUTION:
-			// TODO: ?? action ??
+			killVictims();
 			storytelling = "The victims die.";
 			break;
 			
@@ -599,7 +624,7 @@ public class AgtStoryteller extends Agent {
 			
 			// Start a vote for the mayor
 			mVoteRun voteMsg = new mVoteRun(AgtVote.voteType.ELECT_MAYOR);
-			this.sendMessageToVoteAgent(voteMsg);
+			this.sendMessageToVoteAgent(voteMsg, ACLMessage.REQUEST);
 		}break;
 		
 		case HUNGVOTE:{
@@ -607,7 +632,7 @@ public class AgtStoryteller extends Agent {
 			
 			// Start a vote in the village
 			mVoteRun voteMsg = new mVoteRun(AgtVote.voteType.VOTE_PAYSAN);
-			this.sendMessageToVoteAgent(voteMsg);
+			this.sendMessageToVoteAgent(voteMsg, ACLMessage.REQUEST);
 		}	break;
 		
 		case HUNGREVELATION:
@@ -619,7 +644,7 @@ public class AgtStoryteller extends Agent {
 			storytelling = "Before his hunging the hung can try a desperate move.";
 			break;
 		case HUNGRESOLUTION:
-			// TODO: ?? action ??
+			killVictims();
 			storytelling = "The hung is dead.";
 			break;
 		default:
@@ -647,7 +672,6 @@ public class AgtStoryteller extends Agent {
 		case NONE:
 			break;
 		case NIGHT:
-			lastVictimsRoles.clear();
 			break;
 		case CUPID:
 			break;
@@ -680,13 +704,6 @@ public class AgtStoryteller extends Agent {
 		case VICTIMSEVENT:
 			break;
 		case VICTIMSRESOLUTION:
-			for(AID aid: this.lastVictimsRoles){
-				mStorytellerPlayer message = new mStorytellerPlayer();
-				message.setPhase(phase);
-				message.setType(mType.DIE);
-				message.setStoryTelling(aid.getLocalName()+", you are dead. Goodbye.");
-				sendMessageToOneRegisteredAgent(aid, message);
-			}
 			gameIsOver = this.checkGameIsOver();
 			lastVictimsRoles.clear();
 			break;
@@ -700,6 +717,7 @@ public class AgtStoryteller extends Agent {
 			break;
 		case HUNGRESOLUTION:
 			gameIsOver = this.checkGameIsOver();
+			lastVictimsRoles.clear();
 			break;
 		default:
 			break;
@@ -830,9 +848,9 @@ public class AgtStoryteller extends Agent {
 	 * Initialize a message for the Advice Agent
 	 * @param message The message object to serialize and send as content to the agent
 	 */
-	public void sendMessageToAdviceAgent(mMessage message){
+	public void sendMessageToAdviceAgent(mMessage message, int messageType){
 		//TODO: mMessage -> mAdvice or whatever
-		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+		ACLMessage msg = new ACLMessage(messageType);
 		msg.addReceiver(this.agentAdviceAid);
 		msg.setContent(message.toJson());
 		this.send(msg);		
@@ -841,8 +859,8 @@ public class AgtStoryteller extends Agent {
 	 * Initialize a message for the Action Agent
 	 * @param message The message object to serialize and send as content to the agent
 	 */
-	public void sendMessageToActionAgent(mMessage message){
-		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+	public void sendMessageToActionAgent(mMessage message, int messageType){
+		ACLMessage msg = new ACLMessage(messageType);
 		msg.addReceiver(this.agentActionAid);
 		msg.setContent(message.toJson());
 		this.send(msg);		
@@ -851,8 +869,8 @@ public class AgtStoryteller extends Agent {
 	 * Initialize a message for the Vote Agent
 	 * @param message The message object to serialize and send as content to the agent
 	 */
-	public void sendMessageToVoteAgent(mMessage message){
-		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+	public void sendMessageToVoteAgent(mMessage message, int messageType){
+		ACLMessage msg = new ACLMessage(messageType);
 		msg.addReceiver(this.agentVoteAid);
 		msg.setContent(message.toJson());
 		this.send(msg);		

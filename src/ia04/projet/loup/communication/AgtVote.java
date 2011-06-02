@@ -3,6 +3,7 @@ package ia04.projet.loup.communication;
 import ia04.projet.loup.Debugger;
 import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.Roles;
+import ia04.projet.loup.messages.mPlayerDied;
 import ia04.projet.loup.messages.mStartGame;
 import ia04.projet.loup.messages.mVote;
 import ia04.projet.loup.messages.mVoteResult;
@@ -234,6 +235,30 @@ public class AgtVote extends Agent {
 		this.send(message);
 	}
 
+	/**
+	 * Method called when one or several players have been killed.
+	 * The agent needs to purge its playersMap role and notify the other players about his death.
+	 * @param deathMessage the mPlayerDied sent to this agent
+	 */
+	public void deaths(mPlayerDied deathMessage){
+		ArrayList<String> deathNames = deathMessage.getDeadNames();
+		for(String death: deathNames){
+			AID deathAid = new AID(death,AID.ISLOCALNAME);
+			this.playersMap.put(deathAid, Global.Roles.DEAD);
+		}
+		ACLMessage message = new ACLMessage(ACLMessage.INFORM);
+		message.setContent(deathMessage.toJson());
+		for(AID aid: playersMap.keySet()){
+			message.addReceiver(aid);
+		}
+		Debugger.println("AgtVote received death message");
+		if(Debugger.isOn()){
+			for(Entry<AID,Roles> entry: playersMap.entrySet()){
+				Debugger.println(entry.getKey().getLocalName()+" "+entry.getValue());
+			}
+		}
+		this.send(message);
+	}
 	/**
 	 * Add a player to the playerMap
 	 */

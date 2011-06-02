@@ -1,6 +1,5 @@
 package ia04.projet.loup.roles;
 
-import ia04.projet.loup.DFInterface;
 import ia04.projet.loup.Debugger;
 import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.Strategies;
@@ -10,14 +9,11 @@ import ia04.projet.loup.messages.mVote;
 import ia04.projet.loup.messages.mVoteRegister;
 import jade.core.AID;
 import jade.core.Agent;
-import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
-
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 /**
  * This agent is the core of a role. Each role agent has to be a subclass of AgtRole.
