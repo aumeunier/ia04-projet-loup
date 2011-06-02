@@ -119,6 +119,8 @@ public class Global {
 	 */
 	public enum Strategies {
 		/** Strategy used for the very beginning of the project: random behavior */
-		RABBIT
+		RABBIT,
+		/** First real strategy, votes for the confidence lvl */
+		BASIC
 	}
 }
