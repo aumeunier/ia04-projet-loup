@@ -3,6 +3,7 @@ package ia04.projet.loup.roles;
 import ia04.projet.loup.Debugger;
 import ia04.projet.loup.communication.AgtVote;
 import ia04.projet.loup.messages.mMessage;
+import ia04.projet.loup.messages.mStartGame;
 import ia04.projet.loup.messages.mVote;
 import ia04.projet.loup.messages.mVoteResult;
 import jade.core.AID;
@@ -32,9 +33,11 @@ public class BehaviourWerewolf extends RoleBehaviour {
 			/** Gets votes of all the werewolves */
 			//Debugger.println("BehaviourWerewolf: get the result of the vote");
 			mVoteResult msgResultContent = (mVoteResult)mMessage.parseJson(msgString, mVoteResult.class);
-			if (msgResultContent.getType() == AgtVote.voteType.VOTE_WW){
-				((AgtWerewolf)myAgent).setLastVote(msgResultContent.getWhoVotesForWho());
-				//((AgtWerewolf)myAgent).updateConfidenceVoteWerewolf();
+			if(msgResultContent != null){
+				if (msgResultContent.getType() == AgtVote.voteType.VOTE_WW){
+					((AgtWerewolf)myAgent).setLastVote(msgResultContent.getWhoVotesForWho());
+					//((AgtWerewolf)myAgent).updateConfidenceVoteWerewolf();
+				}
 			}
 			break;
 		case ACLMessage.REQUEST: 
