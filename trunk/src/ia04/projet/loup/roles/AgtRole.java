@@ -45,7 +45,7 @@ public class AgtRole extends Agent {
 	/** number of voices during a vote for the victim of the day */
 	protected int voices=1;
 	/** list of all the behaviours of the agent */
-	protected ArrayList<Behaviour> behaviours = new ArrayList<Behaviour>();
+	protected ArrayList<RoleBehaviour> behaviours = new ArrayList<RoleBehaviour>();
 	/** generate random int for the rabbit strategy */
 	protected Random random = new Random();
 	
@@ -103,9 +103,14 @@ public class AgtRole extends Agent {
 		role = Global.Roles.VILLAGER;
 	}
 	/** add a behaviour and save it in Behaviours */
-	protected void addAndSaveBehaviour(Behaviour aBehaviour){
+	protected void addAndSaveBehaviour(RoleBehaviour aBehaviour){
 		this.addBehaviour(aBehaviour);
 		behaviours.add(aBehaviour);
+	}
+	public void dispatchMessageToBehaviours(ACLMessage message){
+		for(RoleBehaviour b: behaviours){
+			b.roleAction(message);
+		}
 	}
 	/**
 	 * Initializes the different level of confidence at the beginning of a new game.

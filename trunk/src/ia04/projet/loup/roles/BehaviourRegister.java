@@ -4,7 +4,7 @@ import ia04.projet.loup.messages.mVoteRegister;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 
-public class BehaviourRegister extends Behaviour {
+public class BehaviourRegister extends RoleBehaviour {
 
 
 	/**
@@ -18,16 +18,14 @@ public class BehaviourRegister extends Behaviour {
 	 * @author claquette
 	 */
 	@Override
-	public void action() {
+	public void roleAction(ACLMessage msg) {
 		/** launched at the beginning of the game */
-		ACLMessage msg = new ACLMessage(ACLMessage.SUBSCRIBE);
 		msg.setContent(new mVoteRegister(((AgtRole)myAgent).getRole()).toJson());
 		myAgent.send(msg);
 	}
-
+	
 	@Override
-	public boolean done() {
+	public boolean done(){
 		return true;
 	}
-
 }
