@@ -80,6 +80,7 @@ public class AgtVote extends Agent {
 		if (newVote) {
 			this.whoVotesForWho = new HashMap<AID, mVote>();
 			this.lastVote = runVote;
+			this.lastElectionResult.clear();
 		} else {
 			HashMap<String, mVote> temp = new HashMap<String, mVote>();
 			for (Entry<AID, mVote> entry : this.whoVotesForWho.entrySet()) {
@@ -93,7 +94,18 @@ public class AgtVote extends Agent {
 		this.remainingVotes = 0;
 
 		switch (runVote.getType()) {
-		case VOTE_PAYSAN:
+		case VOTE_PAYSAN: {
+			for (Entry<AID, Roles> entry : this.playersMap.entrySet()) {
+				AID aid = entry.getKey();
+				lastElectionResult.put(aid.getLocalName(), 0); // ?
+				if(entry.getValue() != Roles.DEAD){
+					aVote.getCandidates().add(aid.getLocalName());
+					this.remainingVotes++;
+				}
+				voteMessage.addReceiver(aid);
+			}
+		}	break;
+		case ELECT_MAYOR: {
 			for (Entry<AID, Roles> entry : this.playersMap.entrySet()) {
 				AID aid = entry.getKey();
 				if(entry.getValue() != Roles.DEAD){
@@ -103,32 +115,20 @@ public class AgtVote extends Agent {
 				}
 				voteMessage.addReceiver(aid);
 			}
-			break;
-		case ELECT_MAYOR:
+		}	break;
+		case VOTE_WW:{
 			for (Entry<AID, Roles> entry : this.playersMap.entrySet()) {
 				AID aid = entry.getKey();
-				if(entry.getValue() != Roles.DEAD){
-					aVote.getCandidates().add(aid.getLocalName());
-					lastElectionResult.put(aid.getLocalName(), 0);
-					this.remainingVotes++;
-				}
-				voteMessage.addReceiver(aid);
-			}
-			break;
-		case VOTE_WW:
-			for (Entry<AID, Roles> entry : this.playersMap.entrySet()) {
-				AID aid = entry.getKey();
-				voteMessage.addReceiver(aid);
 				if (entry.getValue() == Global.Roles.WEREWOLF) {
 					voteMessage.addReceiver(aid);
 					this.remainingVotes++;
-				} else if(entry.getValue() != Roles.DEAD){
+				}
+				else if(entry.getValue() != Roles.DEAD){
 					aVote.getCandidates().add(aid.getLocalName());
 					lastElectionResult.put(aid.getLocalName(), 0);
 				}
 			}
-
-			break;
+		}	break;
 		default:
 			break;
 			//throw new NotImplementedException();
@@ -143,7 +143,7 @@ public class AgtVote extends Agent {
 	 */
 	public void addVote(AID aid, mVote aVote) {	
 		if (remainingVotes < 0)
-			Debugger.println("Should Never Happened: More votes than expected.");
+			Debugger.println("Should Never Happen: More votes than expected.");
 		else {
 			this.whoVotesForWho.put(aid, aVote);
 			this.remainingVotes--;
@@ -161,8 +161,7 @@ public class AgtVote extends Agent {
 
 	private void calculateResults() {
 		for (Entry<AID, mVote> entry : this.whoVotesForWho.entrySet()) {
-			int previousScore = lastElectionResult.get(entry.getValue()
-					.getChoice());
+			int previousScore = lastElectionResult.get(entry.getValue().getChoice());
 			lastElectionResult.put(entry.getValue().getChoice(), previousScore
 					+ entry.getValue().getNumbreOfVoices());
 		}

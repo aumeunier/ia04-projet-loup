@@ -19,6 +19,8 @@ public class mStorytellerPlayer extends mMessage {
 		START_GAME,
 		// Following are usually Joueur -> Conteur
 		REGISTER, LEAVE_GAME,
+		// End of the game
+		END_GAME
 	}
 	private mType type;
 	private Global.Roles role;

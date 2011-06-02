@@ -109,7 +109,9 @@ public class AgtRole extends Agent {
 	}
 	public void dispatchMessageToBehaviours(ACLMessage message){
 		for(RoleBehaviour b: behaviours){
-			b.roleAction(message);
+			if((b instanceof BehaviourDead) || (!b.isDone())){
+				b.roleAction(message);
+			}
 		}
 	}
 	/**

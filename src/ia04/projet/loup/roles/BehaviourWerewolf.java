@@ -23,29 +23,14 @@ public class BehaviourWerewolf extends RoleBehaviour {
 	public void roleAction(ACLMessage msg) {
 		/** Waits the nightfall */
 		// Message reception
-		String msgString = msg.getContent();
-		AID msgSender = msg.getSender();
-		int msgPerformative = msg.getPerformative();	
+		String msgString = msg.getContent();	
 
-		//TODO check who sent the message (DF) if( msgSender == ACTION || ADVICE || VOTE)
-		switch(msgPerformative){
-		case ACLMessage.INFORM: 
-			/** Gets votes of all the werewolves */
-			//Debugger.println("BehaviourWerewolf: get the result of the vote");
-			mVoteResult msgResultContent = (mVoteResult)mMessage.parseJson(msgString, mVoteResult.class);
-			if(msgResultContent != null){
-				if (msgResultContent.getType() == AgtVote.voteType.VOTE_WW){
-					((AgtWerewolf)myAgent).setLastVote(msgResultContent.getWhoVotesForWho());
-					//((AgtWerewolf)myAgent).updateConfidenceVoteWerewolf();
-				}
-			}
-			break;
-		case ACLMessage.REQUEST: 
-			/** Votes for the victim of the night */
-			//Debugger.println("BehaviourWerewolf: vote to eat somebody");
-			mVote msgContent = (mVote)mMessage.parseJson(msgString, mVote.class);
+		mVote msgContent = (mVote)mMessage.parseJson(msgString, mVote.class);
+		/** Votes for the victim of the night */
+		//Debugger.println("BehaviourWerewolf: vote to eat somebody");
+		if(msgContent!=null){
 			if (msgContent.getType() == AgtVote.voteType.VOTE_WW){
-				System.out.println(msgContent.getCandidates().toString());
+				//Debugger.println(myAgent.getLocalName()+" received call for a Werewolf Vote.");
 				/** if this isn't the first turn updates the confidence levels */
 				if(msgContent.getWhoVotesForWho()==null){
 					((AgtWerewolf)myAgent).setLastVote(msgContent.getWhoVotesForWho());
@@ -56,6 +41,18 @@ public class BehaviourWerewolf extends RoleBehaviour {
 				response.setPerformative(ACLMessage.INFORM);
 				response.setContent(msgContent.toJson());
 				myAgent.send(response);
+			}
+		}
+		else {
+			/** Gets votes of all the werewolves */
+			//Debugger.println("BehaviourWerewolf: get the result of the vote");
+			mVoteResult msgResultContent = (mVoteResult)mMessage.parseJson(msgString, mVoteResult.class);
+			if(msgResultContent != null){
+				//Debugger.println("Result of the werewolves' vote");
+				if (msgResultContent.getType() == AgtVote.voteType.VOTE_WW){
+					((AgtWerewolf)myAgent).setLastVote(msgResultContent.getWhoVotesForWho());
+					//((AgtWerewolf)myAgent).updateConfidenceVoteWerewolf();
+				}
 			}
 		}
 	}

@@ -23,7 +23,6 @@ import jade.core.Agent;
 public class AgtKbStoryteller extends Agent {
 	private Model modeln3 = null;
 
-
 	public AgtKbStoryteller() {
 		int i = 0;
 		try{
