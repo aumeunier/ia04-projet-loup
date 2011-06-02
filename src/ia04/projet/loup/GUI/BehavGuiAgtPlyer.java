@@ -18,10 +18,11 @@ public class BehavGuiAgtPlyer extends Behaviour {
 		ACLMessage msg = myAgent.receive();
 		if (msg != null){
 			String msgString = msg.getContent();
+			Debugger.println(myAgent.getAID().getLocalName().toString()+" reçoit "+ msgString);
 			mToGui msgObj = (mToGui) mMessage.parseJson(msgString, mToGui.class);
 			((GuiAgtPlayer) myAgent).guiMaj(msgObj);
-			Debugger.println(myAgent.getAID().getLocalName().toString()+" reçoit "+ msgString);
 		}
+		
 	}
 
 	@Override

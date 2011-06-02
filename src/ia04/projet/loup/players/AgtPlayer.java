@@ -1,6 +1,5 @@
 package ia04.projet.loup.players;
 
-import ia04.projet.loup.Debugger;
 import ia04.projet.loup.Global;
 import ia04.projet.loup.messages.mStorytellerPlayer;
 import ia04.projet.loup.messages.mToGui;
@@ -43,9 +42,9 @@ public class AgtPlayer extends Agent {
 	public void GuiCreation() throws StaleProxyException{
 		/*
 		GuiAgtPlayer guiAgt = new GuiAgtPlayer(this.getAID());
-		GuiID = guiAgt.getAID();
 		AgentContainer mc = this.getContainerController();
 		mc.acceptNewAgent(this.getLocalName()+Global.LOCALNAME_SUFFIX_GUI, guiAgt).start();
+		this.setGuiID(guiAgt.getAID());
 		*/
 	}
 	/**
@@ -123,12 +122,15 @@ public class AgtPlayer extends Agent {
 	 * **/
 	public void TransfertToGui(mToGui.mType type, String val){
 		ACLMessage toGui = new ACLMessage(ACLMessage.INFORM);
+		
 		mToGui msg = new mToGui();
 		msg.setType(type);
 		msg.setValue(val);
+		
 		toGui.setContent(msg.toJson());
 		toGui.addReceiver(GuiID);
 		this.send(toGui);
+		
 	}
 
 	/**Setters and getters*/
