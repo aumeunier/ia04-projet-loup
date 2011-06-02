@@ -107,7 +107,6 @@ public class AgtVote extends Agent {
 				AID aid = entry.getKey();
 				if (entry.getValue() == Global.Roles.WEREWOLF) {
 					voteMessage.addReceiver(aid);
-					Debugger.println("Wolf added:"+aid.getLocalName());
 					this.remainingVotes++;
 				} else {
 					aVote.getCandidates().add(aid.getLocalName());
@@ -127,8 +126,7 @@ public class AgtVote extends Agent {
 	/*
 	 * Add a vote to the currentElection
 	 */
-	public void addVote(AID aid, mVote aVote) {
-		Debugger.println("Vote received:"+aVote.toJson());		
+	public void addVote(AID aid, mVote aVote) {	
 		if (remainingVotes < 0)
 			Debugger.println("Should Never Happened: More votes than expected.");
 		else {
@@ -147,7 +145,6 @@ public class AgtVote extends Agent {
 	}
 
 	private void calculateResults() {
-		Debugger.println("Results"+this.whoVotesForWho.toString());
 		for (Entry<AID, mVote> entry : this.whoVotesForWho.entrySet()) {
 			int previousScore = lastElectionResult.get(entry.getValue()
 					.getChoice());
@@ -215,7 +212,7 @@ public class AgtVote extends Agent {
 
 		/* Inform StoryTeller of the final result */
 		message = new ACLMessage(ACLMessage.INFORM);
-		this.lastVote.setChoice(winner);
+		this.lastVote.setChoice(winner.replace(Global.LOCALNAME_SUFFIX_ROLE, ""));
 		message.setContent(this.lastVote.toJson());
 		message.addReceiver(this.storyTeller);
 		this.send(message);

@@ -88,18 +88,17 @@ public class BehaviourStoryteller extends Behaviour {
 					generalMessage = mMessage.parseJson(msgString, mVoteRun.class);
 					if(generalMessage !=null){
 						mVoteRun message = (mVoteRun)generalMessage;
-						Debugger.println(message.toJson());
 						switch(message.getType()){
 						case VOTE_PAYSAN: {
 							if(message.getChoice()!=null){
 								AID victimAid = new AID(message.getChoice(), AID.ISLOCALNAME);
-								myAgt.addVictim(victimAid);
+								myAgt.paysansEndedWithChoice(victimAid);
 							}
 						}	break;
 						case VOTE_WW:{
 							if(message.getChoice()!=null){
 								AID victimAid = new AID(message.getChoice(), AID.ISLOCALNAME);
-								myAgt.addVictim(victimAid);
+								myAgt.werewolvesEndedWithChoice(victimAid);
 							}
 						}	break;
 						case ELECT_MAYOR:
