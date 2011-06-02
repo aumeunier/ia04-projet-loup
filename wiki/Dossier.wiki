@@ -22,9 +22,24 @@ Cette page décrit les différentes section à inclure dans le dossier de rendu 
   * Les phases de jeu
   * Les personnages
 
-= Architecture = 
-  * Organisation des agents
-  * Communication entre les agents
+= Analyse Jade=
+  * Use Cases
+  * Diagramme d'Agents
+  * Tableau des fonctionnalités
+  * Diagramme de déploiement
+
+= Organisation de Gestion de projet =
+  * Mise en place plateforme de collaboration sur Google Code
+  * Repartition des taches
+
+= Planification =
+  * Liste des versions
+  * Implementation des versions
+
+= Utilisation des Bases de connaissances =
+  * Cas d'utilisation
+  * Implementation
+  * Description des bases de connaissances
 
 = Implémentation = 
 == Phases de Jeu ==
@@ -37,15 +52,32 @@ Cette page décrit les différentes section à inclure dans le dossier de rendu 
   * AgentY (Role, Behaviour, Stratégies)
   * ..
 
-== Interfaces  ==
+== Messages ==
+
+== Intelligence Articielle ==
+  * Description des IA
+  * Algorithmes utilisés
+
+== Service Restlet ==
+  * Utilité/Description
+  * Implémentation
+
+= Interfaces Utilisateurs  =
+Description avec captures d'écran
   * Interface d'un Joueur Humain
   * Interface d'un Joueur Bot
-  * Interface d'un Mort/Observateur
-  * Autres interfaces (Conteur, Web, Omniscient, etc, ou Restlet ??)
 
-== Services Restlet ==
-  * Service A
-  * Service B
+= Difficultés rencontrées =
+  * Réception de messages avec plusieurs behaviour
+    Solution = Qlist et Dispatcher
 
+  * Format des messages
+    Solution = Seralisation JSON
+
+  * Messages et methodes: Roles ou Player ? Vote ou Storyteller ?
+
+  * Ontologies
+
+= Améliorations =
 = Conclusion = 
 = Glossaire =
