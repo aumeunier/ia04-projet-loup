@@ -9,6 +9,7 @@ import ia04.projet.loup.Global.Roles;
 public class mActionRequest extends mMessage {
 
 	private Roles role;
+	private Integer numberOfActionPerformed = 0;
 	
 	public mActionRequest(){}
 	
@@ -32,5 +33,19 @@ public class mActionRequest extends mMessage {
 	 */
 	public Roles getRole() {
 		return role;
+	}
+
+	/**
+	 * @param numberOfActionPerformed the numberOfActionPerformed to set
+	 */
+	public void setNumberOfActionPerformed(Integer numberOfActionPerformed) {
+		this.numberOfActionPerformed = numberOfActionPerformed;
+	}
+
+	/**
+	 * @return the numberOfActionPerformed
+	 */
+	public Integer getNumberOfActionPerformed() {
+		return numberOfActionPerformed;
 	}
 }

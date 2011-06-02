@@ -1,4 +1,4 @@
-package ia04.projet.loup.gui;
+package ia04.projet.loup.GUI;
 
 import ia04.projet.loup.Debugger;
 import ia04.projet.loup.messages.mMessage;

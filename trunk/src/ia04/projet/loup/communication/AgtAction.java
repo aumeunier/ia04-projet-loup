@@ -91,6 +91,7 @@ public class AgtAction extends Agent {
 		else {
 			if (nbActionsInProgress == 0) {
 				ACLMessage message = new ACLMessage(ACLMessage.INFORM);
+				lastActionRequest.setNumberOfActionPerformed(anAction.getNumberOfActionPerformed());
 				message.setContent(lastActionRequest.toJson());
 				message.addReceiver(agtStoryteller);
 				this.send(message);

@@ -1,4 +1,4 @@
-package ia04.projet.loup.gui;
+package ia04.projet.loup.GUI;
 
 import jade.core.AID;
 
