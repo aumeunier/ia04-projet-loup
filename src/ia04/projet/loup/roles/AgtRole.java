@@ -220,8 +220,7 @@ public class AgtRole extends Agent {
 	/** Send a message to AgtVote saying that the role is dead */
 	public void iAmDead(){
 		mPlayerDied message = new mPlayerDied();
-		message.setNbPeopleDead(1);
-		message.addDead(this.getLocalName());
+		message.setDeadName(this.getLocalName());
 		
 		AID voteAid = new AID(Global.LOCALNAME_VOTE,AID.ISLOCALNAME);
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
