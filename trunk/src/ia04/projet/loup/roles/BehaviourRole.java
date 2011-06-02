@@ -24,8 +24,6 @@ public class BehaviourRole extends RoleBehaviour {
 	@Override
 	public void roleAction(ACLMessage msg) {
 		String msgString = msg.getContent();
-		AID msgSender = msg.getSender();
-		int msgPerformative = msg.getPerformative();
 
 		/** TODO Checks the source of the message */
 		//if( msgSender == ACTION || ADVICE || VOTE)

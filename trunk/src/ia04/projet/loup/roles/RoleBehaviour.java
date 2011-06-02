@@ -9,6 +9,9 @@ public class RoleBehaviour extends Behaviour {
 	public void setIsDone(){
 		isDone = true;
 	}
+	public boolean isDone(){
+		return isDone;
+	}
 
 	@Override
 	public void action() {

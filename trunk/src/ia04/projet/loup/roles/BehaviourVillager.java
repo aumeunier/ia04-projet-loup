@@ -26,16 +26,11 @@ public class BehaviourVillager extends RoleBehaviour {
 	@Override
 	public void roleAction(ACLMessage msg) {
 		/** Waits the sunrise */
-		// Message reception
 		String msgString = msg.getContent();
-		AID msgSender = msg.getSender();
-		int msgPerformative = msg.getPerformative();
 
-		/** TODO Checks the source of the message */
-		//if( msgSender == ACTION || ADVICE || VOTE)
 		ACLMessage response = msg.createReply();
 		mMessage message = mMessage.parseJson(msgString, mVote.class);
-		// if msgSender == Vote
+		// Vote requesting a vote for Mayor or Paysan
 		if(message!=null){
 			mVote msgContent = (mVote)message;
 			switch (msgContent.getType()){
@@ -46,10 +41,9 @@ public class BehaviourVillager extends RoleBehaviour {
 				response.setPerformative(ACLMessage.INFORM);
 				myAgent.send(response);
 				break;
-				/** Votes for the victim of the  day */
+			/** Votes for the victim of the  day */
 			case VOTE_PAYSAN: 
 				msgContent.setNumbreOfVoices(((AgtRole)myAgent).getVoices());
-				System.out.println(msgContent.getCandidates().toString());
 				msgContent.setChoice(((AgtRole) myAgent).vote(msgContent.getCandidates()));
 				response.setContent(msgContent.toJson());
 				response.setPerformative(ACLMessage.INFORM);
@@ -58,19 +52,21 @@ public class BehaviourVillager extends RoleBehaviour {
 			}
 		}
 		else {
+			// Vote sending results
 			message = mMessage.parseJson(msgString, mVoteResult.class);
 			if(message!=null){
 				mVoteResult msgContent = (mVoteResult)message;
 				((AgtRole) myAgent).setLastVote(msgContent.getWhoVotesForWho());
-		}
+			}
 			else{
+				// Action requesting an action
 				message = mMessage.parseJson(msgString, mAction.class);
-				// if msgSender == ACTION
 				if(message!=null){
 					mAction msgContent = (mAction)message;
 					// TODO:
 				}
 				else {
+					// Advice requesting an action 
 					// TODO: advice	
 				}
 			}

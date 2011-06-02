@@ -412,7 +412,6 @@ public class AgtStoryteller extends Agent {
 			message.setIsOver(false);
 			message.setDeadName(victim.getLocalName());
 			sendMessageToOneRegisteredAgent(victim, message, ACLMessage.INFORM);
-			Debugger.println(victim.getLocalName()+" died.");
 		}
 		
 		// Wait for the players to clean their role
@@ -626,8 +625,8 @@ public class AgtStoryteller extends Agent {
 			storytelling = "Before their last action the victims can try a desperate move.";
 			break;
 		case VICTIMSRESOLUTION:
-			killVictims();
 			storytelling = "The victims die.";
+			killVictims();
 			break;
 			
 		case MAYORELECTION:{
@@ -810,8 +809,7 @@ public class AgtStoryteller extends Agent {
 		// Prepare a message for all the players using the Storyteller-Player Message template
 		mStorytellerPlayer message = new mStorytellerPlayer();
 		message.setPhase(Global.GamePhases.NONE);
-		//message.setType(mStorytellerPlayer.mType.END_GAME);
-		//TODO: what to do ?
+		message.setType(mStorytellerPlayer.mType.END_GAME);
 		
 		// Reason depends on the errorCode
 		switch(errorCode){
@@ -850,8 +848,8 @@ public class AgtStoryteller extends Agent {
 			message.setStoryTelling("Laule. I don't even have an error code for that.");
 			break;
 		}
-		//TODO: send or not?
-		//sendMessageToRegisteredAgents(message);
+
+		sendMessageToRegisteredAgents(message);
 	}
 
 	
