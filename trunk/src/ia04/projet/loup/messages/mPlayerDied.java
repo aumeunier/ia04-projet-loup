@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class mPlayerDied extends mMessage {
 	private int nbPeopleDead;
-	private ArrayList<String> deadNames;
+	private ArrayList<String> deadNames = new ArrayList<String>();
 	
 	public int getNbPeopleDead(){
 		return nbPeopleDead;
@@ -18,6 +18,9 @@ public class mPlayerDied extends mMessage {
 	}
 	public void setDeadNames(ArrayList<String> _deadNames){
 		this.deadNames = _deadNames;
+	}
+	public void addDead(String deadName){
+		this.deadNames.add(deadName);
 	}
 		
 	/**
