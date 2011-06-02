@@ -406,20 +406,14 @@ public class AgtStoryteller extends Agent {
 	 * The communication agent is notified about that.
 	 */
 	public void killVictims(){
-		ArrayList<String> victimNames = new ArrayList<String>();
 		Global.GamePhases phase = this.phaseClock.getCurrentPhase();
 		for(AID victim: this.lastVictimsRoles){
-			victimNames.add(victim.getLocalName());
 			mStorytellerPlayer message = new mStorytellerPlayer();
 			message.setPhase(phase);
 			message.setType(mType.DIE);
 			message.setStoryTelling(victim.getLocalName()+", you are dead. Goodbye.");
 			sendMessageToOneRegisteredAgent(victim, message);
 		}
-		mPlayerDied message = new mPlayerDied();
-		message.setNbPeopleDead(this.lastVictimsRoles.size());
-		message.setDeadNames(victimNames);
-		this.sendMessageToVoteAgent(message, ACLMessage.INFORM);
 	}
 	//TODO: actions reactions
 
@@ -446,6 +440,15 @@ public class AgtStoryteller extends Agent {
 		if(choice!=null){
 			this.addVictim(choice);
 		}
+		this.nbWaitingAnswers=0;		
+	}
+	/**
+	 * Treatment of the mayor's election's vote results
+	 * @param choice The elected player
+	 */
+	public void mayorElectionEndedWithChoice(AID choice){
+		Debugger.println("New mayor: "+choice.getLocalName());
+		// TODO: mayor
 		this.nbWaitingAnswers=0;		
 	}
 	
@@ -625,7 +628,8 @@ public class AgtStoryteller extends Agent {
 			// Start a vote for the mayor
 			mVoteRun voteMsg = new mVoteRun(AgtVote.voteType.ELECT_MAYOR);
 			this.sendMessageToVoteAgent(voteMsg, ACLMessage.REQUEST);
-		}break;
+			this.nbWaitingAnswers = 1;
+		}	break;
 		
 		case HUNGVOTE:{
 			storytelling = "The hanged selection begins. Who will be hung on the place today ?";
@@ -633,6 +637,7 @@ public class AgtStoryteller extends Agent {
 			// Start a vote in the village
 			mVoteRun voteMsg = new mVoteRun(AgtVote.voteType.VOTE_PAYSAN);
 			this.sendMessageToVoteAgent(voteMsg, ACLMessage.REQUEST);
+			this.nbWaitingAnswers = 1;
 		}	break;
 		
 		case HUNGREVELATION:

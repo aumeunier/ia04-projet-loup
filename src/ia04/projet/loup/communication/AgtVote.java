@@ -55,7 +55,7 @@ public class AgtVote extends Agent {
 		super();
 		this.addBehaviour(new BehaviourVote(this));
 	}
-	
+
 	/**
 	 * Registers its service into the DF
 	 */
@@ -67,7 +67,7 @@ public class AgtVote extends Agent {
 		sd.setName(this.getLocalName());
 		DFInterface.registerService(this, sd);
 		System.out.println("AgtVote registered to DF");
-		*/
+		 */
 	}
 
 	/**
@@ -100,15 +100,15 @@ public class AgtVote extends Agent {
 				this.remainingVotes++;
 			}
 			break;
-			case ELECT_MAYOR:
-				for (Entry<AID, Roles> entry : this.playersMap.entrySet()) {
-					AID aid = entry.getKey();
-					aVote.getCandidates().add(aid.getLocalName());
-					lastElectionResult.put(aid.getLocalName(), 0);
-					voteMessage.addReceiver(aid);
-					this.remainingVotes++;
-				}
-				break;
+		case ELECT_MAYOR:
+			for (Entry<AID, Roles> entry : this.playersMap.entrySet()) {
+				AID aid = entry.getKey();
+				aVote.getCandidates().add(aid.getLocalName());
+				lastElectionResult.put(aid.getLocalName(), 0);
+				voteMessage.addReceiver(aid);
+				this.remainingVotes++;
+			}
+			break;
 		case VOTE_WW:
 			for (Entry<AID, Roles> entry : this.playersMap.entrySet()) {
 				AID aid = entry.getKey();
@@ -169,18 +169,19 @@ public class AgtVote extends Agent {
 	 */
 	private boolean uniqueWinner(HashMap<String, Integer> voteResults) {
 		int maxVote = 0;
+		int nbMaxVote = 0;
 
 		for (String aCandidates : voteResults.keySet()) {
 			if (voteResults.get(aCandidates) > maxVote) {
 				maxVote = voteResults.get(aCandidates);
-			} else {
-				if (voteResults.get(aCandidates) > maxVote && maxVote != 0) {
-					return false;
-				}
+				nbMaxVote = 1;
+			}
+			else if(voteResults.get(aCandidates) == maxVote){
+				nbMaxVote++;
 			}
 		}
 
-		return true;
+		return (nbMaxVote==1);
 	}
 
 	/**
@@ -192,18 +193,21 @@ public class AgtVote extends Agent {
 		int maxVote = 0;
 		String winner = null;
 
-		/* Determines who was elected */
+		/* Determine who was elected */
 		for (String aCandidates : voteResults.keySet()) {
 			if (voteResults.get(aCandidates) > maxVote) {
 				maxVote = voteResults.get(aCandidates);
 				winner = aCandidates;
 			}
 		}
+		
+		Debugger.println("Winner:"+winner);
 
 		/* Inform the electors of the final result */
 		ACLMessage message = new ACLMessage(ACLMessage.INFORM);
 		mVoteResult aResultVote = new mVoteResult();
 		aResultVote.setType(lastVote.getType());
+		aResultVote.setIsFinalElection(true);
 
 		HashMap<String, mVote> temp = new HashMap<String, mVote>();
 		for (Entry<AID, mVote> entry : this.whoVotesForWho.entrySet()) {
@@ -225,7 +229,7 @@ public class AgtVote extends Agent {
 		message.addReceiver(this.storyTeller);
 		this.send(message);
 	}
-	
+
 	/** 
 	 * Send the start message to the role agents with the names of the other players
 	 */
