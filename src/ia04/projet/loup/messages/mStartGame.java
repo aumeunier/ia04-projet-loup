@@ -24,4 +24,13 @@ public class mStartGame extends mMessage {
 		return startGame;
 	}
 
+	/**
+	 * Return an instance of mVote build on a JSON string
+	 * @param jsonString
+	 * @return mVote
+	 */
+	public static mStartGame parseJson(String jsonString){
+		return (mStartGame)mMessage.parseJson(jsonString, mStartGame.class);
+	}
+
 }

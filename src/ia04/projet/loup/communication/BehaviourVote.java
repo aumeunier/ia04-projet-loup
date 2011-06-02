@@ -1,6 +1,7 @@
 package ia04.projet.loup.communication;
 
-import ia04.projet.loup.Debugger;
+import ia04.projet.loup.messages.mMessage;
+import ia04.projet.loup.messages.mStartGame;
 import ia04.projet.loup.messages.mVote;
 import ia04.projet.loup.messages.mVoteRegister;
 import ia04.projet.loup.messages.mVoteRun;
@@ -40,6 +41,12 @@ public class BehaviourVote extends CyclicBehaviour {
 				mVote aVote = mVote.parseJson(startMessage.getContent());
 				if (aVote != null) {
 					this.agtVote.addVote(startMessage.getSender(), aVote);
+				}
+				else {
+					mStartGame generalMessage = mStartGame.parseJson(startMessage.getContent());
+					if(generalMessage != null){
+						this.agtVote.startGame();
+					}
 				}
 				break;
 			}
