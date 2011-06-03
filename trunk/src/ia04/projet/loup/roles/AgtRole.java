@@ -35,7 +35,7 @@ public class AgtRole extends Agent {
 	/** role of the agent */
 	protected Global.Roles role;
 	/** The strategy in use */
-	protected Global.Strategies currentStrategy = Strategies.RABBIT;
+	protected Global.Strategies currentStrategy = Strategies.BASIC;
 	/** Array of the players */
 	protected java.util.List<AID> players = new ArrayList<AID>();
 	/** Map of the players with the corresponding confidence level */
@@ -193,21 +193,23 @@ public class AgtRole extends Agent {
 	}
 	/** get the name of the player with the highest confidence level in a list of players */
 	protected String getHighestConfidence(ArrayList<String> players){
-		String max=null;
+		int max=0;
+		String playerMax=null;
 		for(String player : players){
-			if(max.equals(null)||(confidenceLevel.get(player).getLevel()>confidenceLevel.get(max).getLevel()))
-				max=player;
+			if(confidenceLevel.get(player).getLevel()>max)
+				playerMax=player;
 		}
-		return max;
+		return playerMax;
 	}
 	/** get the name of the player with the lowest confidence level in a list of players */
 	protected String getLowestConfidence(ArrayList<String> players){
-		String min=null;
+		int min=100;
+		String playerMin=null;
 		for(String player : players){
-			if(min.equals(null)||(confidenceLevel.get(player).getLevel()<confidenceLevel.get(min).getLevel()))
-				min=player;
+			if(confidenceLevel.get(player).getLevel()<min)
+				playerMin=player;
 		}
-		return min;
+		return playerMin;
 	}
 
 	public void setLastVote(HashMap<String, mVote> lastVote) {
