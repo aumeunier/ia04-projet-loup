@@ -32,9 +32,11 @@ public class BehaviourWerewolf extends RoleBehaviour {
 			if (msgContent.getType() == AgtVote.voteType.VOTE_WW){
 				//Debugger.println(myAgent.getLocalName()+" received call for a Werewolf Vote.");
 				/** if this isn't the first turn updates the confidence levels */
-				if(msgContent.getWhoVotesForWho()==null){
+				if(msgContent.getWhoVotesForWho()!=null){
+					//TODO check if this code is running at the first turn
+					//Debugger.println("update confidence");
 					((AgtWerewolf)myAgent).setLastVote(msgContent.getWhoVotesForWho());
-					//((AgtWerewolf)myAgent).updateConfidenceVoteWerewolf();
+					((AgtWerewolf)myAgent).updateConfidenceVoteWerewolf();
 				}
 				msgContent.setChoice(((AgtWerewolf) myAgent).eatSomebody(msgContent.getCandidates()));
 				ACLMessage response = msg.createReply();

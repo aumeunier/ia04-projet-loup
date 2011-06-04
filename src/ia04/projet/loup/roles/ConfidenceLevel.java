@@ -1,14 +1,18 @@
 package ia04.projet.loup.roles;
 
+import ia04.projet.loup.Debugger;
+
+import java.util.Random;
+
 public class ConfidenceLevel{
 	private int level;
 	public static int VOTEFORME = -10;
 	public static int VOTEFORMYROLE = -5;
 	public static int VOTEFOROPPONENT = +5;
-	public static int FRIENDWANTSTOEATHIM = -5;
+	public static int FRIENDWANTSTOEATHIM = -1;
 	
-	public ConfidenceLevel(){
-		level = 50;
+	public ConfidenceLevel(int badFacing){
+		level = 45+badFacing;
 	}
 	
 	public void update(int value){

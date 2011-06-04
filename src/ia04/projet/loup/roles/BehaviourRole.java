@@ -33,7 +33,7 @@ public class BehaviourRole extends RoleBehaviour {
 		if(message!=null){
 			mStartGame msgContent = (mStartGame)message;
 			for(String player : msgContent.getLocalNames()){
-				((AgtRole)myAgent).confidenceLevel.put(player, new ConfidenceLevel());
+				((AgtRole)myAgent).confidenceLevel.put(player, new ConfidenceLevel(((AgtRole)myAgent).random.nextInt(10)));
 			}
 		} else {
 			message = mMessage.parseJson(msgString, mPlayerDied.class);

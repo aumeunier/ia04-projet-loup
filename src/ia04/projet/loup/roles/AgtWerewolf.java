@@ -1,6 +1,7 @@
 package ia04.projet.loup.roles;
 
 import ia04.projet.loup.Debugger;
+import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.messages.mVote;
 
@@ -29,16 +30,18 @@ public class AgtWerewolf extends AgtRole {
 			//Debugger.println("AgtWerewofl: eatSomedy-RABBIT");
 			return candidates.get(random.nextInt(candidates.size()));
 		case BASIC:
-			//Debugger.println("AgtWerewofl: eatSomedy-BASIC");
+			//Debugger.println(this.getLocalName()+": vote-BASIC: "+getLowestConfidence(candidates));
 			return getLowestConfidence(candidates);
 		default: return null;
 		}
 	}
 	/** Update confidence levels after a WW vote */
 	protected void updateConfidenceVoteWerewolf(){
-		for(mVote vote:lastVote.values()){
-			confidenceLevel.get(vote.getChoice()).update(ConfidenceLevel.FRIENDWANTSTOEATHIM);
+		for (String elector : this.lastVote.keySet()) {
+			if (!elector.equals(this.getLocalName())){
+				/** if this isn't my vote */
+				confidenceLevel.get(lastVote.get(elector).getChoice()).update(ConfidenceLevel.FRIENDWANTSTOEATHIM);
+			}
 		}
 	}
-
 }

@@ -1,6 +1,7 @@
 package ia04.projet.loup;
 
 import java.util.HashMap;
+import java.util.Random;
 
 /**
  * This class contains variables and methods that can be used anywhere in the program
@@ -129,4 +130,6 @@ public class Global {
 		/** First real strategy, votes for the confidence lvl */
 		BASIC
 	}
+	
+	public static Random random = new Random(System.currentTimeMillis());
 }
