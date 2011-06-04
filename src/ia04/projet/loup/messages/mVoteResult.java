@@ -9,11 +9,14 @@ public class mVoteResult extends mMessage{
 	/** Type of the election */
 	private AgtVote.voteType type;
 	
-	/** Difference from the */
+	/** To differentiate from the mVote message during serialization */
 	private boolean isFinalElection;
 	
 	/** The results of the previous election turn */
 	private HashMap<String, mVote> whoVotesForWho;
+	
+	/** The final choice */
+	private String choiceResult;
 
 	/**
 	 *  Transform the Json String into a mResultVote instance
@@ -58,5 +61,12 @@ public class mVoteResult extends mMessage{
 	
 	public boolean getIsFinalElection(){
 		return isFinalElection;
+	}
+	
+	public void setChoiceResult(String choice){
+		this.choiceResult = choice;
+	}
+	public String getChoiceResult(){
+		return choiceResult;
 	}
 }

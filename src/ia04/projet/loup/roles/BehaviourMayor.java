@@ -13,7 +13,6 @@ public class BehaviourMayor extends RoleBehaviour {
 	 */
 	private static final long serialVersionUID = 6216754252215810671L;
 
-
 	/**
 	 * Waits for the day and do the corresponding actions
 	 *  
@@ -26,29 +25,27 @@ public class BehaviourMayor extends RoleBehaviour {
 		/** Waits the sunrise */
 		// Message reception
 		String msgString = msg.getContent();
-		AID msgSender = msg.getSender();
-		int msgPerformative = msg.getPerformative();
 
-		/** TODO Checks the source of the message */
-		//if( msgSender == ACTION || ADVICE || VOTE)
 		mVote msgContent = (mVote)mMessage.parseJson(msgString, mVote.class);
-		ACLMessage response = msg.createReply();
-		switch (msgContent.getType()){
-		/** elects the next mayor */
-		case SUCCESSOR: 
-			msgContent.setChoice(((AgtRole) myAgent).nameSuccessor(msgContent.getCandidates()));
-			response.setContent(msgContent.toJson());
-			myAgent.send(response);
-			break;					
+		if(msgContent != null){
+			ACLMessage response = msg.createReply();
+			switch (msgContent.getType()){
+			/** elects the next mayor */
+			case SUCCESSOR: 
+				msgContent.setChoice(((AgtRole) myAgent).nameSuccessor(msgContent.getCandidates()));
+				response.setContent(msgContent.toJson());
+				response.setPerformative(ACLMessage.INFORM);
+				myAgent.send(response);
+				break;		
 
-			/** Resolves equality */
-		case EQUALITY: 
-			Debugger.println("behaviour mayor equality"+msgContent.getCandidates());
-			msgContent.setChoice(((AgtRole) myAgent).resolveEquality(msgContent.getCandidates()));
-			response.setContent(msgContent.toJson());
-			response.setPerformative(ACLMessage.INFORM);
-			myAgent.send(response);
-			break;						
+				/** Resolves equality */
+			case EQUALITY: 
+				msgContent.setChoice(((AgtRole) myAgent).resolveEquality(msgContent.getCandidates()));
+				response.setContent(msgContent.toJson());
+				response.setPerformative(ACLMessage.INFORM);
+				myAgent.send(response);
+				break;						
+			}
 		}
 	}
 }

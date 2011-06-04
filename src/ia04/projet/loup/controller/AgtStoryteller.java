@@ -49,7 +49,7 @@ public class AgtStoryteller extends Agent {
 	/** The clock that regulates the game phases and game speed. */
 	private PhaseClock phaseClock;
 	/** The generator used to pick configurations and assign roles randomly */
-    private Random generator = new Random();
+	private Random generator = new Random();
 	/** The number of answers the controller is waiting for before going on. */
 	private int nbWaitingAnswers;
 	/** Remember when a request has been sent and not answered */
@@ -64,12 +64,18 @@ public class AgtStoryteller extends Agent {
 	private AID agentAdviceAid;
 	/** The AID of the AgtRole protected by the Guardian this turn */
 	private AID guardianTarget;
-	//TODO: lovers, charmed
+	/** The AID of the AgtRole being a mayor. */
+	private AID mayorAid;
+	/** The AID of the first lover. */
+	private AID firstLoverAid;
+	/** The AID of the second lover. */
+	private AID secondLoverAid;
+	//TODO: charmed
 
-	
-////////////////////////////////////////////////////////////////////////////////
-/////////////// 	 INITIALIZATIONS    
-////////////////////////////////////////////////////////////////////////////////
+
+	////////////////////////////////////////////////////////////////////////////////
+	/////////////// 	 INITIALIZATIONS    
+	////////////////////////////////////////////////////////////////////////////////
 	/**
 	 * The default constructor. Start an AgtStoryteller.
 	 * Attach its behaviour and initialize the internal clock.
@@ -89,7 +95,7 @@ public class AgtStoryteller extends Agent {
 		sd.setName(this.getLocalName());
 		DFInterface.registerService(this, sd);
 	}
- 	/**
+	/**
 	 * Initialize the Kb Agent used by the Storyteller agent if it hasn't been done before.
 	 */
 	public void createKbAgent(){		
@@ -98,7 +104,7 @@ public class AgtStoryteller extends Agent {
 			nbWaitingAnswers = 0;
 			return;
 		}
-		
+
 		// Create and register an agent KB used by this storyteller
 		AgtKbStoryteller agtKbStoryteller = new AgtKbStoryteller();
 		AgentContainer mc = this.getContainerController();
@@ -110,7 +116,7 @@ public class AgtStoryteller extends Agent {
 			Debugger.println("Could not initialize the AgtKbStoryteller.");
 			Debugger.println(e.toString());
 		}
-		
+
 		// Link the agent KB to this Storyteller agent
 		this.kbStoryteller = agtKbStoryteller.getAID();
 	}
@@ -158,10 +164,10 @@ public class AgtStoryteller extends Agent {
 		} 	
 	}
 
-	
-////////////////////////////////////////////////////////////////////////////////
-/////////////// 	 START A GAME     
-////////////////////////////////////////////////////////////////////////////////
+
+	////////////////////////////////////////////////////////////////////////////////
+	/////////////// 	 START A GAME     
+	////////////////////////////////////////////////////////////////////////////////
 	/**
 	 * Enough players registered. Storyteller can ask all the players whether they are ready or not.
 	 * If enough players are ready, the game will start.
@@ -173,7 +179,7 @@ public class AgtStoryteller extends Agent {
 		message.setType(mStorytellerPlayer.mType.START_GAME);
 		message.setStoryTelling("Do you want to participate in the new game ?");
 		this.sendMessageToRegisteredAgents(message);
-		
+
 		// If it takes too long, cut the preparation phase
 		this.phaseClock.startPreparationTimer();
 	}
@@ -186,17 +192,17 @@ public class AgtStoryteller extends Agent {
 		if(possibleConfigurations.isEmpty()){
 			return;
 		}
-		
+
 		// Pick a configuration randomly
 		int pickedConfiguration = generator.nextInt(possibleConfigurations.size());
 		ArrayList<Global.Roles> rolesToAttribute =  possibleConfigurations.get(
 				possibleConfigurations.keySet().toArray()[pickedConfiguration]);
-		
+
 		// Start the Roles assignation
 		System.out.println("Starting Roles assignation");
 		System.out.println("Possible Roles:"+rolesToAttribute.toString());
 		this.lastVictimsRoles.clear();
-		
+
 		// Remove players who do not participate
 		Set<AID> keySet = playersMap.keySet();
 		HashSet<AID> playersAid = new HashSet<AID>();
@@ -205,15 +211,15 @@ public class AgtStoryteller extends Agent {
 				playersAid.add(aid);
 			}
 		}
-		
+
 		// For each player
 		for(AID aid: playersAid){
 			// Pick a role randomly
 			int roleIndex = generator.nextInt(rolesToAttribute.size());
-			
+
 			// Attribute the role to the player
 			this.assignRoleToPlayer(rolesToAttribute.get(roleIndex), aid);
-			
+
 			// Remove role from list
 			rolesToAttribute.remove(roleIndex);
 		}			
@@ -225,17 +231,17 @@ public class AgtStoryteller extends Agent {
 	private void startGame(){
 		// Start the game phases
 		this.phaseClock.startGameTimer();	
-		
+
 		// Notify the roles through the Vote agent
 		mStartGame startGameMessage = new mStartGame();		
 		startGameMessage.setStartGame(true);
 		this.sendMessageToVoteAgent(startGameMessage, ACLMessage.INFORM);
 	}
-	
 
-////////////////////////////////////////////////////////////////////////////////
-/////////////// 	 PLAYERS     
-////////////////////////////////////////////////////////////////////////////////
+
+	////////////////////////////////////////////////////////////////////////////////
+	/////////////// 	 PLAYERS     
+	////////////////////////////////////////////////////////////////////////////////
 	/**
 	 * Add a player to the party room. The players do not necessarily have to be "playing".
 	 * They can watch the game and participate in a game if a new game starts.
@@ -245,7 +251,7 @@ public class AgtStoryteller extends Agent {
 		// Add the player list of players in the room of this storyteller
 		// Default Roles value for a player is "Dead" (Observer)
 		this.playersMap.put(player, Roles.DEAD);
-		
+
 		// If enough players are in the room now, we can ask all the players if they want to start the game
 		if(this.playersMap.size() >= this.nbOfRequiredPlayersToStartAGame && this.nbWaitingAnswers == 0){
 			this.askToStartGame();
@@ -259,11 +265,11 @@ public class AgtStoryteller extends Agent {
 		// Remove the player from list of players of this storyteller
 		this.playersMap.remove(player);
 	}
-	
-	
-////////////////////////////////////////////////////////////////////////////////
-/////////////// 	 ROLES     
-////////////////////////////////////////////////////////////////////////////////
+
+
+	////////////////////////////////////////////////////////////////////////////////
+	/////////////// 	 ROLES     
+	////////////////////////////////////////////////////////////////////////////////
 	/**
 	 * Assign a role to a player. Initialize a message to send to that player.
 	 * Storyteller will wait for his answer.
@@ -284,7 +290,7 @@ public class AgtStoryteller extends Agent {
 	public void addRoleToPlayer(Roles role, AID player){
 		// Change the role of the given player
 		this.playersMap.put(player, role);
-		
+
 		// Another player has answered, if it was the last to answer, we may want to start the game
 		this.nbWaitingAnswers--;
 		if(this.nbWaitingAnswers == 0){
@@ -299,11 +305,11 @@ public class AgtStoryteller extends Agent {
 	public boolean roleStillInGame(Roles role){
 		return this.playersMap.containsValue(role);
 	}
-	
-	
-////////////////////////////////////////////////////////////////////////////////
-/////////////// 	 PARTICIPATION OF PLAYERS      
-////////////////////////////////////////////////////////////////////////////////
+
+
+	////////////////////////////////////////////////////////////////////////////////
+	/////////////// 	 PARTICIPATION OF PLAYERS      
+	////////////////////////////////////////////////////////////////////////////////
 	/**
 	 * If all the players have answered to the Storyteller we may want to start the game.
 	 * The game will only start if enough players are willing to participate.
@@ -314,7 +320,7 @@ public class AgtStoryteller extends Agent {
 			return;
 		}
 		hasSentRequestToKb = false;
-		
+
 		// Get the number of players who answered yes
 		int numberOfPositiveAnswers = 0;
 		for(Roles role: this.playersMap.values()){
@@ -322,7 +328,7 @@ public class AgtStoryteller extends Agent {
 				numberOfPositiveAnswers++;
 			}
 		}
-		
+
 		// Now, we want to find a configuration with this number of players
 		// Then we will assign the roles to the players who participate in the game
 		// and wait for their answer (they initialized their Role correctly and are ready to play)
@@ -372,9 +378,9 @@ public class AgtStoryteller extends Agent {
 	}
 
 
-////////////////////////////////////////////////////////////////////////////////
-/////////////// 	 ACTIONS      
-////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////
+	/////////////// 	 ACTIONS      
+	////////////////////////////////////////////////////////////////////////////////
 	/**
 	 * Add a victim to the list of people who should be dying soon
 	 * @param victimAid The new victim
@@ -401,6 +407,64 @@ public class AgtStoryteller extends Agent {
 		this.guardianTarget = targetAid;
 	}
 	/**
+	 * The night's victims may have an action to perform before 
+	 */
+	public void nightVictimsEvent(){
+		this.nbWaitingAnswers = 0;
+		for(AID victim: this.lastVictimsRoles){
+			// Lovers
+			if(victim.equals(this.firstLoverAid) || victim.equals(this.secondLoverAid)){
+				//TODO:
+			}
+			else {
+				Global.Roles victimRole = this.playersMap.get(victim);
+				//TODO:
+				// Hunter
+				if(victimRole.equals(Roles.HUNTER)){
+					
+				}
+				// Sage
+				else if(victimRole.equals(Roles.VILLAGESAGE)){
+
+				}
+			}
+		}		
+	}
+	/**
+	 * The day's victims may have an action to perform before 
+	 */
+	public void dayVictimsEvent(){
+		this.nbWaitingAnswers = 0;
+		for(AID victim: this.lastVictimsRoles){
+			// Mayor
+			if(victim.equals(this.mayorAid)){
+				mVoteRun voteMsg = new mVoteRun(AgtVote.voteType.SUCCESSOR);
+				this.sendMessageToVoteAgent(voteMsg, ACLMessage.REQUEST);
+				this.nbWaitingAnswers++;
+			}
+			// Lovers 
+			else if(victim.equals(this.firstLoverAid) || victim.equals(this.secondLoverAid)){
+				//TODO:
+			}
+			else {
+				Global.Roles victimRole = this.playersMap.get(victim);
+				//TODO:
+				// Hunter
+				if(victimRole.equals(Roles.HUNTER)){
+
+				}
+				// Idiot
+				else if(victimRole.equals(Roles.VILLAGEIDIOT)){
+
+				}
+				// Scapegoat
+				else if(victimRole.equals(Roles.SCAPEGOAT)){
+
+				}
+			}
+		}		
+	}
+	/**
 	 * The victims are actually killed. 
 	 * The killed players are notified about their death.
 	 * The communication agent is notified about that.
@@ -413,7 +477,7 @@ public class AgtStoryteller extends Agent {
 			message.setDeadName(victim.getLocalName());
 			sendMessageToOneRegisteredAgent(victim, message, ACLMessage.INFORM);
 		}
-		
+
 		// Wait for the players to clean their role
 		this.nbWaitingAnswers = this.lastVictimsRoles.size();
 	}
@@ -423,11 +487,12 @@ public class AgtStoryteller extends Agent {
 	public void playerFinishedBeingKilled(){
 		this.nbWaitingAnswers--;
 	}
+	
 	//TODO: actions reactions
 
-////////////////////////////////////////////////////////////////////////////////
-/////////////// 	 VOTES      
-////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////
+	/////////////// 	 VOTES      
+	////////////////////////////////////////////////////////////////////////////////
 	/**
 	 * Treatment of the werewolves' vote results
 	 * @param choice The target
@@ -456,13 +521,13 @@ public class AgtStoryteller extends Agent {
 	 */
 	public void mayorElectionEndedWithChoice(AID choice){
 		Debugger.println("New mayor: "+choice.getLocalName());
-		// TODO: mayor
+		this.mayorAid = choice;
 		this.nbWaitingAnswers=0;		
 	}
-	
-////////////////////////////////////////////////////////////////////////////////
-/////////////// 	 PHASES MANAGEMENT
-////////////////////////////////////////////////////////////////////////////////
+
+	////////////////////////////////////////////////////////////////////////////////
+	/////////////// 	 PHASES MANAGEMENT
+	////////////////////////////////////////////////////////////////////////////////
 	/**
 	 * This method is called by the internal clock to know 
 	 * if the phase it wants to start should be skipped
@@ -548,7 +613,7 @@ public class AgtStoryteller extends Agent {
 		mStorytellerPlayer msg = new mStorytellerPlayer();
 		msg.setType(mStorytellerPlayer.mType.STORYTELLING);
 		msg.setPhase(phase);
-		
+
 		// Storytelling depends on the phase
 		String storytelling = "";
 		switch(phase){
@@ -583,16 +648,16 @@ public class AgtStoryteller extends Agent {
 			// TODO: action
 			storytelling = "The clairvoyant can detect someone's role.";
 			break;
-			
+
 		case WEREWOLVES:{
 			storytelling = "The werewolves wake up and gather to select their victim for tonight.";
-			
+
 			// Start a vote between the werewolves
 			mVoteRun voteMsg = new mVoteRun(AgtVote.voteType.VOTE_WW);
 			this.sendMessageToVoteAgent(voteMsg, ACLMessage.REQUEST);
 			this.nbWaitingAnswers = 1;
 		}	break;
-			
+
 		case WITCH:
 			// TODO: action
 			storytelling = "The witch wakes up. She can use her revive pot or her deathly pot.";
@@ -621,39 +686,39 @@ public class AgtStoryteller extends Agent {
 			storytelling = "Tonight's victims are revealed.";
 			break;
 		case VICTIMSEVENT:
-			// TODO: action
+			nightVictimsEvent();
 			storytelling = "Before their last action the victims can try a desperate move.";
 			break;
 		case VICTIMSRESOLUTION:
 			storytelling = "The victims die.";
 			killVictims();
 			break;
-			
+
 		case MAYORELECTION:{
 			storytelling = "The mayor election can begin. The village needs someone to follow! " +
 			"Choose wisely because the mayor has power.";
-			
+
 			// Start a vote for the mayor
 			mVoteRun voteMsg = new mVoteRun(AgtVote.voteType.ELECT_MAYOR);
 			this.sendMessageToVoteAgent(voteMsg, ACLMessage.REQUEST);
 			this.nbWaitingAnswers = 1;
 		}	break;
-		
+
 		case HUNGVOTE:{
 			storytelling = "The hanged selection begins. Who will be hung on the place today ?";
-			
+
 			// Start a vote in the village
 			mVoteRun voteMsg = new mVoteRun(AgtVote.voteType.VOTE_PAYSAN);
 			this.sendMessageToVoteAgent(voteMsg, ACLMessage.REQUEST);
 			this.nbWaitingAnswers = 1;
 		}	break;
-		
+
 		case HUNGREVELATION:
 			// TODO: ?? action ??
 			storytelling = "The hung role's revealed.";
 			break;
 		case HUNGEVENT:
-			// TODO: action
+			dayVictimsEvent();
 			storytelling = "Before his hunging the hung can try a desperate move.";
 			break;
 		case HUNGRESOLUTION:
@@ -664,7 +729,7 @@ public class AgtStoryteller extends Agent {
 			break;
 		}
 		msg.setStoryTelling(storytelling);
-		
+
 		// Send the message to all the registered agents
 		sendMessageToRegisteredAgents(msg);	
 	}
@@ -735,22 +800,22 @@ public class AgtStoryteller extends Agent {
 		default:
 			break;
 		}	
-		
+
 		// If the game is over we end the game
 		if(gameIsOver){
 			this.endGameWithState(GameExitErrorCodes.GAME_OVER);
 		}
-		
+
 		// If the game is not over, we should start the next phase
 		else {
 			phaseClock.startNextPhase();
 		}		
 	}
 
-	
-////////////////////////////////////////////////////////////////////////////////
-/////////////// 	 END OF THE GAME .. OR NOT       
-////////////////////////////////////////////////////////////////////////////////
+
+	////////////////////////////////////////////////////////////////////////////////
+	/////////////// 	 END OF THE GAME .. OR NOT       
+	////////////////////////////////////////////////////////////////////////////////
 	/**
 	 * The various error codes we could have
 	 * @author aurelien
@@ -794,7 +859,7 @@ public class AgtStoryteller extends Agent {
 			}
 			// TODO: if charmed -> nCharmed++
 		}
-		
+
 		// TODO: ||Êtwo lovers only
 		return ((nWolf == nMax) || (nWolf == 0) || (nCharmed == nMax-1)); 
 	}
@@ -805,12 +870,12 @@ public class AgtStoryteller extends Agent {
 	public void endGameWithState(GameExitErrorCodes errorCode){
 		// End the phase clock
 		this.phaseClock.stopTimer();
-		
+
 		// Prepare a message for all the players using the Storyteller-Player Message template
 		mStorytellerPlayer message = new mStorytellerPlayer();
 		message.setPhase(Global.GamePhases.NONE);
 		message.setType(mStorytellerPlayer.mType.END_GAME);
-		
+
 		// Reason depends on the errorCode
 		switch(errorCode){
 		// Normal way to end a game
@@ -852,10 +917,10 @@ public class AgtStoryteller extends Agent {
 		sendMessageToRegisteredAgents(message);
 	}
 
-	
-////////////////////////////////////////////////////////////////////////////////
-/////////////// 	 SEND MESSAGES      
-////////////////////////////////////////////////////////////////////////////////
+
+	////////////////////////////////////////////////////////////////////////////////
+	/////////////// 	 SEND MESSAGES      
+	////////////////////////////////////////////////////////////////////////////////
 	/**
 	 * Initialize a message for the Advice Agent
 	 * @param message The message object to serialize and send as content to the agent

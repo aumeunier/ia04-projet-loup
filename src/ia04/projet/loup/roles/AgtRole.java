@@ -109,7 +109,8 @@ public class AgtRole extends Agent {
 		behaviours.add(aBehaviour);
 	}
 	public void dispatchMessageToBehaviours(ACLMessage message){
-		for(RoleBehaviour b: behaviours){
+		for(int i = 0 ; i < behaviours.size() ; ++i){
+			RoleBehaviour b = behaviours.get(i);
 			if((b instanceof BehaviourDead) || (!b.isDone())){
 				b.roleAction(message);
 			}
@@ -252,5 +253,14 @@ public class AgtRole extends Agent {
 		messageForPlayer.setPerformative(ACLMessage.INFORM);
 		messageForPlayer.setContent(msgcontent.toJson());
 		this.send(messageForPlayer);
+	}
+	
+	/**
+	 * A new mayor has been elected !
+	 */
+	public void newMayorElected(String mayorLocalName){
+		if(mayorLocalName.equals(this.getLocalName())){
+			this.addAndSaveBehaviour(new BehaviourMayor());
+		}
 	}
 }

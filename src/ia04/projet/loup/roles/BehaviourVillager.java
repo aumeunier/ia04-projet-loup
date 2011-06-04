@@ -49,6 +49,11 @@ public class BehaviourVillager extends RoleBehaviour {
 				response.setPerformative(ACLMessage.INFORM);
 				myAgent.send(response);				
 				break;
+			case SUCCESSOR:
+				if(msgContent.getChoice() != null){ // It is the result
+					((AgtRole) myAgent).newMayorElected(msgContent.getChoice());
+				}
+				break;
 			}
 		}
 		else {
@@ -56,7 +61,15 @@ public class BehaviourVillager extends RoleBehaviour {
 			message = mMessage.parseJson(msgString, mVoteResult.class);
 			if(message!=null){
 				mVoteResult msgContent = (mVoteResult)message;
-				((AgtRole) myAgent).setLastVote(msgContent.getWhoVotesForWho());
+				switch(msgContent.getType()){
+				case ELECT_MAYOR:
+					((AgtRole) myAgent).newMayorElected(msgContent.getChoiceResult());
+				case VOTE_PAYSAN:
+				case VOTE_WW:
+					((AgtRole) myAgent).setLastVote(msgContent.getWhoVotesForWho());
+					break;
+				case SUCCESSOR:
+				}
 			}
 			else{
 				// Action requesting an action
