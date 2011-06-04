@@ -11,8 +11,10 @@ import ia04.projet.loup.messages.mVoteRun;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.Map.Entry;
 
 /**
@@ -174,7 +176,11 @@ public class AgtVote extends Agent {
 					case VOTE_PAYSAN : 
 						tieATie();
 						break;
-						// Otherwise, another turn will be run
+					// If it is a vote to elect the mayor (first turn), choose randomly
+					case ELECT_MAYOR:
+						tieRandomly();
+						break;
+					// Otherwise, another turn will be run
 					default: 
 						election(lastVote, false);
 						break;
@@ -189,8 +195,6 @@ public class AgtVote extends Agent {
 	 */
 	private void tieATie() {
 		mVote tieVote = new mVote();
-		int maxVote = 0;
-
 		tieVote.setType(AgtVote.voteType.EQUALITY);
 		tieVote.setCandidates(this.getWinners());
 
@@ -198,6 +202,17 @@ public class AgtVote extends Agent {
 		message.setContent(tieVote.toJson());
 		message.addReceiver(this.mayor);
 		this.send(message);
+	}
+	
+	/**
+	 * The tie is broken randomly among the ones with the biggest number of voices
+	 */
+	private void tieRandomly(){
+		ArrayList<String> winners = getWinners();
+		Random r = new Random(Global.random.nextLong());
+		String winner = winners.get(r.nextInt(winners.size()));	
+		this.mayor = new AID(winner, AID.ISLOCALNAME); 	
+		this.informElectorsFinalResult(winner, lastVote.getType());	
 	}
 
 	private ArrayList<String> getWinners(){
@@ -275,7 +290,7 @@ public class AgtVote extends Agent {
 			break;
 		}
 
-		this.informFinalResult(winner);
+		this.informElectorsFinalResult(winner, lastVote.getType());
 	}
 
 	/**
@@ -283,11 +298,10 @@ public class AgtVote extends Agent {
 	 * @param aVote
 	 */
 	public void endOfEquality(mVote aVote) {
-
 		int oldScore = this.lastElectionResult.get(aVote.getChoice());
 		this.lastElectionResult.put(aVote.getChoice(), oldScore + 1);
 
-		this.informFinalResult(aVote.getChoice());
+		this.informElectorsFinalResult(aVote.getChoice(), voteType.EQUALITY);
 	}
 	
 	/**
@@ -296,18 +310,43 @@ public class AgtVote extends Agent {
 	 */
 	public void endOfSuccessor(mVote aVote){
 		this.mayor = new AID(aVote.getChoice(), AID.ISLOCALNAME); 
-		this.informFinalResult(aVote.getChoice());
+		this.informAllFinalResult(mayor.getLocalName(),	voteType.SUCCESSOR);
+	}
+
+	/**
+	 * Inform everyone of the final results
+	 * @param winner
+	 */
+	private void informAllFinalResult(String winner, voteType type){
+		/* Inform the electors of the final result */
+		ACLMessage message = new ACLMessage(ACLMessage.INFORM);
+		mVoteResult aResultVote = new mVoteResult();
+		aResultVote.setType(type);
+		aResultVote.setIsFinalElection(true);
+		aResultVote.setChoiceResult(winner);
+		for (Entry<AID, Roles> entry : this.playersMap.entrySet()) {
+			message.addReceiver(entry.getKey());
+		}
+		message.setContent(aResultVote.toJson());
+		this.send(message);
+
+		/* Inform StoryTeller of the final result */
+		message = new ACLMessage(ACLMessage.INFORM);
+		this.lastVote.setChoice(winner.replace(Global.LOCALNAME_SUFFIX_ROLE, ""));
+		message.setContent(this.lastVote.toJson());
+		message.addReceiver(this.storyTeller);
+		this.send(message);
 	}
 
 	/**
 	 * Inform the electors the final results
 	 * @param winner
 	 */
-	private void informFinalResult(String winner){
+	private void informElectorsFinalResult(String winner, voteType type){
 		/* Inform the electors of the final result */
 		ACLMessage message = new ACLMessage(ACLMessage.INFORM);
 		mVoteResult aResultVote = new mVoteResult();
-		aResultVote.setType(lastVote.getType());
+		aResultVote.setType(type);
 		aResultVote.setIsFinalElection(true);
 
 		HashMap<String, mVote> temp = new HashMap<String, mVote>();
