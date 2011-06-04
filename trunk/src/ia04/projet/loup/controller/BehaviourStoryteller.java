@@ -124,7 +124,13 @@ public class BehaviourStoryteller extends Behaviour {
 								}
 								break;
 							case SUCCESSOR:
-								//TODO: notify all the roles about who the new mayor is
+								if(message.getChoice()!=null){
+									AID mayorAid = new AID(message.getChoice(), AID.ISLOCALNAME);
+									myAgt.mayorElectionEndedWithChoice(mayorAid);
+								}
+								else {
+									myAgt.mayorElectionEndedWithChoice(null);
+								}
 								break;
 							}
 						}

@@ -12,7 +12,7 @@ import java.util.TimerTask;
  *
  */
 public class PhaseClock {
-	private static final float AVERAGE_SPEED = 0.25f;
+	private static final float AVERAGE_SPEED = 0.025f;
 	private static final int PREPARATION_PHASE_DURATION = 5000;
 	/** The timer used to time the phases */
 	private Timer timer;

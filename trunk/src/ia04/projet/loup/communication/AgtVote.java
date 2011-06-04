@@ -31,7 +31,7 @@ public class AgtVote extends Agent {
 
 	/** Map of the registered players */
 	private HashMap<AID, Roles> playersMap = new HashMap<AID, Roles>();
-	
+
 	/** AID of the Mayor */
 	private AID mayor;
 
@@ -135,11 +135,11 @@ public class AgtVote extends Agent {
 			for (Entry<AID, Roles> entry : this.playersMap.entrySet()) {
 				AID aid = entry.getKey();
 				Roles role = entry.getValue();
-				if(aid.getLocalName() != mayor.getLocalName()){
+				if(!aid.getLocalName().equals(mayor.getLocalName())){
 					if(role != Roles.DEAD){
 						aVote.getCandidates().add(aid.getLocalName());
 					}
-				}
+				}				
 			}
 			this.remainingVotes++;
 			voteMessage.addReceiver(mayor);
@@ -147,7 +147,6 @@ public class AgtVote extends Agent {
 		}
 		default:
 			break;
-			//throw new NotImplementedException();
 		}
 
 		voteMessage.setContent(aVote.toJson());
@@ -161,7 +160,7 @@ public class AgtVote extends Agent {
 		if (remainingVotes < 0)
 			Debugger.println("Should Never Happen: More votes than expected.");
 		else {
-			this.whoVotesForWho.put(aid, aVote);
+			this.whoVotesForWho.put(aid, aVote);	
 			this.remainingVotes--;
 			if (remainingVotes == 0) {
 				this.calculateResults();
@@ -171,40 +170,40 @@ public class AgtVote extends Agent {
 				} else {
 					// There is no unique winner
 					switch(lastVote.getType()){
-						// If it is a vote to kill a were wolf, the mayor will choose one among the winners
-						case VOTE_PAYSAN : 
-							tieATie();
-							break;
+					// If it is a vote to kill a were wolf, the mayor will choose one among the winners
+					case VOTE_PAYSAN : 
+						tieATie();
+						break;
 						// Otherwise, another turn will be run
-						default: 
-							election(lastVote, false);
-							break;
+					default: 
+						election(lastVote, false);
+						break;
 					}
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Ask the mayor to tie a tie
 	 */
 	private void tieATie() {
 		mVote tieVote = new mVote();
 		int maxVote = 0;
-		
+
 		tieVote.setType(AgtVote.voteType.EQUALITY);
 		tieVote.setCandidates(this.getWinners());
-		
+
 		ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
 		message.setContent(tieVote.toJson());
 		message.addReceiver(this.mayor);
 		this.send(message);
 	}
-	
+
 	private ArrayList<String> getWinners(){
 		ArrayList<String> winners = new ArrayList<String>();
 		int maxVote = 0;
-		
+
 		for (String aCandidates : lastElectionResult.keySet()) {
 			if (lastElectionResult.get(aCandidates) > maxVote) {
 				maxVote = lastElectionResult.get(aCandidates);
@@ -215,10 +214,10 @@ public class AgtVote extends Agent {
 				winners.add(aCandidates);
 			}
 		}
-		
+
 		return winners;
 	}
-	
+
 	/*
 	 * Calculate the results of this last election
 	 */
@@ -269,31 +268,37 @@ public class AgtVote extends Agent {
 				winner = aCandidates;
 			}
 		}
-
-		switch(lastVote.getType()){
-			case ELECT_MAYOR: 
-				this.mayor = new AID(winner, AID.ISLOCALNAME); 
-				break;
-			case SUCCESSOR:
-				this.mayor = new AID(winner, AID.ISLOCALNAME); 
-				break;
-		}
 		
+		switch(lastVote.getType()){
+		case ELECT_MAYOR: 
+			this.mayor = new AID(winner, AID.ISLOCALNAME); 
+			break;
+		}
+
 		this.informFinalResult(winner);
 	}
-	
+
 	/**
 	 * Get the choice of the mayor in case of equality in the vote of the paysans
 	 * @param aVote
 	 */
 	public void endOfEquality(mVote aVote) {
-		
+
 		int oldScore = this.lastElectionResult.get(aVote.getChoice());
 		this.lastElectionResult.put(aVote.getChoice(), oldScore + 1);
-		
+
 		this.informFinalResult(aVote.getChoice());
 	}
 	
+	/**
+	 * Get the choice of the mayor regarding his successor
+	 * @param aVote 
+	 */
+	public void endOfSuccessor(mVote aVote){
+		this.mayor = new AID(aVote.getChoice(), AID.ISLOCALNAME); 
+		this.informFinalResult(aVote.getChoice());
+	}
+
 	/**
 	 * Inform the electors the final results
 	 * @param winner
@@ -310,6 +315,7 @@ public class AgtVote extends Agent {
 			temp.put(entry.getKey().getLocalName(), entry.getValue());
 		}
 		aResultVote.setWhoVotesForWho(temp);
+		aResultVote.setChoiceResult(winner);
 
 		message.setContent(aResultVote.toJson());
 		for (Entry<AID, mVote> entry : this.whoVotesForWho.entrySet()) {
@@ -353,7 +359,7 @@ public class AgtVote extends Agent {
 		String deadPlayer = deathMessage.getDeadName();
 		AID deathAid = new AID(deadPlayer,AID.ISLOCALNAME);
 		this.playersMap.put(deathAid, Global.Roles.DEAD);
-		
+
 		// Notify the other players
 		/*
 		ACLMessage message = new ACLMessage(ACLMessage.INFORM);
@@ -364,7 +370,7 @@ public class AgtVote extends Agent {
 			}
 		}
 		this.send(message);
-		*/
+		 */
 	}
 	/**
 	 * Add a player to the playerMap

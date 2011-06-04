@@ -1,5 +1,6 @@
 package ia04.projet.loup.communication;
 
+import ia04.projet.loup.Debugger;
 import ia04.projet.loup.messages.mPlayerDied;
 import ia04.projet.loup.messages.mStartGame;
 import ia04.projet.loup.messages.mVote;
@@ -41,6 +42,9 @@ public class BehaviourVote extends CyclicBehaviour {
 					switch(aVote.getType()){
 						case EQUALITY: 
 							this.agtVote.endOfEquality(aVote); 
+							break;
+						case SUCCESSOR:
+							this.agtVote.endOfSuccessor(aVote);
 							break;
 						default: 
 							this.agtVote.addVote(startMessage.getSender(), aVote); 
