@@ -412,8 +412,14 @@ public class AgtStoryteller extends Agent {
 	public void nightVictimsEvent(){
 		this.nbWaitingAnswers = 0;
 		for(AID victim: this.lastVictimsRoles){
+			// Mayor
+			if(victim.equals(this.mayorAid)){
+				mVoteRun voteMsg = new mVoteRun(AgtVote.voteType.SUCCESSOR);
+				this.sendMessageToVoteAgent(voteMsg, ACLMessage.REQUEST);
+				this.nbWaitingAnswers++;
+			}
 			// Lovers
-			if(victim.equals(this.firstLoverAid) || victim.equals(this.secondLoverAid)){
+			else if(victim.equals(this.firstLoverAid) || victim.equals(this.secondLoverAid)){
 				//TODO:
 			}
 			else {
@@ -620,10 +626,15 @@ public class AgtStoryteller extends Agent {
 		case NONE:
 			break;
 		case NIGHT:
-			Debugger.println("\n New turn \n");
+			Debugger.println("\n Turn "+this.phaseClock.getNbOfTurns()+" \n");
 			if(Debugger.isOn() && this.phaseClock.getNbOfTurns() > 1){
 				for(Entry<AID,Roles> player: this.playersMap.entrySet()){
-					Debugger.println(player.getKey().getLocalName()+" has role: "+player.getValue());
+					if(player.getKey().equals(this.mayorAid)){
+						Debugger.println(player.getKey().getLocalName()+" has role: "+player.getValue()+" (Mayor).");						
+					}
+					else {
+						Debugger.println(player.getKey().getLocalName()+" has role: "+player.getValue());
+					}
 				}
 			}
 			storytelling = "It is now the night. The village goes to sleep.";
