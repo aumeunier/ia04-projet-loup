@@ -15,6 +15,7 @@ import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -47,7 +48,7 @@ public class AgtRole extends Agent {
 	/** list of all the behaviours of the agent */
 	protected ArrayList<RoleBehaviour> behaviours = new ArrayList<RoleBehaviour>();
 	/** generate random int for the rabbit strategy */
-	protected Random random = new Random();
+	protected Random random = new Random(Global.random.nextLong());
 	
 	public int getVoices() {
 		return voices;
@@ -135,7 +136,7 @@ public class AgtRole extends Agent {
 			//Debugger.println("AgtRole: vote-RABBIT");
 			return candidates.get(random.nextInt(candidates.size()));
 		case BASIC:
-			//Debugger.println("AgtRole: vote-BASIC");
+			//Debugger.println(this.getLocalName()+": vote-BASIC: "+getLowestConfidence(candidates));
 			return getLowestConfidence(candidates);
 		default: return null;
 		}
@@ -147,7 +148,7 @@ public class AgtRole extends Agent {
 			//Debugger.println("AgtRole: electMayor-RABBIT");
 			return candidates.get(random.nextInt(candidates.size()));
 		case BASIC:
-			//Debugger.println("AgtRole: electMayor-BASIC");
+			//Debugger.println(this.getLocalName()+": electMayor-BASIC: "+getHighestConfidence(candidates));
 			return getHighestConfidence(candidates);
 		default: return null;
 		}
@@ -156,10 +157,10 @@ public class AgtRole extends Agent {
 	protected String nameSuccessor(ArrayList<String> candidates){
 		switch (currentStrategy){
 		case RABBIT:
-			Debugger.println("AgtRole: nameSuccessor-RABBIT");
+			//Debugger.println("AgtRole: nameSuccessor-RABBIT");
 			return candidates.get(random.nextInt(candidates.size()));
 		case BASIC: 
-			Debugger.println("AgtRole: nameSuccessor-BASIC");
+			//Debugger.println("AgtRole: nameSuccessor-BASIC");
 			return getHighestConfidence(candidates);
 		default: return null;
 		}
@@ -196,8 +197,10 @@ public class AgtRole extends Agent {
 		int max=0;
 		String playerMax=null;
 		for(String player : players){
-			if(confidenceLevel.get(player).getLevel()>max)
+			if(confidenceLevel.get(player).getLevel()>max){
 				playerMax=player;
+				max=confidenceLevel.get(player).getLevel();
+			}
 		}
 		return playerMax;
 	}
@@ -208,6 +211,7 @@ public class AgtRole extends Agent {
 		for(String player : players){
 			if(confidenceLevel.get(player).getLevel()<min)
 				playerMin=player;
+				min=confidenceLevel.get(player).getLevel();
 		}
 		return playerMin;
 	}

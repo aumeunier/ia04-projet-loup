@@ -1,5 +1,6 @@
 package ia04.projet.loup.roles;
 
+import ia04.projet.loup.Debugger;
 import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mVote;
 import jade.core.AID;
@@ -42,8 +43,10 @@ public class BehaviourMayor extends RoleBehaviour {
 
 			/** Resolves equality */
 		case EQUALITY: 
+			Debugger.println("behaviour mayor equality"+msgContent.getCandidates());
 			msgContent.setChoice(((AgtRole) myAgent).resolveEquality(msgContent.getCandidates()));
 			response.setContent(msgContent.toJson());
+			response.setPerformative(ACLMessage.INFORM);
 			myAgent.send(response);
 			break;						
 		}
