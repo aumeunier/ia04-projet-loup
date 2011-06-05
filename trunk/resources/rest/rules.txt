@@ -1,0 +1,13 @@
+Règles de base
+
+Les loups-garous est un jeu de société nécessitant 8 à 20 personnes. Il est également classé comme jeu de rôle, en effet chaque joueur incarne un rôle caché aux yeux de ses camarades. Un joueur incarne le maître du jeu qui orchestre le déroulement de la partie appelant tour à tour les différents personnages à effectuer leurs actions. En effet le jeu est décomposé en 2 phases principales: le jour et la nuit. La nuit les joueurs sont endormis et ne se réveille qu'à l'appel de leur rôle. Ils effectuent alors une action qui se résume la plupart du temps à désigner discrétement (par un geste) l'un de leur camarade. Le jour les joueurs sont tous réveillé. Il communique entre eux et à la fin élimine l'un des leur par le vote du village. 
+Les rôles de bases
+Le simple villageois:
+
+Description: Rôle basique, toutes les actions réalisable par un simple villageois le sont par n'importe quel autre rôle. but: survivre et éliminer les loups-garous Actions: vote du village, vote du maire. 
+Le Loup Garou:
+
+Description but: survivre et éliminer les joueurs non loups-garous. Actions: vote des loups. 
+Les rôles additionnel
+
+Le Maire/Capitaine but: aucun Action: Revote en cas d'égalité, désigne un successeur.
