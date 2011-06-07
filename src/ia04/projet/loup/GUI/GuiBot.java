@@ -2,10 +2,11 @@ package ia04.projet.loup.gui;
 
 import jade.core.AID;
 
-import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextArea;
 
 public class GuiBot extends JFrame implements ActionListener{
@@ -25,6 +27,7 @@ public class GuiBot extends JFrame implements ActionListener{
 	JTextArea name;
 	JTextArea stat;
 	JTextArea role;
+	//JScrollPane storyPane;
 	JTextArea StoryView;
 	JTextArea PlayerList;
 	AID MyPlayerAgent;
@@ -58,7 +61,8 @@ public class GuiBot extends JFrame implements ActionListener{
 		role.setEditable(false);
 		
 		
-		StoryView = new JTextArea();
+		StoryView = new JTextArea("",30,30);
+		StoryView.setWrapStyleWord(true);
 		StoryView.setText("Player initialization...");
 		StoryView.setEditable(false);
 		
@@ -68,54 +72,46 @@ public class GuiBot extends JFrame implements ActionListener{
 		PlayerList.setEditable(false);
 		
 		//Layout creation
-		GridBagConstraints cNameLab = new GridBagConstraints();	
-		cNameLab.gridx = 0;
-		cNameLab.gridy = 0;
+		GridBagConstraints cNameLab = new GridBagConstraints(0,0,1,1,1.0,1.0,GridBagConstraints.EAST,
+				GridBagConstraints.BOTH,new Insets(10,10,10,10),0,0);
 		
-		GridBagConstraints cName = new GridBagConstraints();	
-		cName.gridx = 1;
-		cName.gridy = 0;
+		GridBagConstraints cName = new GridBagConstraints(1,0,1,1,1.0,1.0,GridBagConstraints.EAST,
+				GridBagConstraints.BOTH,new Insets(10,10,10,10),0,0);
 		
-		GridBagConstraints cStatLab = new GridBagConstraints();	
-		cStatLab.gridx = 0;
-		cStatLab.gridy = 1;
+		GridBagConstraints cStatLab = new GridBagConstraints(0,1,1,1,1.0,1.0,GridBagConstraints.EAST,
+				GridBagConstraints.BOTH,new Insets(10,10,10,10),0,0);
 		
-		GridBagConstraints cStat = new GridBagConstraints();	
-		cStat.gridx = 1;
-		cStat.gridy = 1;
+		GridBagConstraints cStat = new GridBagConstraints(1,1,1,1,1.0,1.0,GridBagConstraints.EAST,
+				GridBagConstraints.BOTH,new Insets(10,10,10,10),0,0);
 		
-		GridBagConstraints cRoleLab = new GridBagConstraints();	
-		cRoleLab.gridx = 0;
-		cRoleLab.gridy = 2;
+		GridBagConstraints cRoleLab = new GridBagConstraints(0,2,1,1,1.0,1.0,GridBagConstraints.EAST,
+				GridBagConstraints.BOTH,new Insets(10,10,10,10),0,0);
 		
-		GridBagConstraints cRole = new GridBagConstraints();	
-		cRole.gridx = 1;
-		cRole.gridy = 2;
+		GridBagConstraints cRole = new GridBagConstraints(1,2,1,1,1.0,1.0,GridBagConstraints.EAST,
+				GridBagConstraints.BOTH,new Insets(10,10,10,10),0,0);
 		
-		GridBagConstraints cStoryView = new GridBagConstraints();	
-		cStoryView.gridx = 0;
-		cStoryView.gridy = 3;
-		cStoryView.weighty   = 6;
+		GridBagConstraints cStoryView = new GridBagConstraints(0,0,1,1,1.0,1.0,GridBagConstraints.EAST,
+				GridBagConstraints.BOTH,new Insets(10,10,10,10),0,0);
 		
-		GridBagConstraints cPlayerList = new GridBagConstraints();	
-		cPlayerList.gridx = 0;
-		cPlayerList.gridy = 3;
-		cPlayerList.gridheight = 3;
+		GridBagConstraints cPlayerList = new GridBagConstraints(0,3,1,1,1.0,1.0,GridBagConstraints.EAST,
+				GridBagConstraints.BOTH,new Insets(10,10,10,10),0,0);
 		
 		//Panel construction
-		JPanel mainPanel = new JPanel(new GridBagLayout());
-		mainPanel.add(nameLab,cNameLab);
-		mainPanel.add(name,cName);
-		mainPanel.add(statLab,cStatLab);
-		mainPanel.add(stat,cStat);
-		mainPanel.add(roleLab,cRoleLab);
-		mainPanel.add(role,cRole);
-		mainPanel.add(PlayerList,cPlayerList);
+		JPanel leftPanel = new JPanel(new GridBagLayout());
+		leftPanel.add(nameLab,cNameLab);
+		leftPanel.add(name,cName);
+		leftPanel.add(statLab,cStatLab);
+		leftPanel.add(stat,cStat);
+		leftPanel.add(roleLab,cRoleLab);
+		leftPanel.add(role,cRole);
+		leftPanel.add(PlayerList,cPlayerList);
 		
-		JScrollPane storyPane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		storyPane.add(StoryView);
-		//mainPanel.add(leftPanel);
-		mainPanel.add(storyPane,cStoryView);
+		JPanel mainPanel = new JPanel(new GridBagLayout());
+		JScrollPane storyPane = new JScrollPane(StoryView,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		storyPane.setPreferredSize(new Dimension(400,400));
+		
+		mainPanel.add(leftPanel);
+		mainPanel.add(storyPane);		
 		this.add(mainPanel);
 	}
 	
@@ -157,7 +153,7 @@ public class GuiBot extends JFrame implements ActionListener{
 	}
 
 	public void setStoryView(String str) {
-		StoryView.append("\n"+str);
+		StoryView.append("\n" +str);
 	}
 
 	public String getPlayerList() {
