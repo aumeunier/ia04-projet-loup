@@ -5,6 +5,7 @@ import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mPlayerDied;
 import ia04.projet.loup.messages.mPlayerRole;
 import ia04.projet.loup.messages.mStorytellerPlayer;
+import ia04.projet.loup.messages.mToGui;
 import jade.core.AID;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
@@ -78,7 +79,7 @@ public class BehaviourPlayer extends Behaviour {
 							}
 							break;
 						case STORYTELLING :
-							//((AgtPlayer) myAgent).StoryTransfertToGui(msg);
+							((AgtPlayer) myAgent).TransfertToGui(mToGui.mType.STORYTELLING,msgObj.getStoryTelling());
 							break;
 						default : break;
 						}			

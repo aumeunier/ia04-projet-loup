@@ -1,12 +1,12 @@
-package ia04.projet.loup.GUI;
+package ia04.projet.loup.gui;
 
-import ia04.projet.loup.Debugger;
+
 import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mToGui;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 
-public class BehavGuiAgtPlyer extends Behaviour {
+public class BehaviourAgtPlayerGui extends Behaviour {
 	
 	/**
 	 * 
@@ -18,9 +18,8 @@ public class BehavGuiAgtPlyer extends Behaviour {
 		ACLMessage msg = myAgent.receive();
 		if (msg != null){
 			String msgString = msg.getContent();
-			Debugger.println(myAgent.getAID().getLocalName().toString()+" reçoit "+ msgString);
 			mToGui msgObj = (mToGui) mMessage.parseJson(msgString, mToGui.class);
-			((GuiAgtPlayer) myAgent).guiMaj(msgObj);
+			((AgtPlayerGui) myAgent).guiMaj(msgObj);
 		}
 		
 	}
