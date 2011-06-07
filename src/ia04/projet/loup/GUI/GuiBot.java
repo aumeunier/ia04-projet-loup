@@ -1,7 +1,8 @@
-package ia04.projet.loup.GUI;
+package ia04.projet.loup.gui;
 
 import jade.core.AID;
 
+import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
@@ -11,9 +12,10 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-public class BotPlayerGui extends JFrame implements ActionListener{
+public class GuiBot extends JFrame implements ActionListener{
 
 	/**
 	 * 
@@ -28,7 +30,7 @@ public class BotPlayerGui extends JFrame implements ActionListener{
 	AID MyPlayerAgent;
 	
 	
-	public BotPlayerGui(String arg0, AID agt) throws HeadlessException {
+	public GuiBot(String arg0, AID agt) throws HeadlessException {
 		super(arg0);
 		this.MyPlayerAgent = agt;
 		initialize(arg0);
@@ -55,9 +57,11 @@ public class BotPlayerGui extends JFrame implements ActionListener{
 		role = new JTextArea();
 		role.setEditable(false);
 		
+		
 		StoryView = new JTextArea();
 		StoryView.setText("Player initialization...");
 		StoryView.setEditable(false);
+		
 		
 		
 		PlayerList = new JTextArea();
@@ -89,9 +93,9 @@ public class BotPlayerGui extends JFrame implements ActionListener{
 		cRole.gridy = 2;
 		
 		GridBagConstraints cStoryView = new GridBagConstraints();	
-		cStoryView.gridx = 3;
-		cStoryView.gridy = 0;
-		cStoryView.gridheight = 6;
+		cStoryView.gridx = 0;
+		cStoryView.gridy = 3;
+		cStoryView.weighty   = 6;
 		
 		GridBagConstraints cPlayerList = new GridBagConstraints();	
 		cPlayerList.gridx = 0;
@@ -106,9 +110,12 @@ public class BotPlayerGui extends JFrame implements ActionListener{
 		mainPanel.add(stat,cStat);
 		mainPanel.add(roleLab,cRoleLab);
 		mainPanel.add(role,cRole);
-		mainPanel.add(StoryView,cStoryView);
 		mainPanel.add(PlayerList,cPlayerList);
 		
+		JScrollPane storyPane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		storyPane.add(StoryView);
+		//mainPanel.add(leftPanel);
+		mainPanel.add(storyPane,cStoryView);
 		this.add(mainPanel);
 	}
 	

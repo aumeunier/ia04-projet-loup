@@ -1,4 +1,4 @@
-package ia04.projet.loup.GUI;
+package ia04.projet.loup.gui;
 
 import ia04.projet.loup.Global;
 import ia04.projet.loup.messages.mToGui;
@@ -6,22 +6,22 @@ import jade.core.AID;
 import jade.gui.GuiAgent;
 import jade.gui.GuiEvent;
 
-public class GuiAgtPlayer extends GuiAgent {
+public class AgtPlayerGui extends GuiAgent {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	BotPlayerGui myGui;
+	GuiBot myGui;
 	AID myAgt, roleAgt;
 	
 
-	public GuiAgtPlayer(AID id) {
+	public AgtPlayerGui(AID id) {
 		super();
 		myAgt = id;
-		myGui = new BotPlayerGui(id.getLocalName(),id);
+		myGui = new GuiBot(id.getLocalName(),id);
 		myGui.setVisible(true);
 		
-		this.addBehaviour(new BehavGuiAgtPlyer());
+		this.addBehaviour(new BehaviourAgtPlayerGui());
 	}
 
 	@Override
@@ -49,11 +49,11 @@ public class GuiAgtPlayer extends GuiAgent {
 		myGui.repaint();
 	}
 	//getters and setters
-	public BotPlayerGui getMyGui() {
+	public GuiBot getMyGui() {
 		return myGui;
 	}
 
-	public void setMyGui(BotPlayerGui myGui) {
+	public void setMyGui(GuiBot myGui) {
 		this.myGui = myGui;
 	}
 

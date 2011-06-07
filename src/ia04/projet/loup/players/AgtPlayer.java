@@ -1,6 +1,7 @@
 package ia04.projet.loup.players;
 
 import ia04.projet.loup.Global;
+import ia04.projet.loup.gui.AgtPlayerGui;
 import ia04.projet.loup.messages.mStorytellerPlayer;
 import ia04.projet.loup.messages.mToGui;
 import ia04.projet.loup.roles.AgtRole;
@@ -40,12 +41,10 @@ public class AgtPlayer extends Agent {
 	}
 
 	public void GuiCreation() throws StaleProxyException{
-		/*
-		GuiAgtPlayer guiAgt = new GuiAgtPlayer(this.getAID());
+		AgtPlayerGui guiAgt = new AgtPlayerGui(this.getAID());
 		AgentContainer mc = this.getContainerController();
 		mc.acceptNewAgent(this.getLocalName()+Global.LOCALNAME_SUFFIX_GUI, guiAgt).start();
 		this.setGuiID(guiAgt.getAID());
-		*/
 	}
 	/**
 	 * Answer to storyTeller request to join a game
@@ -129,6 +128,7 @@ public class AgtPlayer extends Agent {
 		
 		toGui.setContent(msg.toJson());
 		toGui.addReceiver(GuiID);
+		
 		this.send(toGui);
 		
 	}
