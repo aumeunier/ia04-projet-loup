@@ -24,26 +24,28 @@ public class AgtHunter extends AgtRole{
 		if(lover!=null){ //Do not vote for your lover !
 			players.remove(lover);
 		}
+		String target;
 		switch (currentStrategy){
 		case RABBIT:
-			msgContent.setTargetKilled(players.get(random.nextInt(players.size())));
-			return msgContent;
+			target = players.get(random.nextInt(players.size()));
 		case BASIC:
-			msgContent.setTargetKilled(getLowestConfidence(players));
-			return msgContent;
+			target = getLowestConfidence(players);
 		case DUMMIE:
-				msgContent.setTargetKilled(getHighestConfidence(players));
-			return msgContent;
+			target = getHighestConfidence(players);
 		case SHEEP:
 			if(lastVote==null){//todo something else
-				msgContent.setTargetSaved(players.get(random.nextInt(players.size())));
+				target = players.get(random.nextInt(players.size()));
 			}
 			else {
-				msgContent.setTargetKilled(getLastMostVoted(players, lastVote));
+				target = getLastMostVoted(players, lastVote);
 			}
-			return msgContent;
-		default: return null;
+		default: target = null;
 		}
+		if(lover!=null){ //Do not vote for your lover !
+			players.add(lover);
+		}
+		msgContent.setTargetKilled(target);
+		return msgContent;
 	}
 	
 }

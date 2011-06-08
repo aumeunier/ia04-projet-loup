@@ -82,7 +82,7 @@ public class AgtRole extends Agent {
 	 * all the messages regarding the game being played
 	 */
 	public void registerToCommunicationAgents(){
-		Debugger.println(this.getLocalName()+" is a "+this.role+"has the "+currentStrategy+"strategy.");
+		Debugger.println(this.getLocalName()+" is a "+this.role+" has the "+currentStrategy+" strategy.");
 		// Register to AgtVote
 		//AID voteAid = DFInterface.getService(this, "AgtVote");
 		AID voteAid = new AID(Global.LOCALNAME_VOTE,AID.ISLOCALNAME);

@@ -2,6 +2,7 @@ package ia04.projet.loup.roles;
 
 import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.messages.mAction;
+import ia04.projet.loup.messages.mActionClairvoyant;
 import ia04.projet.loup.messages.mMessage;
 import jade.lang.acl.ACLMessage;
 
@@ -18,15 +19,16 @@ public class BehaviourClairvoyant extends RoleBehaviour {
 		if(msgContent!=null){
 			if (msgContent.getRole() == Roles.CLAIRVOYANT){
 				//Debugger.println(myAgent.getLocalName()+" received call for a clairvoyant action.");
-				msgContent = ((AgtCupid)myAgent).selectLovers(msgContent);
-				msgContent.setPerformer(myAgent.getLocalName()); 
-				ACLMessage response = msg.createReply();
-				response.setPerformative(ACLMessage.INFORM);
-				response.setContent(msgContent.toJson());
+				mActionClairvoyant replyContent = ((AgtClairvoyant)myAgent).seeARole(msgContent);
+				ACLMessage response = new ACLMessage(ACLMessage.REQUEST);
+				response.setContent(replyContent.toJson());
 				myAgent.send(response);
 			}
 		}
-		else {//TODO get the message with the role
+		else {
+			mActionClairvoyant msgReplyContent = (mActionClairvoyant)mMessage.parseJson(msgString, mActionClairvoyant.class);
+			if(msgReplyContent!=null)
+				((AgtClairvoyant)myAgent).hasSeen(msgReplyContent.getChosenPlayer(), msgReplyContent.getRole());
 		}
 	}
 }
