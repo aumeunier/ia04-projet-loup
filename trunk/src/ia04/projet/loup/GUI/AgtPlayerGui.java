@@ -6,6 +6,8 @@ import jade.core.AID;
 import jade.gui.GuiAgent;
 import jade.gui.GuiEvent;
 
+import java.util.ArrayList;
+
 public class AgtPlayerGui extends GuiAgent {
 	/**
 	 * 
@@ -34,7 +36,10 @@ public class AgtPlayerGui extends GuiAgent {
 			myGui.setStat(msgObj.getValue());
 			break;
 		case PLAYERS_LIST:
-			myGui.setPlayerList(msgObj.getValue());
+			ArrayList<String> list = msgObj.getPlayers();
+			for(int i=0; i < list.size(); i++){
+				myGui.setPlayerList(list.get(i));
+			}
 			break;
 		case ROLE:
 			myGui.setRole(msgObj.getRole().toString());
