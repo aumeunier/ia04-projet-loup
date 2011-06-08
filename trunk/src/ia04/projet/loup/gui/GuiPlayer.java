@@ -1,5 +1,6 @@
 package ia04.projet.loup.gui;
 
+import ia04.projet.loup.players.AgtPlayer;
 import jade.gui.GuiAgent;
 import jade.gui.GuiEvent;
 
@@ -38,7 +39,7 @@ public class GuiPlayer extends GuiBot{
 		jButtonChoose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				jButtonChoose.setEnabled(false);
-				GuiEvent guiEvent = new GuiEvent(e, AgtPlayerGui.CHOOSE_TYPE);
+				GuiEvent guiEvent = new GuiEvent(e, AgtPlayer.CHOOSE_TYPE);
 				guiEvent.addParameter(jListPlayerList.getSelectedValue());
 				myPlayerAgent.postGuiEvent(guiEvent);
 			}

@@ -1,36 +1,80 @@
 package ia04.projet.loup.players;
 
 import ia04.projet.loup.Global;
-import ia04.projet.loup.gui.AgtPlayerGui;
+import ia04.projet.loup.Global.Roles;
+import ia04.projet.loup.gui.GuiBot;
 import ia04.projet.loup.messages.mStorytellerPlayer;
-import ia04.projet.loup.messages.mToGui;
 import ia04.projet.loup.roles.AgtCupid;
 import ia04.projet.loup.roles.AgtGuardian;
 import ia04.projet.loup.roles.AgtRole;
 import ia04.projet.loup.roles.AgtWerewolf;
 import jade.core.AID;
-import jade.core.Agent;
+import jade.gui.GuiAgent;
+import jade.gui.GuiEvent;
 import jade.lang.acl.ACLMessage;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.StaleProxyException;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 
-public class AgtPlayer extends Agent {
+public class AgtPlayer extends GuiAgent {
 
 	private static final long serialVersionUID = -3215896432211766320L;
-
-	private AID RoleID, GuiID;
+	public static final int CHOOSE_TYPE = 0;
+	
+	private GuiBot myGui;
+	private AID RoleID;
 	private HashMap<String,Integer> Confidences;
 
+	/**
+	 * Constructor
+	 * @throws StaleProxyException
+	 */
 	public AgtPlayer() throws StaleProxyException {
 		super();
 		this.addBehaviour(new BehaviourPlayer());
 		setRoleID(null);
 	}
-
+	
+	/**
+	 * Handles event on the GUI
+	 * @param GuiEvent guiEvent
+	 */
+	protected void onGuiEvent(GuiEvent guiEvent) {
+		switch(guiEvent.getType()){
+			case AgtPlayer.CHOOSE_TYPE: /** TO COMPLTE **/ break;
+			default: break;
+		}
+	}
+	
+	/**
+	 * Add an announce to the StoryTeller panel
+	 * @param storyTelling
+	 */
+	public void setStoryView(String storyTelling) {
+		myGui.setStoryView(storyTelling);
+		myGui.repaint();
+	}
+	
+	/**
+	 * Set the Status of the player in GUI (JTextBox)
+	 * @param string
+	 */
+	public void setStat(String string) {
+		myGui.setStat(string);
+		myGui.repaint();
+	}
+	
+	/**
+	 * Set the Role of the player in GUI (JTextBox)
+	 * @param role
+	 */
+	public void setRole(Roles role) {
+		myGui.setRole(role.toString());
+		myGui.repaint();
+	}
+	
 	/**
 	 * Send identification to storyTeller
 	 * @param stryTeller The AgtStoryTeller AID
@@ -46,11 +90,15 @@ public class AgtPlayer extends Agent {
 		this.send(msg);
 	}
 
+	/**
+	 * Create the GUI
+	 * @throws StaleProxyException
+	 */
 	public void GuiCreation() throws StaleProxyException{
-		AgtPlayerGui guiAgt = new AgtPlayerGui(this.getAID());
-		AgentContainer mc = this.getContainerController();
-		mc.acceptNewAgent(this.getLocalName()+Global.LOCALNAME_SUFFIX_GUI, guiAgt).start();
-		this.setGuiID(guiAgt.getAID());
+		if(Global.IS_GUI_ACTIVATED){
+			myGui = new GuiBot(this.getLocalName(), this);
+			myGui.setVisible(true);
+		}
 	}
 	/**
 	 * Answer to storyTeller request to join a game
@@ -78,16 +126,16 @@ public class AgtPlayer extends Agent {
 		AgtRole agtR = null;
 		switch(role){
 		case VILLAGER:
-			agtR = new AgtRole(GuiID);
+			agtR = new AgtRole(this.getAID());
 			break;
 		case WEREWOLF:			
-			agtR = new AgtWerewolf(GuiID);
+			agtR = new AgtWerewolf(this.getAID());
 			break;
 		case CUPID:
-			agtR = new AgtCupid(GuiID);
+			agtR = new AgtCupid(this.getAID());
 			break;
 		case GUARDIAN:
-			agtR = new AgtGuardian(GuiID);
+			agtR = new AgtGuardian(this.getAID());
 			break;
 			/*
 			case THIEF:
@@ -112,75 +160,15 @@ public class AgtPlayer extends Agent {
 				agtR = new AgtRole(); 
 				*/
 		default:
-			agtR = new AgtRole(GuiID);
+			agtR = new AgtRole(this.getAID());
 			break;
 		}
 		
 		// Create the role on the platform and register it
 		AgentContainer mc = this.getContainerController();
-		mc.acceptNewAgent(this.getLocalName()+Global.LOCALNAME_SUFFIX_ROLE, agtR).start();
+		mc.acceptNewAgent(this.getLocalName() + Global.LOCALNAME_SUFFIX_ROLE, agtR).start();
 		agtR.registerToCommunicationAgents();
 		setRoleID(agtR.getAID());
-	}
-
-	/**
-	 * Transfer to AgtGui the current game phase
-	 * @param type message type to inform gui
-	 * @param val value to transfer
-	 * @author Guillaume
-	 * **/
-	public void TransfertToGui(mToGui.mType type, String val){
-		ACLMessage toGui = new ACLMessage(ACLMessage.INFORM);
-		
-		mToGui msg = new mToGui();
-		msg.setType(type);
-		msg.setValue(val);
-		
-		toGui.setContent(msg.toJson());
-		toGui.addReceiver(GuiID);
-		
-		this.send(toGui);
-		
-	}
-	
-	/**
-	 * Transfer to AgtGui the current game phase
-	 * @param type message type to inform gui
-	 * @param list player list to gui
-	 * @author Guillaume
-	 * **/
-	public void TransfertToGui(mToGui.mType type, ArrayList<String> list){
-		ACLMessage toGui = new ACLMessage(ACLMessage.INFORM);
-		
-		mToGui msg = new mToGui();
-		msg.setType(type);
-		msg.setPlayers(list);
-		
-		toGui.setContent(msg.toJson());
-		toGui.addReceiver(GuiID);
-		
-		this.send(toGui);
-		
-	}
-	
-	/**
-	 * Transfer to AgtGui the current game phase
-	 * @param type message type to inform gui
-	 * @param role role given by the storyTeller
-	 * @author Guillaume
-	 * **/
-	public void TransfertToGui(mToGui.mType type, Global.Roles role){
-		ACLMessage toGui = new ACLMessage(ACLMessage.INFORM);
-		
-		mToGui msg = new mToGui();
-		msg.setType(type);
-		msg.setRole(role);
-		
-		toGui.setContent(msg.toJson());
-		toGui.addReceiver(GuiID);
-		
-		this.send(toGui);
-		
 	}
 
 	
@@ -191,13 +179,5 @@ public class AgtPlayer extends Agent {
 
 	public AID getRoleID() {
 		return RoleID;
-	}
-
-	public AID getGuiID() {
-		return GuiID;
-	}
-
-	public void setGuiID(AID guiID) {
-		GuiID = guiID;
 	}
 }

@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import ia04.projet.loup.Global;
 import ia04.projet.loup.messages.mStorytellerPlayer.mType;
 
+/**
+ * 
+ * @author paul
+ * @deprecated
+ */
 public class mToGui extends mMessage {
 
 	/**
