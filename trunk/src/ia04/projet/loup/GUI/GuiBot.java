@@ -49,17 +49,22 @@ public class GuiBot extends JFrame implements ActionListener{
 		
 		//Components initialization
 		JLabel nameLab = new JLabel("NAME :");
+		nameLab.setPreferredSize(new Dimension(100,20));
 		name = new JTextArea(arg0);
 		name.setEditable(false);
+		name.setPreferredSize(new Dimension(100,20));
 		
 		JLabel statLab = new JLabel("STATUS :");
+		statLab.setPreferredSize(new Dimension(100,20));
 		stat = new JTextArea();
 		stat.setEditable(false);
+		stat.setPreferredSize(new Dimension(100,20));
 		
 		JLabel roleLab = new JLabel("ROLE :");
+		roleLab.setPreferredSize(new Dimension(100,20));
 		role = new JTextArea();
 		role.setEditable(false);
-		
+		role.setPreferredSize(new Dimension(100,20));
 		
 		StoryView = new JTextArea("",30,30);
 		StoryView.setWrapStyleWord(true);
@@ -72,46 +77,55 @@ public class GuiBot extends JFrame implements ActionListener{
 		PlayerList.setEditable(false);
 		
 		//Layout creation
-		GridBagConstraints cNameLab = new GridBagConstraints(0,0,1,1,1.0,1.0,GridBagConstraints.EAST,
+		GridBagConstraints cNameLab = new GridBagConstraints(0,0,1,1,1.0,1.0,GridBagConstraints.NORTHEAST,
+				GridBagConstraints.NONE,new Insets(1,1,1,1),0,0);
+		
+		GridBagConstraints cName = new GridBagConstraints(1,0,1,1,1.0,1.0,GridBagConstraints.NORTHEAST,
+				GridBagConstraints.HORIZONTAL,new Insets(1,1,1,1),0,0);
+		
+		GridBagConstraints cStatLab = new GridBagConstraints(0,1,1,1,1.0,1.0,GridBagConstraints.NORTHEAST,
+				GridBagConstraints.NONE,new Insets(1,1,1,1),0,0);
+		
+		GridBagConstraints cStat = new GridBagConstraints(1,1,1,1,1.0,1.0,GridBagConstraints.NORTHEAST,
+				GridBagConstraints.HORIZONTAL,new Insets(1,1,1,1),0,0);
+		
+		GridBagConstraints cRoleLab = new GridBagConstraints(0,2,1,1,1.0,1.0,GridBagConstraints.NORTHEAST,
+				GridBagConstraints.NONE,new Insets(1,1,1,1),0,0);
+		
+		GridBagConstraints cRole = new GridBagConstraints(1,2,1,1,1.0,1.0,GridBagConstraints.NORTHEAST,
+				GridBagConstraints.HORIZONTAL,new Insets(1,1,1,1),0,0);
+		
+		
+		GridBagConstraints cStatPane = new GridBagConstraints(0,0,1,1,1.0,1.0,GridBagConstraints.EAST,
 				GridBagConstraints.BOTH,new Insets(10,10,10,10),0,0);
 		
-		GridBagConstraints cName = new GridBagConstraints(1,0,1,1,1.0,1.0,GridBagConstraints.EAST,
+		GridBagConstraints cPlayerList = new GridBagConstraints(0,1,1,1,1.0,1.0,GridBagConstraints.EAST,
 				GridBagConstraints.BOTH,new Insets(10,10,10,10),0,0);
-		
-		GridBagConstraints cStatLab = new GridBagConstraints(0,1,1,1,1.0,1.0,GridBagConstraints.EAST,
+
+		GridBagConstraints cStoryView = new GridBagConstraints(1,0,1,1,1.0,1.0,GridBagConstraints.WEST,
 				GridBagConstraints.BOTH,new Insets(10,10,10,10),0,0);
-		
-		GridBagConstraints cStat = new GridBagConstraints(1,1,1,1,1.0,1.0,GridBagConstraints.EAST,
-				GridBagConstraints.BOTH,new Insets(10,10,10,10),0,0);
-		
-		GridBagConstraints cRoleLab = new GridBagConstraints(0,2,1,1,1.0,1.0,GridBagConstraints.EAST,
-				GridBagConstraints.BOTH,new Insets(10,10,10,10),0,0);
-		
-		GridBagConstraints cRole = new GridBagConstraints(1,2,1,1,1.0,1.0,GridBagConstraints.EAST,
-				GridBagConstraints.BOTH,new Insets(10,10,10,10),0,0);
-		
-		GridBagConstraints cStoryView = new GridBagConstraints(0,0,1,1,1.0,1.0,GridBagConstraints.EAST,
-				GridBagConstraints.BOTH,new Insets(10,10,10,10),0,0);
-		
-		GridBagConstraints cPlayerList = new GridBagConstraints(0,3,1,1,1.0,1.0,GridBagConstraints.EAST,
+
+		GridBagConstraints cleftpanel = new GridBagConstraints(0,0,1,1,1.0,1.0,GridBagConstraints.EAST,
 				GridBagConstraints.BOTH,new Insets(10,10,10,10),0,0);
 		
 		//Panel construction
 		JPanel leftPanel = new JPanel(new GridBagLayout());
-		leftPanel.add(nameLab,cNameLab);
-		leftPanel.add(name,cName);
-		leftPanel.add(statLab,cStatLab);
-		leftPanel.add(stat,cStat);
-		leftPanel.add(roleLab,cRoleLab);
-		leftPanel.add(role,cRole);
+		JPanel statPanel = new JPanel(new GridBagLayout());
+		statPanel.add(nameLab,cNameLab);
+		statPanel.add(name,cName);
+		statPanel.add(statLab,cStatLab);
+		statPanel.add(stat,cStat);
+		statPanel.add(roleLab,cRoleLab);
+		statPanel.add(role,cRole);
+		leftPanel.add(statPanel,cStatPane);
 		leftPanel.add(PlayerList,cPlayerList);
 		
 		JPanel mainPanel = new JPanel(new GridBagLayout());
 		JScrollPane storyPane = new JScrollPane(StoryView,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		storyPane.setPreferredSize(new Dimension(400,400));
 		
-		mainPanel.add(leftPanel);
-		mainPanel.add(storyPane);		
+		mainPanel.add(leftPanel, cleftpanel);
+		mainPanel.add(storyPane, cStoryView);		
 		this.add(mainPanel);
 	}
 	
