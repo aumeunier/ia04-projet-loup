@@ -76,7 +76,6 @@ public class AgtRole extends Agent {
 		addAndSaveBehaviour(new BehaviourVillager());
 		initializeConfidenceLevel();
 		myGuiID=guiID;
-		Debugger.println(this.getLocalName()+" is a "+this.role+" and has the "+currentStrategy+" strategy.");
 	}
 	/**
 	 * Here the agent registers to the Communication agents such that he can receive 
