@@ -59,7 +59,7 @@ public class BehaviourStoryteller extends Behaviour {
 					// 5. Is the player ready to play (has finished role initialization)
 				case ATTRIBUTE_ROLE:
 					//TODO:	answers from role attribution (ex: Thief)
-					Debugger.println(msg.getSender().getLocalName()+" now has its role assigned:"+message.getRole()+".");
+					//Debugger.println(msg.getSender().getLocalName()+" now has its role assigned:"+message.getRole()+".");
 					myAgt.addRoleToPlayer(message.getRole(), msg.getSender());
 					break;
 				}

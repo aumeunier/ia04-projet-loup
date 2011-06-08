@@ -76,12 +76,14 @@ public class AgtRole extends Agent {
 		addAndSaveBehaviour(new BehaviourVillager());
 		initializeConfidenceLevel();
 		myGuiID=guiID;
+		Debugger.println(this.getLocalName()+" is a "+this.role+" and has the "+currentStrategy+" strategy.");
 	}
 	/**
 	 * Here the agent registers to the Communication agents such that he can receive 
 	 * all the messages regarding the game being played
 	 */
 	public void registerToCommunicationAgents(){
+		Debugger.println(this.getLocalName()+" is a "+this.role+"has the "+currentStrategy+"strategy.");
 		// Register to AgtVote
 		//AID voteAid = DFInterface.getService(this, "AgtVote");
 		AID voteAid = new AID(Global.LOCALNAME_VOTE,AID.ISLOCALNAME);
