@@ -91,7 +91,7 @@ public class AgtRole extends Agent {
 		//AID actionAid = DFInterface.getService(this, "AgtAction");
 		AID actionAid = new AID(Global.LOCALNAME_ACTION,AID.ISLOCALNAME);
 		mActionRegister mAction = new mActionRegister(getRole());
-		//this.initializeMessageToCommunicationAgent(mAction, actionAid);	
+		this.initializeMessageToCommunicationAgent(mAction, actionAid);	
 
 		// TODO: Register to AgtAdvice
 	}
