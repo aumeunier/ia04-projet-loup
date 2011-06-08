@@ -65,7 +65,7 @@ public class AgtVote extends Agent {
 	 */
 	public void registerServiceToDf(){
 		/*
-		// TODO: DFInterface problems...
+		// FIXME: DFInterface problems...
 		ServiceDescription sd = new ServiceDescription();
 		sd.setType("AgtVote");
 		sd.setName(this.getLocalName());

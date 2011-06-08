@@ -4,7 +4,6 @@ import ia04.projet.loup.DFInterface;
 import ia04.projet.loup.Debugger;
 import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.messages.mAction;
-import ia04.projet.loup.messages.mActionRequest;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
@@ -26,8 +25,6 @@ public class AgtAction extends Agent {
 	private AID agtStoryteller;
 	/** Number of actions in progress */
 	private int nbActionsInProgress;
-	/** Last Action Requested */
-	private mActionRequest lastActionRequest;
 
 	/**
 	 * Constructor
@@ -41,10 +38,13 @@ public class AgtAction extends Agent {
 	 * Registers its service into the DF
 	 */
 	public void registerServiceToDf(){
+		/*
+		 * FIXME: DFInterface problems
 		ServiceDescription sd = new ServiceDescription();
 		sd.setType("AgtAction");
 		sd.setName(this.getLocalName());
 		DFInterface.registerService(this, sd);
+		*/
 	}
 
 	/**
@@ -62,8 +62,7 @@ public class AgtAction extends Agent {
 	 * 
 	 * @param anActionRequest
 	 */
-	public void performAction(mActionRequest anActionRequest) {
-		lastActionRequest = anActionRequest;
+	public void performAction(mAction anActionRequest) {
 		ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
 		mAction anAction = new mAction();
 		message.setContent(anAction.toJson());
@@ -71,7 +70,7 @@ public class AgtAction extends Agent {
 		nbActionsInProgress = 0;
 
 		for (Entry<AID, Roles> entry : playersMap.entrySet()) {
-			if (entry.getValue() == lastActionRequest.getRole()) {
+			if (entry.getValue() == anActionRequest.getRole()) {
 				message.addReceiver(entry.getKey());
 				nbActionsInProgress++;
 			}
@@ -84,18 +83,16 @@ public class AgtAction extends Agent {
 	 * 
 	 * @param anAction
 	 */
-	public void addAction(mAction anAction) {
+	public void addAction(mAction anAction, AID performer) {
 		nbActionsInProgress--;
 		if (nbActionsInProgress < 0)
 			Debugger.println("Should Never Happened: More Actions than expected.");
 		else {
-			if (nbActionsInProgress == 0) {
-				ACLMessage message = new ACLMessage(ACLMessage.INFORM);
-				lastActionRequest.setNumberOfActionPerformed(anAction.getNumberOfActionPerformed());
-				message.setContent(lastActionRequest.toJson());
-				message.addReceiver(agtStoryteller);
-				this.send(message);
-			}
+			ACLMessage message = new ACLMessage(ACLMessage.INFORM);
+			anAction.setPerformer(performer.getLocalName());
+			message.setContent(anAction.toJson());
+			message.addReceiver(agtStoryteller);
+			this.send(message);
 		}
 
 	}

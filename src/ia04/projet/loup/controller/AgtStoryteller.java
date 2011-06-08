@@ -390,6 +390,14 @@ public class AgtStoryteller extends Agent {
 		if(this.phaseClock.getCurrentPhase()!=GamePhases.WEREWOLVES
 				|| !victimAid.equals(this.guardianTarget)){
 			this.lastVictimsRoles.add(victimAid);
+			
+			// Lovers 
+			if(victimAid.equals(this.firstLoverAid)){
+				this.lastVictimsRoles.add(this.secondLoverAid);
+			}
+			else if(victimAid.equals(this.secondLoverAid)){
+				this.lastVictimsRoles.add(this.firstLoverAid);
+			}
 		}
 	}
 	/**
@@ -398,13 +406,6 @@ public class AgtStoryteller extends Agent {
 	 */
 	public void removeVictim(AID victimAid){
 		this.lastVictimsRoles.add(victimAid);
-	}
-	/**
-	 * The person that will be protected for this turn by the Guardian
-	 * @param targetAid The target aid
-	 */
-	public void setGuardianTarget(AID targetAid){
-		this.guardianTarget = targetAid;
 	}
 	/**
 	 * The night's victims may have an action to perform before 
@@ -417,10 +418,6 @@ public class AgtStoryteller extends Agent {
 				mVoteRun voteMsg = new mVoteRun(AgtVote.voteType.SUCCESSOR);
 				this.sendMessageToVoteAgent(voteMsg, ACLMessage.REQUEST);
 				this.nbWaitingAnswers++;
-			}
-			// Lovers
-			else if(victim.equals(this.firstLoverAid) || victim.equals(this.secondLoverAid)){
-				//TODO:
 			}
 			else {
 				Global.Roles victimRole = this.playersMap.get(victim);
@@ -447,10 +444,6 @@ public class AgtStoryteller extends Agent {
 				mVoteRun voteMsg = new mVoteRun(AgtVote.voteType.SUCCESSOR);
 				this.sendMessageToVoteAgent(voteMsg, ACLMessage.REQUEST);
 				this.nbWaitingAnswers++;
-			}
-			// Lovers 
-			else if(victim.equals(this.firstLoverAid) || victim.equals(this.secondLoverAid)){
-				//TODO:
 			}
 			else {
 				Global.Roles victimRole = this.playersMap.get(victim);
@@ -481,6 +474,8 @@ public class AgtStoryteller extends Agent {
 			mPlayerDied message = new mPlayerDied();
 			message.setIsOver(false);
 			message.setDeadName(victim.getLocalName());
+			message.setIsHungVictim(this.phaseClock.getCurrentPhase().
+					equals(GamePhases.HUNGRESOLUTION));
 			sendMessageToOneRegisteredAgent(victim, message, ACLMessage.INFORM);
 		}
 
@@ -492,6 +487,24 @@ public class AgtStoryteller extends Agent {
 	 */
 	public void playerFinishedBeingKilled(){
 		this.nbWaitingAnswers--;
+	}
+	
+	public void actionDone(AID performer, AID target, Roles role){
+		switch(role){
+		case GUARDIAN:
+			break;
+		case HUNTER:
+			break;
+		default:
+			break;
+		}
+	}
+	/**
+	 * The person that will be protected for this turn by the Guardian
+	 * @param targetAid The target aid
+	 */
+	public void setGuardianTarget(AID targetAid){
+		this.guardianTarget = targetAid;
 	}
 	
 	//TODO: actions reactions

@@ -10,6 +10,7 @@ public class mActionRequest extends mMessage {
 
 	private Roles role;
 	private Integer numberOfActionPerformed = 0;
+	private String target;
 	
 	public mActionRequest(){}
 	
@@ -47,5 +48,14 @@ public class mActionRequest extends mMessage {
 	 */
 	public Integer getNumberOfActionPerformed() {
 		return numberOfActionPerformed;
+	}
+	
+
+	public void setTarget(String _target){
+		this.target = _target;
+	}
+	
+	public String getTarget(){
+		return target;
 	}
 }
