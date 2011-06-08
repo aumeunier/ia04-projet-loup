@@ -142,10 +142,12 @@ public class BehaviourStoryteller extends Behaviour {
 								mAction message = (mAction)generalMessage;
 								String performerName = message.getPerformer();
 								AID performer = new AID(performerName,AID.ISLOCALNAME);
-								String targetName = message.getTarget();
-								AID target = new AID(targetName,AID.ISLOCALNAME);
+								String targetKilledName = message.getTargetKilled();
+								AID targetKilled = new AID(targetKilledName,AID.ISLOCALNAME);
+								String targetSavedName = message.getTargetSaved();
+								AID targetSaved = new AID(targetSavedName,AID.ISLOCALNAME);
 								Roles role = message.getRole();
-								myAgt.actionDone(performer, target, role);								
+								myAgt.actionDone(performer, targetKilled, targetSaved, role);								
 							}
 
 							// E - Message can come from an AgtAdvice

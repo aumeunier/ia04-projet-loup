@@ -6,12 +6,12 @@ import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.GamePhases;
 import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.communication.AgtVote;
+import ia04.projet.loup.messages.mAction;
 import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mPlayerDied;
 import ia04.projet.loup.messages.mStartGame;
 import ia04.projet.loup.messages.mStorytellerKb;
 import ia04.projet.loup.messages.mStorytellerPlayer;
-import ia04.projet.loup.messages.mStorytellerPlayer.mType;
 import ia04.projet.loup.messages.mVoteRun;
 import ia04.projet.loup.players.AgtPlayer;
 import jade.core.AID;
@@ -385,7 +385,7 @@ public class AgtStoryteller extends Agent {
 	 * Add a victim to the list of people who should be dying soon
 	 * @param victimAid The new victim
 	 */
-	public void addVictim(AID victimAid){		
+	private void addVictim(AID victimAid){		
 		// If the werewolves' target was the guardian's one, it is saved
 		if(this.phaseClock.getCurrentPhase()!=GamePhases.WEREWOLVES
 				|| !victimAid.equals(this.guardianTarget)){
@@ -404,8 +404,8 @@ public class AgtStoryteller extends Agent {
 	 * The victim was saved by a special power and will not die
 	 * @param victimAid The victim who has been saved
 	 */
-	public void removeVictim(AID victimAid){
-		this.lastVictimsRoles.add(victimAid);
+	private void saveVictim(AID victimAid){
+		this.lastVictimsRoles.remove(victimAid);
 	}
 	/**
 	 * The night's victims may have an action to perform before 
@@ -421,14 +421,17 @@ public class AgtStoryteller extends Agent {
 			}
 			else {
 				Global.Roles victimRole = this.playersMap.get(victim);
-				//TODO:
 				// Hunter
 				if(victimRole.equals(Roles.HUNTER)){
-					
+					mAction actionMsg = new mAction(victimRole);
+					this.sendMessageToActionAgent(actionMsg, ACLMessage.REQUEST);
+					this.nbWaitingAnswers++;
 				}
 				// Sage
 				else if(victimRole.equals(Roles.VILLAGESAGE)){
-
+					mAction actionMsg = new mAction(victimRole);
+					this.sendMessageToActionAgent(actionMsg, ACLMessage.REQUEST);
+					this.nbWaitingAnswers++;
 				}
 			}
 		}		
@@ -447,18 +450,23 @@ public class AgtStoryteller extends Agent {
 			}
 			else {
 				Global.Roles victimRole = this.playersMap.get(victim);
-				//TODO:
 				// Hunter
 				if(victimRole.equals(Roles.HUNTER)){
-
+					mAction actionMsg = new mAction(victimRole);
+					this.sendMessageToActionAgent(actionMsg, ACLMessage.REQUEST);
+					this.nbWaitingAnswers++;
 				}
 				// Idiot
 				else if(victimRole.equals(Roles.VILLAGEIDIOT)){
-
+					mAction actionMsg = new mAction(victimRole);
+					this.sendMessageToActionAgent(actionMsg, ACLMessage.REQUEST);
+					this.nbWaitingAnswers++;
 				}
 				// Scapegoat
 				else if(victimRole.equals(Roles.SCAPEGOAT)){
-
+					mAction actionMsg = new mAction(victimRole);
+					this.sendMessageToActionAgent(actionMsg, ACLMessage.REQUEST);
+					this.nbWaitingAnswers++;
 				}
 			}
 		}		
@@ -489,25 +497,53 @@ public class AgtStoryteller extends Agent {
 		this.nbWaitingAnswers--;
 	}
 	
-	public void actionDone(AID performer, AID target, Roles role){
+	public void actionStart(Roles role){
+		
+	}
+	public void actionFailed(){
+		this.nbWaitingAnswers--;
+	}
+	public void actionDone(AID performer, AID targetKilled, AID targetSaved, Roles role){
 		switch(role){
 		case GUARDIAN:
+			this.guardianTarget = targetSaved;
 			break;
 		case HUNTER:
+			this.addVictim(targetKilled);
+			break;
+		case CLAIRVOYANT:
+			break;
+		case WITCH:
+			if(targetKilled != null){
+				this.addVictim(targetKilled);
+			}
+			if(targetSaved != null){
+				this.saveVictim(targetSaved);
+			}
+			break;
+		case VILLAGEIDIOT:
+			break;
+		case VILLAGESAGE:
+			break;
+		case SCAPEGOAT:
+			break;
+		case CUPID:
+			break;
+		case THIEF:
+			break;
+		case WHITEWOLF:
+			break;
+		case RAVEN:
+			break;
+		case FLUTEPLAYER:
 			break;
 		default:
 			break;
 		}
-	}
-	/**
-	 * The person that will be protected for this turn by the Guardian
-	 * @param targetAid The target aid
-	 */
-	public void setGuardianTarget(AID targetAid){
-		this.guardianTarget = targetAid;
+		this.nbWaitingAnswers--;
 	}
 	
-	//TODO: actions reactions
+	//TODO: actions' reactions
 
 	////////////////////////////////////////////////////////////////////////////////
 	/////////////// 	 VOTES      
@@ -845,8 +881,7 @@ public class AgtStoryteller extends Agent {
 	 * @author aurelien
 	 *
 	 */
-	public enum GameExitErrorCodes 
-	{
+	public enum GameExitErrorCodes {
 		/** This would be bad. */
 		UNKNOWN_REASON,
 		/** This should not happening but we knew it could happen. */
