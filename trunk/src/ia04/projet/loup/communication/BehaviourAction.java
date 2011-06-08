@@ -30,7 +30,7 @@ public class BehaviourAction extends CyclicBehaviour {
 					this.agtAction.addPlayer(message.getSender(), anActionRegister.getRole());
 				break;
 			case ACLMessage.REQUEST: 
-				mActionRequest anActionRequest = mActionRequest.parseJson(message.getContent());
+				mAction anActionRequest = mAction.parseJson(message.getContent());
 				if(anActionRequest != null){
 					this.agtAction.setAgtStoryteller(message.getSender());
 					this.agtAction.performAction(anActionRequest);
@@ -39,7 +39,7 @@ public class BehaviourAction extends CyclicBehaviour {
 			case ACLMessage.INFORM: 
 				mAction anAction = mAction.parseJson(message.getContent());
 				if(anAction != null){
-					this.agtAction.addAction(anAction);
+					this.agtAction.addAction(anAction, message.getSender());
 				}
 				break;
 		}

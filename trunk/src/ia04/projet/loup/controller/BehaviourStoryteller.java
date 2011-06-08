@@ -1,13 +1,13 @@
 package ia04.projet.loup.controller;
 
 import ia04.projet.loup.Debugger;
-import ia04.projet.loup.Global;
+import ia04.projet.loup.Global.Roles;
+import ia04.projet.loup.messages.mAction;
 import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mPlayerDied;
-import ia04.projet.loup.messages.mVoteRun;
 import ia04.projet.loup.messages.mStorytellerKb;
 import ia04.projet.loup.messages.mStorytellerPlayer;
-import ia04.projet.loup.messages.mStorytellerPlayer.mType;
+import ia04.projet.loup.messages.mVoteRun;
 import jade.core.AID;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
@@ -137,11 +137,15 @@ public class BehaviourStoryteller extends Behaviour {
 
 						// D - Message can come from an AgtAction
 						else {
-							generalMessage = mMessage.parseJson(msgString, mVoteRun.class);
-							//TODO:
-
+							generalMessage = mMessage.parseJson(msgString, mAction.class);
 							if(generalMessage!=null){
-
+								mAction message = (mAction)generalMessage;
+								String performerName = message.getPerformer();
+								AID performer = new AID(performerName,AID.ISLOCALNAME);
+								String targetName = message.getTarget();
+								AID target = new AID(targetName,AID.ISLOCALNAME);
+								Roles role = message.getRole();
+								myAgt.actionDone(performer, target, role);								
 							}
 
 							// E - Message can come from an AgtAdvice

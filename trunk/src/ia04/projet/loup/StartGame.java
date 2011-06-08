@@ -1,5 +1,6 @@
 package ia04.projet.loup;
 
+import ia04.projet.loup.communication.AgtAction;
 import ia04.projet.loup.communication.AgtVote;
 import ia04.projet.loup.controller.AgtStoryteller;
 import ia04.projet.loup.players.AgtPlayer;
@@ -49,9 +50,16 @@ public class StartGame {
 			vote.registerServiceToDf();
 			System.out.println("Vote agent created...");
 			
+			// Create a Vote agent linked to the Storyteller Agent
+			AgtAction action = new AgtAction();
+			ac = mc.acceptNewAgent(Global.LOCALNAME_ACTION,action);
+			ac.start();
+			action.registerServiceToDf();
+			System.out.println("Action agent created...");
+			
 			// Link the agents to the storyteller
-			// TODO: use the DF ? Vote find storyteller and register itself to the storyteller using a message
 			storyteller.setVoteAgent(vote.getAID());
+			storyteller.setActionAgent(action.getAID());
 			
 			// Create players
 			System.out.println("Populating the room with players...");

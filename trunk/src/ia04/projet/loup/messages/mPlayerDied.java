@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class mPlayerDied extends mMessage {
 	private boolean isOver = false;
 	private String deadName;
+	private boolean isHungVictim = false;
 	
 	public boolean getIsOver(){
 		return isOver;
@@ -18,6 +19,13 @@ public class mPlayerDied extends mMessage {
 	}
 	public void setDeadName(String _deadName){
 		this.deadName = _deadName;
+	}
+
+	public void setIsHungVictim(boolean flag){
+		this.isHungVictim = flag;
+	}
+	public boolean getIsHungVictim(){
+		return isHungVictim;
 	}
 		
 	/**
