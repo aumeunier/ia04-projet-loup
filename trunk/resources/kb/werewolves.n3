@@ -100,6 +100,111 @@ werewolves:GameComposition
 	rdfs:comment "A possible composition of a Werewolves of Millers Hollow game." ;
 	rdfs:label "Composition".
 	
+werewolves:Composition4
+	a werewolves:GameComposition ;
+	owl:cardinality 4 ;
+	rdfs:comment "A composition for 4 players with 9 roles for more possibilities and uncertainty.";
+	foaf:knows werewolves:Villager ;
+	rdfs:subClassOf [ a werewolves:NbVillagers ;
+		owl:cardinality 3;
+	];
+	foaf:knows werewolves:Werewolf ;
+	rdfs:subClassOf [ a werewolves:NbWerewolves ;
+		owl:cardinality 1;
+	];
+	foaf:knows werewolves:Guardian ;
+	foaf:knows werewolves:Witch ;
+	foaf:knows werewolves:Hunter ;
+	foaf:knows werewolves:Cupid ;
+	foaf:knows werewolves:Clairvoyant .
+	
+werewolves:Composition4Guardian
+	a werewolves:GameComposition ;
+	owl:cardinality 4 ;
+	rdfs:comment "A composition for 4 players with 4 roles to test the guardian.";
+	foaf:knows werewolves:Villager ;
+	rdfs:subClassOf [ a werewolves:NbVillagers ;
+		owl:cardinality 2;
+	];
+	foaf:knows werewolves:Werewolf ;
+	rdfs:subClassOf [ a werewolves:NbWerewolves ;
+		owl:cardinality 1;
+	];
+	foaf:knows werewolves:Guardian.
+	
+werewolves:Composition4Witch
+	a werewolves:GameComposition ;
+	owl:cardinality 4 ;
+	rdfs:comment "A composition for 4 players with 4 roles to test the witch.";
+	foaf:knows werewolves:Villager ;
+	rdfs:subClassOf [ a werewolves:NbVillagers ;
+		owl:cardinality 2;
+	];
+	foaf:knows werewolves:Werewolf ;
+	rdfs:subClassOf [ a werewolves:NbWerewolves ;
+		owl:cardinality 1;
+	];
+	foaf:knows werewolves:Witch.
+	
+werewolves:Composition4Hunter
+	a werewolves:GameComposition ;
+	owl:cardinality 4 ;
+	rdfs:comment "A composition for 4 players with 4 roles to test the hunter.";
+	foaf:knows werewolves:Villager ;
+	rdfs:subClassOf [ a werewolves:NbVillagers ;
+		owl:cardinality 2;
+	];
+	foaf:knows werewolves:Werewolf ;
+	rdfs:subClassOf [ a werewolves:NbWerewolves ;
+		owl:cardinality 1;
+	];
+	foaf:knows werewolves:Hunter.
+	
+werewolves:Composition4Cupid
+	a werewolves:GameComposition ;
+	owl:cardinality 4 ;
+	rdfs:comment "A composition for 4 players with 4 roles to test the cupid.";
+	foaf:knows werewolves:Villager ;
+	rdfs:subClassOf [ a werewolves:NbVillagers ;
+		owl:cardinality 2;
+	];
+	foaf:knows werewolves:Werewolf ;
+	rdfs:subClassOf [ a werewolves:NbWerewolves ;
+		owl:cardinality 1;
+	];
+	foaf:knows werewolves:Cupid.
+	
+werewolves:Composition4Clairvoyant
+	a werewolves:GameComposition ;
+	owl:cardinality 4 ;
+	rdfs:comment "A composition for 4 players with 4 roles to test the clairvoyant.";
+	foaf:knows werewolves:Villager ;
+	rdfs:subClassOf [ a werewolves:NbVillagers ;
+		owl:cardinality 2;
+	];
+	foaf:knows werewolves:Werewolf ;
+	rdfs:subClassOf [ a werewolves:NbWerewolves ;
+		owl:cardinality 1;
+	];
+	foaf:knows werewolves:Clairvoyant.
+	
+werewolves:Composition6
+	a werewolves:GameComposition ;
+	owl:cardinality 6 ;
+	rdfs:comment "A composition for 6 players with 6 roles.";
+	foaf:knows werewolves:Villager ;
+	rdfs:subClassOf [ a werewolves:NbVillagers ;
+		owl:cardinality 0;
+	];
+	foaf:knows werewolves:Werewolf ;
+	rdfs:subClassOf [ a werewolves:NbWerewolves ;
+		owl:cardinality 1;
+	];
+	foaf:knows werewolves:Guardian ;
+	foaf:knows werewolves:Witch ;
+	foaf:knows werewolves:Hunter ;
+	foaf:knows werewolves:Cupid ;
+	foaf:knows werewolves:Clairvoyant .
 	
 werewolves:Composition9A
 	a werewolves:GameComposition ;
@@ -126,6 +231,42 @@ werewolves:Composition9B
 	foaf:knows werewolves:Villager ;
 	rdfs:subClassOf [ a werewolves:NbVillagers ;
 		owl:cardinality 3;
+	];
+	foaf:knows werewolves:Werewolf ;
+	rdfs:subClassOf [ a werewolves:NbWerewolves ;
+		owl:cardinality 3;
+	];
+	foaf:knows werewolves:Guardian ;
+	foaf:knows werewolves:Witch ;
+	foaf:knows werewolves:Hunter ;
+	foaf:knows werewolves:Cupid ;
+	foaf:knows werewolves:Clairvoyant .
+	
+werewolves:Composition10
+	a werewolves:GameComposition ;
+	owl:cardinality 10 ;
+	rdfs:comment "A composition for 10 players with 10 roles.";
+	foaf:knows werewolves:Villager ;
+	rdfs:subClassOf [ a werewolves:NbVillagers ;
+		owl:cardinality 3;
+	];
+	foaf:knows werewolves:Werewolf ;
+	rdfs:subClassOf [ a werewolves:NbWerewolves ;
+		owl:cardinality 2;
+	];
+	foaf:knows werewolves:Guardian ;
+	foaf:knows werewolves:Witch ;
+	foaf:knows werewolves:Hunter ;
+	foaf:knows werewolves:Cupid ;
+	foaf:knows werewolves:Clairvoyant .
+	
+werewolves:Composition11
+	a werewolves:GameComposition ;
+	owl:cardinality 11 ;
+	rdfs:comment "A composition for 11 players with 13 roles for more possibilities and uncertainty.";
+	foaf:knows werewolves:Villager ;
+	rdfs:subClassOf [ a werewolves:NbVillagers ;
+		owl:cardinality 5;
 	];
 	foaf:knows werewolves:Werewolf ;
 	rdfs:subClassOf [ a werewolves:NbWerewolves ;
