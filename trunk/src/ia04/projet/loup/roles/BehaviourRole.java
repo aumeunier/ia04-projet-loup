@@ -1,6 +1,7 @@
 package ia04.projet.loup.roles;
 
 import ia04.projet.loup.Debugger;
+import ia04.projet.loup.messages.mActionLover;
 import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mPlayerDied;
 import ia04.projet.loup.messages.mStartGame;
@@ -52,6 +53,18 @@ public class BehaviourRole extends RoleBehaviour {
 						((AgtRole)myAgent).players.remove(msgcontent.getDeadName());
 						if(msgcontent.getIsHungVictim())
 						((AgtRole)myAgent).updateConfidenceVotePaysan(msgcontent.getDeadName(), msgcontent.getRole());
+					}
+				}
+			}
+			else {
+				message = mMessage.parseJson(msgString, mActionLover.class);
+				if(message != null) { 
+					mActionLover msgcontent = (mActionLover)message;
+					if(msgcontent.getLover1()!=myAgent.getLocalName()){
+						((AgtRole)myAgent).setLover(msgcontent.getLover1());
+					}
+					else {
+						((AgtRole)myAgent).setLover(msgcontent.getLover2());
 					}
 				}
 			}
