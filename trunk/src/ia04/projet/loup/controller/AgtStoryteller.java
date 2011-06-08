@@ -12,6 +12,7 @@ import ia04.projet.loup.messages.mPlayerDied;
 import ia04.projet.loup.messages.mStartGame;
 import ia04.projet.loup.messages.mStorytellerKb;
 import ia04.projet.loup.messages.mStorytellerPlayer;
+import ia04.projet.loup.messages.mTimeElapsed;
 import ia04.projet.loup.messages.mVoteRun;
 import ia04.projet.loup.players.AgtPlayer;
 import jade.core.AID;
@@ -52,6 +53,8 @@ public class AgtStoryteller extends Agent {
 	private Random generator = new Random();
 	/** The number of answers the controller is waiting for before going on. */
 	private int nbWaitingAnswers;
+	/** The number of times the current phase has been repeated */
+	private int nbRepeatedPhase;
 	/** Remember when a request has been sent and not answered */
 	private boolean hasSentRequestToKb = false;
 	/** The AID of the AgtKbStoryteller this storyteller agent can use. */
@@ -555,9 +558,12 @@ public class AgtStoryteller extends Agent {
 	 * @param choice The target
 	 */
 	public void werewolvesEndedWithChoice(AID choice){
-		Debugger.println("Werewolves target: "+choice.getLocalName());
 		if(choice!=null){
+			Debugger.println("Werewolves target: "+choice.getLocalName());
 			this.addVictim(choice);
+		}
+		else {
+			Debugger.println("Werewolves couldn't agree on a target");
 		}
 		this.nbWaitingAnswers=0;
 	}
@@ -670,6 +676,7 @@ public class AgtStoryteller extends Agent {
 		mStorytellerPlayer msg = new mStorytellerPlayer();
 		msg.setType(mStorytellerPlayer.mType.STORYTELLING);
 		msg.setPhase(phase);
+		this.nbRepeatedPhase = 0;
 
 		// Storytelling depends on the phase
 		String storytelling = "";
@@ -797,6 +804,36 @@ public class AgtStoryteller extends Agent {
 		// Send the message to all the registered agents
 		sendMessageToRegisteredAgents(msg);	
 	}
+
+	/**
+	 * If we need to repeat a phase
+	 */
+	private boolean shouldRepeatPhase(GamePhases phase){
+		boolean result = false;
+		// Everyone answered, we're good
+		if(this.nbWaitingAnswers == 0){
+			result = false;
+		}
+		// Waiting for some answers but we have time
+		else if(this.nbRepeatedPhase < Global.MAX_REPEATED_TIMES){
+			result = true;
+		}
+		// Answered too late
+		else if(this.nbRepeatedPhase == Global.MAX_REPEATED_TIMES){	
+			// One last time, ask the Vote agent to finish
+			if(phase.equals(GamePhases.WEREWOLVES)) {
+				mTimeElapsed msg = new mTimeElapsed();
+				msg.setTypeTimeElapsed(AgtVote.voteType.VOTE_WW.toString());
+				this.sendMessageToVoteAgent(msg, ACLMessage.REQUEST);
+				result = true;
+			}			
+		}
+		// Wait for the result (should have asked to finish)
+		else {
+			result = true;
+		}
+		return result;
+	}
 	/**
 	 * This method is called by the internal clock when the current phase stops.
 	 * The clock is actually stopped until the Storyteller does something.
@@ -804,9 +841,10 @@ public class AgtStoryteller extends Agent {
 	 */
 	public void endOfPhase(GamePhases phase){
 		boolean gameIsOver = false;
-		// Give more time
-		if(this.nbWaitingAnswers > 0){
-			phaseClock.restartPhaseTimer();
+		// If it is needed, give more time
+		if(shouldRepeatPhase(phase)){
+			phaseClock.restartPhaseTimer();	
+			this.nbRepeatedPhase++;
 			return;
 		}
 		// TODO: lots of stuff to do

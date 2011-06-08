@@ -215,6 +215,7 @@ public class AgtRole extends Agent {
 		if(lover!=null){ //Do not kill your lover !
 			candidates.remove(lover);
 		}
+		candidates.remove(this.getLocalName());
 		switch (currentStrategy){
 		case RABBIT:
 			//Debugger.println("AgtRole: resolveEquality-RABBIT");

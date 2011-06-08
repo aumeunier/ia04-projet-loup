@@ -23,7 +23,6 @@ import java.util.Map.Entry;
  * @author paul
  */
 public class AgtVote extends Agent {
-
 	private static final long serialVersionUID = 1L;
 
 	/** Possible types of vote */
@@ -33,24 +32,20 @@ public class AgtVote extends Agent {
 
 	/** Map of the registered players */
 	private HashMap<AID, Roles> playersMap = new HashMap<AID, Roles>();
-
 	/** AID of the Mayor */
 	private AID mayor;
-
 	/** AID of the StoryTeller */
 	private AID storyTeller;
-
 	/** Who votes for who */
 	private HashMap<AID, mVote> whoVotesForWho = new HashMap<AID, mVote>();
-
 	/** Result of the previous election */
 	private HashMap<String, Integer> lastElectionResult = new HashMap<String, Integer>();
-
 	/** Last elected person */
 	private mVoteRun lastVote = null;
-
 	/** Number of electors who haven't vote yet */
 	private int remainingVotes;
+	/** Whether we should stop the vote at the next iteration (taking too long) */
+	private boolean shouldStopNext = false;
 
 	/**
 	 * Constructor
@@ -85,6 +80,7 @@ public class AgtVote extends Agent {
 			this.whoVotesForWho = new HashMap<AID, mVote>();
 			this.lastVote = runVote;
 			this.lastElectionResult.clear();
+			this.shouldStopNext = false;
 		} else {
 			HashMap<String, mVote> temp = new HashMap<String, mVote>();
 			for (Entry<AID, mVote> entry : this.whoVotesForWho.entrySet()) {
@@ -168,27 +164,41 @@ public class AgtVote extends Agent {
 				this.calculateResults();
 
 				if (uniqueWinner(lastElectionResult)) {
+					this.shouldStopNext = false;
 					endOfVote(lastElectionResult);
 				} else {
-					Debugger.println("THERE IS A FUCKING TIE");
-					// There is no unique winner
-					switch(lastVote.getType()){
-					// If it is a vote to kill a were wolf, the mayor will choose one among the winners
-					case VOTE_PAYSAN : 
-						tieATie();
-						break;
-					// If it is a vote to elect the mayor (first turn), choose randomly
-					case ELECT_MAYOR:
-						tieRandomly();
-						break;
-					// Otherwise, another turn will be run
-					default: 
-						election(lastVote, false);
-						break;
+					// If it took too long, we stop the election
+					if(this.shouldStopNext){
+						terminateVote(aVote.getType());
+					}
+					else {
+						// There is no unique winner
+						switch(aVote.getType()){
+						// If it is a vote to kill a were wolf, the mayor will choose one among the winners
+						case VOTE_PAYSAN : 
+							tieATie();
+							break;
+							// If it is a vote to elect the mayor (first turn), choose randomly
+						case ELECT_MAYOR:
+							tieRandomly();
+							break;
+							// Otherwise, another turn will be run
+						default: 
+							election(lastVote, false);
+							break;
+						}
 					}
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Vote isn't be finished
+	 */
+	public void terminateVote(voteType type){
+		this.informElectorsFinalResult(null, type);
+		this.shouldStopNext = false;
 	}
 
 	/**
@@ -204,7 +214,7 @@ public class AgtVote extends Agent {
 		message.addReceiver(this.mayor);
 		this.send(message);
 	}
-	
+
 	/**
 	 * The tie is broken randomly among the ones with the biggest number of voices
 	 */
@@ -284,7 +294,7 @@ public class AgtVote extends Agent {
 				winner = aCandidates;
 			}
 		}
-		
+
 		switch(lastVote.getType()){
 		case ELECT_MAYOR: 
 			this.mayor = new AID(winner, AID.ISLOCALNAME); 
@@ -304,7 +314,7 @@ public class AgtVote extends Agent {
 
 		this.informElectorsFinalResult(aVote.getChoice(), voteType.EQUALITY);
 	}
-	
+
 	/**
 	 * Get the choice of the mayor regarding his successor
 	 * @param aVote 
@@ -366,7 +376,9 @@ public class AgtVote extends Agent {
 
 		/* Inform StoryTeller of the final result */
 		message = new ACLMessage(ACLMessage.INFORM);
-		this.lastVote.setChoice(winner.replace(Global.LOCALNAME_SUFFIX_ROLE, ""));
+		if(winner != null){
+			this.lastVote.setChoice(winner.replace(Global.LOCALNAME_SUFFIX_ROLE, ""));			
+		}
 		message.setContent(this.lastVote.toJson());
 		message.addReceiver(this.storyTeller);
 		this.send(message);
@@ -402,7 +414,7 @@ public class AgtVote extends Agent {
 		this.playersMap.put(deathAid, Global.Roles.DEAD);
 
 		// Notify the other players
-		
+
 		ACLMessage message = new ACLMessage(ACLMessage.INFORM);
 		message.setContent(deathMessage.toJson());
 		for(AID aid: playersMap.keySet()){
@@ -411,7 +423,7 @@ public class AgtVote extends Agent {
 			}
 		}
 		this.send(message);
-		 
+
 	}
 	/**
 	 * Add a player to the playerMap

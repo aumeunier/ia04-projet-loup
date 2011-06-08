@@ -12,7 +12,6 @@ import java.util.TimerTask;
  *
  */
 public class PhaseClock {
-	private static final float AVERAGE_SPEED = 0.025f;
 	private static final int PREPARATION_PHASE_DURATION = 5000;
 	/** The timer used to time the phases */
 	private Timer timer;
@@ -109,10 +108,10 @@ public class PhaseClock {
 			return;
 		case NIGHT:
 			nbOfTurns++;
-			phaseDuration = (int) (5000*AVERAGE_SPEED);
+			phaseDuration = (int) (5000*Global.AVERAGE_SPEED);
 			break;
 		default:
-			phaseDuration = (int) (5000*AVERAGE_SPEED);
+			phaseDuration = (int) (5000*Global.AVERAGE_SPEED);
 			break;				
 		}
 		
