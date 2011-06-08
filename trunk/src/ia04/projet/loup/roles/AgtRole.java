@@ -2,6 +2,7 @@ package ia04.projet.loup.roles;
 
 import ia04.projet.loup.Debugger;
 import ia04.projet.loup.Global;
+import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.Global.Strategies;
 import ia04.projet.loup.messages.mActionRegister;
 import ia04.projet.loup.messages.mMessage;
@@ -38,7 +39,7 @@ public class AgtRole extends Agent {
 	/** role of the agent */
 	protected Global.Roles role;
 	/** The strategy in use */
-	protected Global.Strategies currentStrategy = Strategies.SHEEP;
+	protected Global.Strategies currentStrategy;
 	/** Array of the players */
 	protected java.util.List<AID> players = new ArrayList<AID>();
 	/** Map of the players with the corresponding confidence level */
@@ -68,6 +69,7 @@ public class AgtRole extends Agent {
 	public AgtRole(AID guiID) {
 		super();
 		initializeRole();
+		initializeStrategy();
 		//addBehaviour(new BehaviourRegister()); //TODO: useless for now
 		addAndSaveBehaviour(new BehaviourRole());
 		addAndSaveBehaviour(new BehaviourVillager());
@@ -108,6 +110,10 @@ public class AgtRole extends Agent {
 	protected void initializeRole(){
 		role = Global.Roles.VILLAGER;
 	}
+	/** initialize the strategy of thearg0 agent */
+	protected void initializeStrategy(){
+		currentStrategy=Global.STATEGY_VALUES.get(random.nextInt(Global.STATEGY_VALUES.size()));
+	}
 	/** add a behaviour and save it in Behaviours */
 	protected void addAndSaveBehaviour(RoleBehaviour aBehaviour){
 		this.addBehaviour(aBehaviour);
@@ -146,13 +152,12 @@ public class AgtRole extends Agent {
 			//Debugger.println(this.getLocalName()+": vote-BASIC: "+getLowestConfidence(candidates));
 			return getLowestConfidence(candidates);
 		case SHEEP:
-			Debugger.println(this.getLocalName()+": vote-SHEEP: ");
 			if(lastVote==null){
-					Debugger.println("******lastvote null");
+				//TODO something else
 					return candidates.get(random.nextInt(candidates.size()));
 			}
 			else{
-				Debugger.println(this.getLocalName()+": vote-SHEEP: "+getLastMostVoted(candidates,lastVote));
+				//Debugger.println(this.getLocalName()+": vote-SHEEP: "+getLastMostVoted(candidates,lastVote));
 				return getLastMostVoted(candidates, lastVote);
 			}
 		default: return null;		
@@ -162,7 +167,7 @@ public class AgtRole extends Agent {
 	protected String electMayor(ArrayList<String> candidates){
 		switch (currentStrategy){
 		case RABBIT:
-		case SHEEP:
+		case SHEEP: //TODO sheep elect mayor comportment
 			//Debugger.println("AgtRole: electMayor-RABBIT");
 			return candidates.get(random.nextInt(candidates.size()));
 		case BASIC:
@@ -175,12 +180,20 @@ public class AgtRole extends Agent {
 	protected String nameSuccessor(ArrayList<String> candidates){
 		switch (currentStrategy){
 		case RABBIT:
-		case SHEEP:
 			//Debugger.println("AgtRole: nameSuccessor-RABBIT");
 			return candidates.get(random.nextInt(candidates.size()));
 		case BASIC: 
-			//Debugger.println("AgtRole: nameSuccessor-BASIC");
+			//Debugger.println("AgtRole: nameSuccessor-BASIC");			
 			return getHighestConfidence(candidates);
+		case SHEEP:
+			if(lastVote==null){
+				//TODO something else
+				return candidates.get(random.nextInt(candidates.size()));
+		}
+		else{
+			//Debugger.println(this.getLocalName()+": vote-SHEEP: "+getLastLeastVoted(candidates,lastVote));
+			return getLastLeastVoted(candidates, lastVote);
+		}
 		default: return null;
 		}
 	}
@@ -188,12 +201,20 @@ public class AgtRole extends Agent {
 	protected String resolveEquality(ArrayList<String> candidates){
 		switch (currentStrategy){
 		case RABBIT:
-		case SHEEP:
 			//Debugger.println("AgtRole: resolveEquality-RABBIT");
 			return candidates.get(random.nextInt(candidates.size()));
 		case BASIC:
 			//Debugger.println("AgtRole: resolveEquality-BASIC");
 			return getLowestConfidence(candidates);
+		case SHEEP:
+			if(lastVote==null){
+				//TODO something else
+					return candidates.get(random.nextInt(candidates.size()));
+			}
+			else{
+				//Debugger.println(this.getLocalName()+": vote-SHEEP: "+getLastMostVoted(candidates,lastVote));
+				return getLastMostVoted(candidates, lastVote);
+			}
 		default: return null;
 		}
 	}
@@ -282,8 +303,9 @@ public class AgtRole extends Agent {
 			this.addAndSaveBehaviour(new BehaviourMayor());
 		}
 	}
-	
+
 	protected String getLastMostVoted(ArrayList<String> players, HashMap<String, mVote> aVote){
+		//TODO if equality use confidenceLevels to tie
 		String maxPlayer=null; int max=0;
 		for(String player : players){
 			int tmp=0;
@@ -296,6 +318,29 @@ public class AgtRole extends Agent {
 				maxPlayer=player;
 			}	
 		}
+		if(max==0){ //no vote for survivors
+			return players.get(random.nextInt(players.size()));	
+		}
 		return maxPlayer; 
+	}
+	
+	protected String getLastLeastVoted(ArrayList<String> players, HashMap<String, mVote> aVote){
+		//TODO if equality use confidenceLevels to tie
+		String minPlayer=null; int min=100;
+		for(String player : players){
+			int tmp=0;
+			for(String elector : aVote.keySet()){
+				if(aVote.get(elector).getChoice().equals(player))
+					tmp++;
+			}
+			if(tmp < min){
+				min=tmp;
+				minPlayer=player;
+			}	
+		}
+		if(min==100){ //no vote for survivors
+			return players.get(random.nextInt(players.size()));	
+		}
+		return minPlayer; 
 	}
 }

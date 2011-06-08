@@ -1,6 +1,9 @@
 package ia04.projet.loup;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -132,6 +135,10 @@ public class Global {
 		/** Votes for the player with the highest number of votes during the last vote of the same type */
 		SHEEP
 	}
+
+	public static final List<Strategies> STATEGY_VALUES =
+	    Collections.unmodifiableList(Arrays.asList(Strategies.values()));
+
 	
 	public static Random random = new Random(System.currentTimeMillis());
 }
