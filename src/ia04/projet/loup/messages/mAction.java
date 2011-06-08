@@ -5,7 +5,8 @@ import ia04.projet.loup.Global.Roles;
 public class mAction extends mMessage {
 
 	private Roles role;
-	private String target;
+	private String targetKilled;
+	private String targetSaved;
 	private String performer;
 	
 	public mAction() {
@@ -32,13 +33,20 @@ public class mAction extends mMessage {
 		return role;
 	}
 
-	
-	public void setTarget(String _target){
-		this.target = _target;
+
+	public void setTargetKilled(String _target){
+		this.targetKilled = _target;
 	}
 	
-	public String getTarget(){
-		return target;
+	public String getTargetKilled(){
+		return targetKilled;
+	}
+	public void setTargetSaved(String _target){
+		this.targetSaved = _target;
+	}
+	
+	public String getTargetSaved(){
+		return targetSaved;
 	}
 	
 	public void setPerformer(String _performer){
