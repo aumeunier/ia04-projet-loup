@@ -128,7 +128,9 @@ public class Global {
 		/** Strategy used for the very beginning of the project: random behavior */
 		RABBIT,
 		/** First real strategy, votes for the confidence lvl */
-		BASIC
+		BASIC,
+		/** Votes for the player with the highest number of votes during the last vote of the same type */
+		SHEEP
 	}
 	
 	public static Random random = new Random(System.currentTimeMillis());

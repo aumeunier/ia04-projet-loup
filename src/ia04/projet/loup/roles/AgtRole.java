@@ -7,6 +7,7 @@ import ia04.projet.loup.messages.mActionRegister;
 import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mPlayerDied;
 import ia04.projet.loup.messages.mStorytellerPlayer;
+import ia04.projet.loup.messages.mToGui;
 import ia04.projet.loup.messages.mVote;
 import ia04.projet.loup.messages.mVoteRegister;
 import ia04.projet.loup.messages.mStorytellerPlayer.mType;
@@ -18,6 +19,7 @@ import jade.lang.acl.ACLMessage;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -36,7 +38,7 @@ public class AgtRole extends Agent {
 	/** role of the agent */
 	protected Global.Roles role;
 	/** The strategy in use */
-	protected Global.Strategies currentStrategy = Strategies.BASIC;
+	protected Global.Strategies currentStrategy = Strategies.SHEEP;
 	/** Array of the players */
 	protected java.util.List<AID> players = new ArrayList<AID>();
 	/** Map of the players with the corresponding confidence level */
@@ -49,6 +51,9 @@ public class AgtRole extends Agent {
 	protected ArrayList<RoleBehaviour> behaviours = new ArrayList<RoleBehaviour>();
 	/** generate random int for the rabbit strategy */
 	protected Random random = new Random(Global.random.nextLong());
+	/** ID of his associated GUI */
+	protected AID myGuiID;
+	protected boolean firstTurn = true;
 	
 	public int getVoices() {
 		return voices;
@@ -60,14 +65,14 @@ public class AgtRole extends Agent {
 	 * The default constructor. Starts the agent and attach its behaviors (core + villager).
 	 * Gets an access to his player's GUI
 	 */
-	public AgtRole() {
+	public AgtRole(AID guiID) {
 		super();
 		initializeRole();
 		//addBehaviour(new BehaviourRegister()); //TODO: useless for now
 		addAndSaveBehaviour(new BehaviourRole());
 		addAndSaveBehaviour(new BehaviourVillager());
 		initializeConfidenceLevel();
-		//TODO get the GUI
+		myGuiID=guiID;
 	}
 	/**
 	 * Here the agent registers to the Communication agents such that he can receive 
@@ -132,6 +137,7 @@ public class AgtRole extends Agent {
 	 * vote to kill somebody in the village 
 	 */
 	protected String vote(ArrayList<String> candidates){
+		ACLMessage toGui = new ACLMessage(ACLMessage.INFORM);
 		switch (currentStrategy){
 		case RABBIT:
 			//Debugger.println("AgtRole: vote-RABBIT");
@@ -139,13 +145,24 @@ public class AgtRole extends Agent {
 		case BASIC:
 			//Debugger.println(this.getLocalName()+": vote-BASIC: "+getLowestConfidence(candidates));
 			return getLowestConfidence(candidates);
-		default: return null;
+		case SHEEP:
+			Debugger.println(this.getLocalName()+": vote-SHEEP: ");
+			if(lastVote==null){
+					Debugger.println("******lastvote null");
+					return candidates.get(random.nextInt(candidates.size()));
+			}
+			else{
+				Debugger.println(this.getLocalName()+": vote-SHEEP: "+getLastMostVoted(candidates,lastVote));
+				return getLastMostVoted(candidates, lastVote);
+			}
+		default: return null;		
 		}
 	}
 	/** Vote for the election of the first mayor */
 	protected String electMayor(ArrayList<String> candidates){
 		switch (currentStrategy){
 		case RABBIT:
+		case SHEEP:
 			//Debugger.println("AgtRole: electMayor-RABBIT");
 			return candidates.get(random.nextInt(candidates.size()));
 		case BASIC:
@@ -158,6 +175,7 @@ public class AgtRole extends Agent {
 	protected String nameSuccessor(ArrayList<String> candidates){
 		switch (currentStrategy){
 		case RABBIT:
+		case SHEEP:
 			//Debugger.println("AgtRole: nameSuccessor-RABBIT");
 			return candidates.get(random.nextInt(candidates.size()));
 		case BASIC: 
@@ -170,6 +188,7 @@ public class AgtRole extends Agent {
 	protected String resolveEquality(ArrayList<String> candidates){
 		switch (currentStrategy){
 		case RABBIT:
+		case SHEEP:
 			//Debugger.println("AgtRole: resolveEquality-RABBIT");
 			return candidates.get(random.nextInt(candidates.size()));
 		case BASIC:
@@ -262,5 +281,21 @@ public class AgtRole extends Agent {
 		if(mayorLocalName.equals(this.getLocalName())){
 			this.addAndSaveBehaviour(new BehaviourMayor());
 		}
+	}
+	
+	protected String getLastMostVoted(ArrayList<String> players, HashMap<String, mVote> aVote){
+		String maxPlayer=null; int max=0;
+		for(String player : players){
+			int tmp=0;
+			for(String elector : aVote.keySet()){
+				if(aVote.get(elector).getChoice().equals(player))
+					tmp++;
+			}
+			if(tmp > max){
+				max=tmp;
+				maxPlayer=player;
+			}	
+		}
+		return maxPlayer; 
 	}
 }

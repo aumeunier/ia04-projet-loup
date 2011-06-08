@@ -1,12 +1,21 @@
 package ia04.projet.loup.messages;
 
+import ia04.projet.loup.Global;
+
 import java.util.ArrayList;
 
 public class mPlayerDied extends mMessage {
 	private boolean isOver = false;
 	private String deadName;
+	private Global.Roles role;
 	private boolean isHungVictim = false;
 	
+	public Global.Roles getRole() {
+		return role;
+	}
+	public void setRole(Global.Roles role) {
+		this.role = role;
+	}
 	public boolean getIsOver(){
 		return isOver;
 	}

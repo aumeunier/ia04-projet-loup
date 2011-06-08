@@ -74,10 +74,10 @@ public class AgtPlayer extends Agent {
 		AgtRole agtR = null;
 		switch(role){
 		case VILLAGER:
-			agtR = new AgtRole();
+			agtR = new AgtRole(GuiID);
 			break;
 		case WEREWOLF:			
-			agtR = new AgtWerewolf();
+			agtR = new AgtWerewolf(GuiID);
 			break;
 			/*case CUPID:
 				agtR = new AgtRole();
@@ -105,7 +105,7 @@ public class AgtPlayer extends Agent {
 				agtR = new AgtRole(); 
 				*/
 		default:
-			agtR = new AgtRole();
+			agtR = new AgtRole(GuiID);
 			break;
 		}
 		

@@ -397,10 +397,11 @@ public class AgtVote extends Agent {
 		// Change the player's role in the map
 		String deadPlayer = deathMessage.getDeadName();
 		AID deathAid = new AID(deadPlayer,AID.ISLOCALNAME);
+		deathMessage.setRole(this.playersMap.get(deathAid));
 		this.playersMap.put(deathAid, Global.Roles.DEAD);
 
 		// Notify the other players
-		/*
+		
 		ACLMessage message = new ACLMessage(ACLMessage.INFORM);
 		message.setContent(deathMessage.toJson());
 		for(AID aid: playersMap.keySet()){
@@ -409,7 +410,7 @@ public class AgtVote extends Agent {
 			}
 		}
 		this.send(message);
-		 */
+		 
 	}
 	/**
 	 * Add a player to the playerMap
