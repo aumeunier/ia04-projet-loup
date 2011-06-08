@@ -2,7 +2,9 @@ package ia04.projet.loup.gui;
 
 import jade.core.AID;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
@@ -10,66 +12,83 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextArea;
+import javax.swing.ListModel;
 
+/**
+ * Class which handles the GUI for a bot player
+ * @author Guillaume
+ */
 public class GuiBot extends JFrame implements ActionListener{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
-	JTextArea name;
-	JTextArea stat;
-	JTextArea role;
-	//JScrollPane storyPane;
-	JTextArea StoryView;
-	JTextArea PlayerList;
-	AID MyPlayerAgent;
+	protected JTextArea jTextAreaName;
+	protected JTextArea jTextAreaStat;
+	protected JTextArea jTextAreaRole;
+	protected JTextArea jTextAreaStoryView;
+	protected JList jListPlayerList;
+	protected JPanel leftPanel;
+	protected JPanel buttonPanel;
+	protected JButton jButtonHelp;
+	protected AID myPlayerAgent;
 	
-	
-	public GuiBot(String arg0, AID agt) throws HeadlessException {
-		super(arg0);
-		this.MyPlayerAgent = agt;
-		initialize(arg0);
-		output();
+	/**
+	 * Construction
+	 * @param String playerName
+	 * @param AID agt
+	 * @throws HeadlessException
+	 */
+	public GuiBot(String playerName, AID agt) throws HeadlessException {
+		super(playerName);
+		this.myPlayerAgent = agt;
+		this.initialize(playerName);
+		this.output();
 	}
 	
-	private void output() {
+	/**
+	 * Set the default size to the frame
+	 */
+	protected void output() {
 		setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
 		setSize(640, 480);
 	}
 	
-	private void initialize(String arg0) {
+	/**
+	 * Initialize the Frame
+	 * @param playerName
+	 */
+	protected void initialize(String playerName) {
 		
 		//Components initialization
 		JLabel nameLab = new JLabel("NAME :");
-		name = new JTextArea(arg0);
-		name.setEditable(false);
+		jTextAreaName = new JTextArea(playerName);
+		jTextAreaName.setEditable(false);
 		
 		JLabel statLab = new JLabel("STATUS :");
-		stat = new JTextArea();
-		stat.setEditable(false);
+		jTextAreaStat = new JTextArea();
+		jTextAreaStat.setEditable(false);
 		
 		JLabel roleLab = new JLabel("ROLE :");
-		role = new JTextArea();
-		role.setEditable(false);
+		jTextAreaRole = new JTextArea();
+		jTextAreaRole.setEditable(false);
 		
+		jTextAreaStoryView = new JTextArea("",30,30);
+		jTextAreaStoryView.setWrapStyleWord(true);
+		jTextAreaStoryView.setText("Player initialization...");
+		jTextAreaStoryView.setEditable(false);
 		
-		StoryView = new JTextArea("",30,30);
-		StoryView.setWrapStyleWord(true);
-		StoryView.setText("Player initialization...");
-		StoryView.setEditable(false);
+		DefaultListModel model = new DefaultListModel();
+		jListPlayerList = new JList(model);
 		
-		
-		
-		PlayerList = new JTextArea();
-		PlayerList.setEditable(false);
+		jButtonHelp = new JButton("Help");
 		
 		//Layout creation
 		GridBagConstraints cNameLab = new GridBagConstraints(0,0,1,1,1.0,1.0,GridBagConstraints.EAST,
@@ -90,28 +109,35 @@ public class GuiBot extends JFrame implements ActionListener{
 		GridBagConstraints cRole = new GridBagConstraints(1,2,1,1,1.0,1.0,GridBagConstraints.EAST,
 				GridBagConstraints.BOTH,new Insets(10,10,10,10),0,0);
 		
-		GridBagConstraints cStoryView = new GridBagConstraints(0,0,1,1,1.0,1.0,GridBagConstraints.EAST,
-				GridBagConstraints.BOTH,new Insets(10,10,10,10),0,0);
+		//GridBagConstraints cStoryView = new GridBagConstraints(0,0,1,1,1.0,1.0,GridBagConstraints.EAST,
+		//		GridBagConstraints.BOTH,new Insets(10,10,10,10),0,0);
 		
 		GridBagConstraints cPlayerList = new GridBagConstraints(0,3,1,1,1.0,1.0,GridBagConstraints.EAST,
 				GridBagConstraints.BOTH,new Insets(10,10,10,10),0,0);
 		
 		//Panel construction
-		JPanel leftPanel = new JPanel(new GridBagLayout());
-		leftPanel.add(nameLab,cNameLab);
-		leftPanel.add(name,cName);
-		leftPanel.add(statLab,cStatLab);
-		leftPanel.add(stat,cStat);
-		leftPanel.add(roleLab,cRoleLab);
-		leftPanel.add(role,cRole);
-		leftPanel.add(PlayerList,cPlayerList);
+		JPanel informationPanel = new JPanel(new GridBagLayout());
+		informationPanel.add(nameLab,cNameLab);
+		informationPanel.add(jTextAreaName,cName);
+		informationPanel.add(statLab,cStatLab);
+		informationPanel.add(jTextAreaStat,cStat);
+		informationPanel.add(roleLab,cRoleLab);
+		informationPanel.add(jTextAreaRole,cRole);
 		
-		JPanel mainPanel = new JPanel(new GridBagLayout());
-		JScrollPane storyPane = new JScrollPane(StoryView,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		buttonPanel = new JPanel(new FlowLayout());
+		buttonPanel.add(jButtonHelp);
+		
+		leftPanel = new JPanel(new BorderLayout());
+		leftPanel.add(informationPanel, BorderLayout.PAGE_START);
+		leftPanel.add(jListPlayerList, BorderLayout.CENTER);
+		leftPanel.add(buttonPanel, BorderLayout.SOUTH);
+		
+		JPanel mainPanel = new JPanel(new BorderLayout());
+		JScrollPane storyPane = new JScrollPane(jTextAreaStoryView,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		storyPane.setPreferredSize(new Dimension(400,400));
 		
-		mainPanel.add(leftPanel);
-		mainPanel.add(storyPane);		
+		mainPanel.add(leftPanel, BorderLayout.WEST);
+		mainPanel.add(storyPane, BorderLayout.EAST);		
 		this.add(mainPanel);
 	}
 	
@@ -125,45 +151,69 @@ public class GuiBot extends JFrame implements ActionListener{
 	}
 	
 	public String getName() {
-		return name.getText();
+		return jTextAreaName.getText();
 	}
 
 	public void setName(String nam) {
-		this.name.setText(nam);
+		this.jTextAreaName.setText(nam);
 	}
 
 	public String getStat() {
-		return stat.getText();
+		return jTextAreaStat.getText();
 	}
 	
 	public void setStat(String state) {
-			this.stat.setText(state);
+			this.jTextAreaStat.setText(state);
 		}
 	
 	public String getRole() {
-		return role.getText();
+		return jTextAreaRole.getText();
 	}
 	
 	public void setRole(String rol) {
-		this.role.setText(rol);
+		this.jTextAreaRole.setText(rol);
 	}
 		
 	public String getStoryView() {
-		return StoryView.getText();
+		return jTextAreaStoryView.getText();
 	}
 
 	public void setStoryView(String str) {
-		StoryView.append("\n" +str);
-		StoryView.setCaretPosition( StoryView.getDocument().getLength() );
+		jTextAreaStoryView.append("\n" +str);
+		jTextAreaStoryView.setCaretPosition( jTextAreaStoryView.getDocument().getLength() );
 	}
 
-	public String getPlayerList() {
-		return PlayerList.getText();
+	/**
+	 * Return all the player names
+	 * @return String[]
+	 */
+	public String[] getPlayerList() {
+		ListModel model = jListPlayerList.getModel();
+		return (String[]) ((DefaultListModel) model).toArray();
 	}
 
-	public void setPlayerList(String str) {
-		PlayerList.append("\n"+str);
+	/**
+	 * Add a player to the list, if the player does not already exist in the list return true, else false
+	 * @param str
+	 * @return
+	 */
+	public boolean addPlayerToTheList(String str) {
+		ListModel model = jListPlayerList.getModel();
+		if(((DefaultListModel) model).contains(str)){
+			return false;
+		}else{
+			((DefaultListModel) model).add(model.getSize(), str);
+			return true;
+		}
 	}
-
 	
+	/**
+	 * Remove a player to the list, if the player does not already exist in the list return true, else false
+	 * @param str
+	 * @return
+	 */
+	public boolean removePlayerFromTheList(String str) {
+		ListModel model = jListPlayerList.getModel();
+		return ((DefaultListModel) model).removeElement(str);
+	}
 }

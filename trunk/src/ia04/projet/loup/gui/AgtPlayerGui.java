@@ -38,7 +38,7 @@ public class AgtPlayerGui extends GuiAgent {
 		case PLAYERS_LIST:
 			ArrayList<String> list = msgObj.getPlayers();
 			for(int i=0; i < list.size(); i++){
-				myGui.setPlayerList(list.get(i));
+				myGui.addPlayerToTheList(list.get(i));
 			}
 			break;
 		case ROLE:
