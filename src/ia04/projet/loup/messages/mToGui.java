@@ -1,5 +1,7 @@
 package ia04.projet.loup.messages;
 
+import java.util.ArrayList;
+
 import ia04.projet.loup.Global;
 import ia04.projet.loup.messages.mStorytellerPlayer.mType;
 
@@ -21,7 +23,7 @@ public class mToGui extends mMessage {
 	
 	private mType type;
 	private Global.Roles role;
-	private Global.GamePhases phase;
+	private ArrayList<String> players = new ArrayList<String>();;
 	private String value;
 	
 	public mToGui (){
@@ -44,12 +46,18 @@ public class mToGui extends mMessage {
 		this.role = role;
 	}
 
-	public Global.GamePhases getPhase() {
-		return phase;
+	/**
+	 * @param candidates the candidates to set
+	 */
+	public void setPlayers(ArrayList<String> candidates) {
+		this.players = candidates;
 	}
 
-	public void setPhase(Global.GamePhases phase) {
-		this.phase = phase;
+	/**
+	 * @return the candidates
+	 */
+	public ArrayList<String> getPlayers() {
+		return players;
 	}
 
 	public String getValue() {
@@ -59,7 +67,6 @@ public class mToGui extends mMessage {
 	public void setValue(String value) {
 		this.value = value;
 	}
-	
 	
 	
 }

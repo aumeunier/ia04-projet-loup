@@ -1,5 +1,7 @@
 package ia04.projet.loup.players;
 
+import java.util.ArrayList;
+
 import ia04.projet.loup.Global;
 import ia04.projet.loup.gui.AgtPlayerGui;
 import ia04.projet.loup.messages.mStorytellerPlayer;
@@ -116,7 +118,8 @@ public class AgtPlayer extends Agent {
 
 	/**
 	 * Transfer to AgtGui the current game phase
-	 * @param msg Informative message from storyTeller
+	 * @param type message type to inform gui
+	 * @param val value to transfer
 	 * @author Guillaume
 	 * **/
 	public void TransfertToGui(mToGui.mType type, String val){
@@ -132,7 +135,48 @@ public class AgtPlayer extends Agent {
 		this.send(toGui);
 		
 	}
+	
+	/**
+	 * Transfer to AgtGui the current game phase
+	 * @param type message type to inform gui
+	 * @param list player list to gui
+	 * @author Guillaume
+	 * **/
+	public void TransfertToGui(mToGui.mType type, ArrayList<String> list){
+		ACLMessage toGui = new ACLMessage(ACLMessage.INFORM);
+		
+		mToGui msg = new mToGui();
+		msg.setType(type);
+		msg.setPlayers(list);
+		
+		toGui.setContent(msg.toJson());
+		toGui.addReceiver(GuiID);
+		
+		this.send(toGui);
+		
+	}
+	
+	/**
+	 * Transfer to AgtGui the current game phase
+	 * @param type message type to inform gui
+	 * @param role role given by the storyTeller
+	 * @author Guillaume
+	 * **/
+	public void TransfertToGui(mToGui.mType type, Global.Roles role){
+		ACLMessage toGui = new ACLMessage(ACLMessage.INFORM);
+		
+		mToGui msg = new mToGui();
+		msg.setType(type);
+		msg.setRole(role);
+		
+		toGui.setContent(msg.toJson());
+		toGui.addReceiver(GuiID);
+		
+		this.send(toGui);
+		
+	}
 
+	
 	/**Setters and getters*/
 	public void setRoleID(AID roleID) {
 		RoleID = roleID;
