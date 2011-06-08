@@ -1,9 +1,5 @@
 package ia04.projet.loup.roles;
 
-import ia04.projet.loup.Debugger;
-
-import java.util.Random;
-
 public class ConfidenceLevel{
 	private int level;
 	public static int ILOVEHIM = 30;
@@ -14,6 +10,10 @@ public class ConfidenceLevel{
 	public static int ISWEREWOLF = -30;
 	public static int ISVILLAGER = 30;
 	
+	
+	public ConfidenceLevel(){
+		level = -1;
+	}
 	
 	public ConfidenceLevel(int badFacing){
 		level = 45+badFacing;
@@ -26,5 +26,8 @@ public class ConfidenceLevel{
 	public int getLevel() {
 		return level;
 	}
-
+	
+	public void setLevel(int l) {
+		level = l;
+	}
 }

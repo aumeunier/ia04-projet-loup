@@ -1,15 +1,11 @@
 package ia04.projet.loup.roles;
 
-import ia04.projet.loup.Debugger;
-import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.messages.mVote;
-
 import jade.core.AID;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
 public class AgtWerewolf extends AgtRole {
 
@@ -60,7 +56,7 @@ public class AgtWerewolf extends AgtRole {
 		for (String elector : this.lastVoteWerewolf.keySet()) {
 			if (!elector.equals(this.getLocalName())){
 				/** if this isn't my vote */
-				confidenceLevel.get(lastVoteWerewolf.get(elector).getChoice()).update(ConfidenceLevel.FRIENDWANTSTOEATHIM);
+				confidenceLevelManager.update(lastVoteWerewolf.get(elector).getChoice(), ConfidenceLevel.FRIENDWANTSTOEATHIM);
 			}
 		}
 	}
