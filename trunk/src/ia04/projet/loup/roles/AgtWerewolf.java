@@ -43,7 +43,7 @@ public class AgtWerewolf extends AgtRole {
 					return candidates.get(random.nextInt(candidates.size()));
 			}
 			else{
-				Debugger.println(this.getLocalName()+": vote-SHEEP: "+getLastMostVoted(candidates,lastVote));
+				//Debugger.println(this.getLocalName()+": vote-SHEEP: "+getLastMostVoted(candidates,lastVote));
 				return getLastMostVoted(candidates, lastVote);
 			}
 		default: return null;

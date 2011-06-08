@@ -1,5 +1,6 @@
 package ia04.projet.loup.roles;
 
+import ia04.projet.loup.Debugger;
 import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mPlayerDied;
 import ia04.projet.loup.messages.mStartGame;
@@ -29,6 +30,10 @@ public class BehaviourRole extends RoleBehaviour {
 		mMessage message = mMessage.parseJson(msgString, mStartGame.class);
 		// if msgSender == Vote
 		if(message!=null){
+			Debugger.println(myAgent.getLocalName().replace("Role", ""));
+			//msg.removeReceiver(myAgent.getAID());
+			//msg.addReceiver(new AID(myAgent.getLocalName().replace("Role", ""), AID.ISLOCALNAME));
+			//myAgent.send(msg);
 			mStartGame msgContent = (mStartGame)message;
 			for(String player : msgContent.getLocalNames()){
 				((AgtRole)myAgent).confidenceLevel.put(player, new ConfidenceLevel(((AgtRole)myAgent).random.nextInt(10)));
@@ -40,8 +45,11 @@ public class BehaviourRole extends RoleBehaviour {
 				if(msgcontent != null){
 					if(msgcontent.getRole()==null)
 						((AgtRole)myAgent).iAmDead(msg);
-					else if(msgcontent.getIsHungVictim())
+					else{ 
+						((AgtRole)myAgent).confidenceLevel.remove(msgcontent.getDeadName());
+						if(msgcontent.getIsHungVictim())
 						((AgtRole)myAgent).updateConfidenceVotePaysan(msgcontent.getDeadName(), msgcontent.getRole());
+					}
 				}
 			}
 		}
