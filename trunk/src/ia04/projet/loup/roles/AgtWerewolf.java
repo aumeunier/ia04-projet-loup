@@ -5,7 +5,10 @@ import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.messages.mVote;
 
+import jade.core.AID;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 public class AgtWerewolf extends AgtRole {
@@ -14,9 +17,11 @@ public class AgtWerewolf extends AgtRole {
 	 * 
 	 */
 	private static final long serialVersionUID = 6633110253810476936L;
+	/** Map containing the last werewolf vote results */
+	protected HashMap<String, mVote> lastVoteWerewolf;
 	
-	public AgtWerewolf () {
-		super();
+	public AgtWerewolf (AID guiID) {
+		super(guiID);
 		addAndSaveBehaviour(new BehaviourWerewolf());
 	}
 	/** initialize the role of the agent */
@@ -27,6 +32,7 @@ public class AgtWerewolf extends AgtRole {
 	public String eatSomebody(ArrayList<String> candidates){
 		switch (currentStrategy){
 		case RABBIT:
+		case SHEEP:
 			//Debugger.println("AgtWerewofl: eatSomedy-RABBIT");
 			return candidates.get(random.nextInt(candidates.size()));
 		case BASIC:
@@ -37,11 +43,14 @@ public class AgtWerewolf extends AgtRole {
 	}
 	/** Update confidence levels after a WW vote */
 	protected void updateConfidenceVoteWerewolf(){
-		for (String elector : this.lastVote.keySet()) {
+		for (String elector : this.lastVoteWerewolf.keySet()) {
 			if (!elector.equals(this.getLocalName())){
 				/** if this isn't my vote */
-				confidenceLevel.get(lastVote.get(elector).getChoice()).update(ConfidenceLevel.FRIENDWANTSTOEATHIM);
+				confidenceLevel.get(lastVoteWerewolf.get(elector).getChoice()).update(ConfidenceLevel.FRIENDWANTSTOEATHIM);
 			}
 		}
+	}
+	public void setLastVoteWerewolf(HashMap<String, mVote> lastVoteWW) {
+		this.lastVoteWerewolf = lastVoteWW;
 	}
 }

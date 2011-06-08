@@ -25,8 +25,6 @@ public class BehaviourRole extends RoleBehaviour {
 	public void roleAction(ACLMessage msg) {
 		String msgString = msg.getContent();
 
-		/** TODO Checks the source of the message */
-		//if( msgSender == ACTION || ADVICE || VOTE)
 		ACLMessage response = msg.createReply();
 		mMessage message = mMessage.parseJson(msgString, mStartGame.class);
 		// if msgSender == Vote
@@ -40,7 +38,10 @@ public class BehaviourRole extends RoleBehaviour {
 			if(message != null){
 				mPlayerDied msgcontent = mPlayerDied.parseJson(msgString);
 				if(msgcontent != null){
-					((AgtRole)myAgent).iAmDead(msg);
+					if(msgcontent.getRole()==null)
+						((AgtRole)myAgent).iAmDead(msg);
+					else if(msgcontent.getIsHungVictim())
+						((AgtRole)myAgent).updateConfidenceVotePaysan(msgcontent.getDeadName(), msgcontent.getRole());
 				}
 			}
 		}

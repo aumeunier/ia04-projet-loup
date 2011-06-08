@@ -61,12 +61,16 @@ public class BehaviourVillager extends RoleBehaviour {
 			message = mMessage.parseJson(msgString, mVoteResult.class);
 			if(message!=null){
 				mVoteResult msgContent = (mVoteResult)message;
+				Debugger.println("mvoteresult received");
 				switch(msgContent.getType()){
 				case ELECT_MAYOR:
 					((AgtRole) myAgent).newMayorElected(msgContent.getChoiceResult());
+					break;
 				case VOTE_PAYSAN:
-				case VOTE_WW:
 					((AgtRole) myAgent).setLastVote(msgContent.getWhoVotesForWho());
+					break;
+				case VOTE_WW:
+					((AgtWerewolf) myAgent).setLastVoteWerewolf(msgContent.getWhoVotesForWho());
 					break;
 				case SUCCESSOR:
 				}

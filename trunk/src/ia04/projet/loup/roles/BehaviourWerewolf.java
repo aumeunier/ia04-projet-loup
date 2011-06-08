@@ -35,7 +35,7 @@ public class BehaviourWerewolf extends RoleBehaviour {
 				if(msgContent.getWhoVotesForWho()!=null){
 					//TODO check if this code is running at the first turn
 					//Debugger.println("update confidence");
-					((AgtWerewolf)myAgent).setLastVote(msgContent.getWhoVotesForWho());
+					((AgtWerewolf)myAgent).setLastVoteWerewolf(msgContent.getWhoVotesForWho());
 					((AgtWerewolf)myAgent).updateConfidenceVoteWerewolf();
 				}
 				msgContent.setChoice(((AgtWerewolf) myAgent).eatSomebody(msgContent.getCandidates()));
@@ -52,7 +52,7 @@ public class BehaviourWerewolf extends RoleBehaviour {
 			if(msgResultContent != null){
 				//Debugger.println("Result of the werewolves' vote");
 				if (msgResultContent.getType() == AgtVote.voteType.VOTE_WW){
-					((AgtWerewolf)myAgent).setLastVote(msgResultContent.getWhoVotesForWho());
+					((AgtWerewolf)myAgent).setLastVoteWerewolf(msgResultContent.getWhoVotesForWho());
 					//((AgtWerewolf)myAgent).updateConfidenceVoteWerewolf();
 				}
 			}
