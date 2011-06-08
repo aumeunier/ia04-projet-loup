@@ -482,6 +482,7 @@ public class AgtStoryteller extends Agent {
 	 */
 	public void killVictims(){
 		for(AID victim: this.lastVictimsRoles){
+			Roles role = this.playersMap.get(victim);
 			this.playersMap.put(victim, Global.Roles.DEAD);
 			mPlayerDied message = new mPlayerDied();
 			message.setIsOver(false);
@@ -489,6 +490,7 @@ public class AgtStoryteller extends Agent {
 			message.setIsHungVictim(this.phaseClock.getCurrentPhase().
 					equals(GamePhases.HUNGRESOLUTION));
 			sendMessageToOneRegisteredAgent(victim, message, ACLMessage.INFORM);
+			Debugger.println(victim.getLocalName()+" ("+role+") died.");
 		}
 
 		// Wait for the players to clean their role
@@ -826,7 +828,8 @@ public class AgtStoryteller extends Agent {
 				msg.setTypeTimeElapsed(AgtVote.voteType.VOTE_WW.toString());
 				this.sendMessageToVoteAgent(msg, ACLMessage.REQUEST);
 				result = true;
-			}			
+			}	
+			result = true;
 		}
 		// Wait for the result (should have asked to finish)
 		else {
