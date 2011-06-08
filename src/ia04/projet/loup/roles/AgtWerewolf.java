@@ -32,12 +32,20 @@ public class AgtWerewolf extends AgtRole {
 	public String eatSomebody(ArrayList<String> candidates){
 		switch (currentStrategy){
 		case RABBIT:
-		case SHEEP:
 			//Debugger.println("AgtWerewofl: eatSomedy-RABBIT");
 			return candidates.get(random.nextInt(candidates.size()));
 		case BASIC:
 			//Debugger.println(this.getLocalName()+": vote-BASIC: "+getLowestConfidence(candidates));
 			return getLowestConfidence(candidates);
+		case SHEEP:
+			if(lastVote==null){
+				//TODO something else
+					return candidates.get(random.nextInt(candidates.size()));
+			}
+			else{
+				Debugger.println(this.getLocalName()+": vote-SHEEP: "+getLastMostVoted(candidates,lastVote));
+				return getLastMostVoted(candidates, lastVote);
+			}
 		default: return null;
 		}
 	}
