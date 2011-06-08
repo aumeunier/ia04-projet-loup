@@ -132,6 +132,8 @@ public class Global {
 		RABBIT,
 		/** First real strategy, votes for the confidence lvl */
 		BASIC,
+		/** Exacly the opposite choice of a BASIC strategy */
+		DUMMIE,
 		/** Votes for the player with the highest number of votes during the last vote of the same type */
 		SHEEP
 	}

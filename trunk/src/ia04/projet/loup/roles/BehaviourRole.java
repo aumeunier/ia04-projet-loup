@@ -35,6 +35,7 @@ public class BehaviourRole extends RoleBehaviour {
 			//msg.addReceiver(new AID(myAgent.getLocalName().replace("Role", ""), AID.ISLOCALNAME));
 			//myAgent.send(msg);
 			mStartGame msgContent = (mStartGame)message;
+			((AgtRole)myAgent).players=msgContent.getLocalNames();
 			for(String player : msgContent.getLocalNames()){
 				((AgtRole)myAgent).confidenceLevel.put(player, new ConfidenceLevel(((AgtRole)myAgent).random.nextInt(10)));
 			}
@@ -47,6 +48,7 @@ public class BehaviourRole extends RoleBehaviour {
 						((AgtRole)myAgent).iAmDead(msg);
 					else{ 
 						((AgtRole)myAgent).confidenceLevel.remove(msgcontent.getDeadName());
+						((AgtRole)myAgent).players.remove(msgcontent.getDeadName());
 						if(msgcontent.getIsHungVictim())
 						((AgtRole)myAgent).updateConfidenceVotePaysan(msgcontent.getDeadName(), msgcontent.getRole());
 					}

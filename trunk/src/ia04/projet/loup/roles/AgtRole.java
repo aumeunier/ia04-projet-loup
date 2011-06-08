@@ -41,7 +41,7 @@ public class AgtRole extends Agent {
 	/** The strategy in use */
 	protected Global.Strategies currentStrategy;
 	/** Array of the players */
-	protected java.util.List<AID> players = new ArrayList<AID>();
+	protected java.util.ArrayList<String> players;
 	/** Map of the players with the corresponding confidence level */
 	protected HashMap<String, ConfidenceLevel> confidenceLevel = new HashMap<String, ConfidenceLevel>();
 	/** Map containing the last vote results */
@@ -151,6 +151,9 @@ public class AgtRole extends Agent {
 		case BASIC:
 			//Debugger.println(this.getLocalName()+": vote-BASIC: "+getLowestConfidence(candidates));
 			return getLowestConfidence(candidates);
+		case DUMMIE:
+			//Debugger.println(this.getLocalName()+": vote-BASIC: "+getLowestConfidence(candidates));
+			return getHighestConfidence(candidates);
 		case SHEEP:
 			if(lastVote==null){
 				//TODO something else
@@ -160,7 +163,7 @@ public class AgtRole extends Agent {
 				//Debugger.println(this.getLocalName()+": vote-SHEEP: "+getLastMostVoted(candidates,lastVote));
 				return getLastMostVoted(candidates, lastVote);
 			}
-		default: return null;		
+		default: return null;	
 		}
 	}
 	/** Vote for the election of the first mayor */
@@ -173,6 +176,9 @@ public class AgtRole extends Agent {
 		case BASIC:
 			//Debugger.println(this.getLocalName()+": electMayor-BASIC: "+getHighestConfidence(candidates));
 			return getHighestConfidence(candidates);
+		case DUMMIE:
+			//Debugger.println(this.getLocalName()+": electMayor-BASIC: "+getHighestConfidence(candidates));
+			return getLowestConfidence(candidates);
 		default: return null;
 		}
 	}
@@ -185,6 +191,9 @@ public class AgtRole extends Agent {
 		case BASIC: 
 			//Debugger.println("AgtRole: nameSuccessor-BASIC");			
 			return getHighestConfidence(candidates);
+		case DUMMIE: 
+			//Debugger.println("AgtRole: nameSuccessor-BASIC");
+			return getLowestConfidence(candidates);
 		case SHEEP:
 			if(lastVote==null){
 				//TODO something else
@@ -206,6 +215,9 @@ public class AgtRole extends Agent {
 		case BASIC:
 			//Debugger.println("AgtRole: resolveEquality-BASIC");
 			return getLowestConfidence(candidates);
+		case DUMMIE:
+			//Debugger.println("AgtRole: resolveEquality-BASIC");
+			return getHighestConfidence(candidates);
 		case SHEEP:
 			if(lastVote==null){
 				//TODO something else

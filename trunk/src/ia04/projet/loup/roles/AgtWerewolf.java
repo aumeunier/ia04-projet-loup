@@ -37,6 +37,9 @@ public class AgtWerewolf extends AgtRole {
 		case BASIC:
 			//Debugger.println(this.getLocalName()+": vote-BASIC: "+getLowestConfidence(candidates));
 			return getLowestConfidence(candidates);
+		case DUMMIE:
+			//Debugger.println(this.getLocalName()+": vote-BASIC: "+getLowestConfidence(candidates));
+			return getHighestConfidence(candidates);
 		case SHEEP:
 			if(lastVote==null){
 				//TODO something else
