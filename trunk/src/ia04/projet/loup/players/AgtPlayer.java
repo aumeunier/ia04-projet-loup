@@ -4,6 +4,8 @@ import ia04.projet.loup.Global;
 import ia04.projet.loup.gui.AgtPlayerGui;
 import ia04.projet.loup.messages.mStorytellerPlayer;
 import ia04.projet.loup.messages.mToGui;
+import ia04.projet.loup.roles.AgtCupid;
+import ia04.projet.loup.roles.AgtGuardian;
 import ia04.projet.loup.roles.AgtRole;
 import ia04.projet.loup.roles.AgtWerewolf;
 import jade.core.AID;
@@ -81,11 +83,14 @@ public class AgtPlayer extends Agent {
 		case WEREWOLF:			
 			agtR = new AgtWerewolf(GuiID);
 			break;
-			/*case CUPID:
-				agtR = new AgtRole();
+		case CUPID:
+			agtR = new AgtCupid(GuiID);
+			break;
+		case GUARDIAN:
+			agtR = new AgtGuardian(GuiID);
+			break;
+			/*
 			case THIEF:
-				agtR = new AgtRole();
-			case GUARDIAN:
 				agtR = new AgtRole();
 			case CLAIRVOYANT:
 				agtR = new AgtRole();
