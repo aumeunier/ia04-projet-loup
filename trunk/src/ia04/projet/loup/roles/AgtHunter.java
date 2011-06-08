@@ -32,10 +32,15 @@ public class AgtHunter extends AgtRole{
 			msgContent.setTargetKilled(getLowestConfidence(players));
 			return msgContent;
 		case DUMMIE:
-			msgContent.setTargetKilled(getHighestConfidence(players));
+				msgContent.setTargetKilled(getHighestConfidence(players));
 			return msgContent;
 		case SHEEP:
-			msgContent.setTargetKilled(getLastMostVoted(players, lastVote));
+			if(lastVote==null){//todo something else
+				msgContent.setTargetSaved(players.get(random.nextInt(players.size())));
+			}
+			else {
+				msgContent.setTargetKilled(getLastMostVoted(players, lastVote));
+			}
 			return msgContent;
 		default: return null;
 		}

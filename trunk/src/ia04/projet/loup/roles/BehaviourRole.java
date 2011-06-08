@@ -33,9 +33,9 @@ public class BehaviourRole extends RoleBehaviour {
 		if(message!=null){
 			//Debugger.println(myAgent.getLocalName().replace("Role", ""));
 			//TODO Send a message with the list roles localnames to the player
-			//msg.removeReceiver(myAgent.getAID());
-			//msg.addReceiver(new AID(myAgent.getLocalName().replace("Role", ""), AID.ISLOCALNAME));
-			//myAgent.send(msg);
+			msg.clearAllReceiver();
+			msg.addReceiver(new AID(myAgent.getLocalName().replace("Role", ""), AID.ISLOCALNAME));
+			myAgent.send(msg);
 			mStartGame msgContent = (mStartGame)message;
 			((AgtRole)myAgent).players=msgContent.getLocalNames();
 			for(String player : msgContent.getLocalNames()){
@@ -61,10 +61,10 @@ public class BehaviourRole extends RoleBehaviour {
 				if(message != null) { 
 					mActionLover msgcontent = (mActionLover)message;
 					if(msgcontent.getLover1()!=myAgent.getLocalName()){
-						((AgtRole)myAgent).setLover(msgcontent.getLover1());
+						((AgtRole)myAgent).setLover(msgcontent.getLover1(),msgcontent.getLover1Role());
 					}
 					else {
-						((AgtRole)myAgent).setLover(msgcontent.getLover2());
+						((AgtRole)myAgent).setLover(msgcontent.getLover2(),msgcontent.getLover2Role());
 					}
 				}
 			}
