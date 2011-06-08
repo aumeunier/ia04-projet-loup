@@ -26,9 +26,6 @@ public class AgtPlayerGui extends GuiAgent {
 	public AgtPlayerGui(AID id) {
 		super();
 		myAgt = id;
-		myGui = new GuiBot(id.getLocalName(), this);
-		myGui.setVisible(true);
-
 		
 		if(Global.IS_GUI_ACTIVATED){
 			myGui = new GuiBot(id.getLocalName(), this);
