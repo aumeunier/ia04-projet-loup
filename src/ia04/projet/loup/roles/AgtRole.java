@@ -362,7 +362,7 @@ public class AgtRole extends Agent {
 		return minPlayer; 
 	}
 	
-	protected void setLover(String myLover){
+	protected void setLover(String myLover, Roles hisRole){
 		lover = myLover;
 		confidenceLevel.get(lover).update(ConfidenceLevel.ILOVEHIM);
 	}

@@ -1,9 +1,6 @@
 package ia04.projet.loup.messages;
 
 import ia04.projet.loup.roles.ConfidenceLevel;
-import jade.util.leap.HashMap;
-
-import java.util.ArrayList;
 
 public class mPlayerRole extends mMessage {
 	/** Message between player and his role containing the confidence levels */
