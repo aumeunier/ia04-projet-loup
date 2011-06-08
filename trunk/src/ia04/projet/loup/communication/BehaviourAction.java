@@ -9,10 +9,10 @@ import jade.lang.acl.ACLMessage;
 public class BehaviourAction extends CyclicBehaviour {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	/** My AgtAction */
 	private AgtAction agtAction;
-	
+
 	/**
 	 * Constructor
 	 */
@@ -20,10 +20,11 @@ public class BehaviourAction extends CyclicBehaviour {
 		super(_myAgent);
 		this.agtAction = (AgtAction)myAgent;
 	}
-	
+
 	public void action() {
 		ACLMessage message = agtAction.receive();
-		switch(message.getPerformative()){
+		if(message!=null){
+			switch(message.getPerformative()){
 			case ACLMessage.SUBSCRIBE: 
 				mActionRegister anActionRegister = mActionRegister.parseJson(message.getContent());
 				if(anActionRegister != null)
@@ -42,6 +43,7 @@ public class BehaviourAction extends CyclicBehaviour {
 					this.agtAction.addAction(anAction, message.getSender());
 				}
 				break;
+			}
 		}
 	}
 }

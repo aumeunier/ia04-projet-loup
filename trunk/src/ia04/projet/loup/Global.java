@@ -12,6 +12,7 @@ import java.util.Random;
  *
  */
 public class Global {
+	public static final boolean IS_GUI_ACTIVATED = false;
 	public static final String LOCALNAME_STORYTELLER = "Storyteller";
 	public static final String LOCALNAME_VOTE = "Vote";
 	public static final String LOCALNAME_ACTION = "Action";

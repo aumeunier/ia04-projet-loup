@@ -20,10 +20,13 @@ public class AgtPlayerGui extends GuiAgent {
 	public AgtPlayerGui(AID id) {
 		super();
 		myAgt = id;
-		myGui = new GuiBot(id.getLocalName(),id);
-		myGui.setVisible(true);
 		
-		this.addBehaviour(new BehaviourAgtPlayerGui());
+		if(Global.IS_GUI_ACTIVATED){
+			myGui = new GuiBot(id.getLocalName(),id);
+			myGui.setVisible(true);
+		
+			this.addBehaviour(new BehaviourAgtPlayerGui());
+		}
 	}
 
 	@Override
