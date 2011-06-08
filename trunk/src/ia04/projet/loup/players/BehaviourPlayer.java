@@ -1,5 +1,6 @@
 package ia04.projet.loup.players;
 
+import ia04.projet.loup.Debugger;
 import ia04.projet.loup.Global;
 import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mPlayerDied;
@@ -81,6 +82,9 @@ public class BehaviourPlayer extends Behaviour {
 							}
 							break;
 						case STORYTELLING :
+							((AgtPlayer) myAgent).TransfertToGui(mToGui.mType.STORYTELLING,msgObj.getStoryTelling());
+							break;
+						case END_GAME:
 							((AgtPlayer) myAgent).TransfertToGui(mToGui.mType.STORYTELLING,msgObj.getStoryTelling());
 							break;
 						default : break;
