@@ -11,6 +11,9 @@ public class ConfidenceLevel{
 	public static int VOTEFORMYROLE = -5;
 	public static int VOTEFOROPPONENT = +5;
 	public static int FRIENDWANTSTOEATHIM = -1;
+	public static int ISWEREWOLF = -30;
+	public static int ISVILLAGER = 30;
+	
 	
 	public ConfidenceLevel(int badFacing){
 		level = 45+badFacing;
