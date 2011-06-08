@@ -118,3 +118,22 @@ werewolves:Composition9A
 	foaf:knows werewolves:Cupid ;
 	foaf:knows werewolves:Clairvoyant .
 	
+	
+werewolves:Composition9B
+	a werewolves:GameComposition ;
+	owl:cardinality 9 ;
+	rdfs:comment "A composition for 9 players with 11 roles for more possibilities and uncertainty.";
+	foaf:knows werewolves:Villager ;
+	rdfs:subClassOf [ a werewolves:NbVillagers ;
+		owl:cardinality 3;
+	];
+	foaf:knows werewolves:Werewolf ;
+	rdfs:subClassOf [ a werewolves:NbWerewolves ;
+		owl:cardinality 3;
+	];
+	foaf:knows werewolves:Guardian ;
+	foaf:knows werewolves:Witch ;
+	foaf:knows werewolves:Hunter ;
+	foaf:knows werewolves:Cupid ;
+	foaf:knows werewolves:Clairvoyant .
+	
