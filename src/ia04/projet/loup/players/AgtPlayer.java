@@ -1,7 +1,5 @@
 package ia04.projet.loup.players;
 
-import java.util.ArrayList;
-
 import ia04.projet.loup.Global;
 import ia04.projet.loup.gui.AgtPlayerGui;
 import ia04.projet.loup.messages.mStorytellerPlayer;
@@ -14,12 +12,16 @@ import jade.lang.acl.ACLMessage;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.StaleProxyException;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 
 public class AgtPlayer extends Agent {
 
 	private static final long serialVersionUID = -3215896432211766320L;
 
 	private AID RoleID, GuiID;
+	private HashMap<String,Integer> Confidences;
 
 	public AgtPlayer() throws StaleProxyException {
 		super();
