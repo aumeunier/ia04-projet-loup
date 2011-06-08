@@ -1,6 +1,6 @@
 package ia04.projet.loup.gui;
 
-import jade.core.AID;
+import jade.gui.GuiAgent;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -24,7 +24,7 @@ import javax.swing.ListModel;
 
 /**
  * Class which handles the GUI for a bot player
- * @author Guillaume
+ * @author Paul
  */
 public class GuiBot extends JFrame implements ActionListener{
 
@@ -38,15 +38,15 @@ public class GuiBot extends JFrame implements ActionListener{
 	protected JPanel leftPanel;
 	protected JPanel buttonPanel;
 	protected JButton jButtonHelp;
-	protected AID myPlayerAgent;
+	protected GuiAgent myPlayerAgent;
 	
 	/**
-	 * Construction
+	 * Constructor
 	 * @param String playerName
-	 * @param AID agt
+	 * @param GuiAgent agt
 	 * @throws HeadlessException
 	 */
-	public GuiBot(String playerName, AID agt) throws HeadlessException {
+	public GuiBot(String playerName, GuiAgent agt) throws HeadlessException {
 		super(playerName);
 		this.myPlayerAgent = agt;
 		this.initialize(playerName);
@@ -89,6 +89,12 @@ public class GuiBot extends JFrame implements ActionListener{
 		jListPlayerList = new JList(model);
 		
 		jButtonHelp = new JButton("Help");
+		jButtonHelp.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new GuiHelp();
+			}
+		});
 		
 		//Layout creation
 		GridBagConstraints cNameLab = new GridBagConstraints(0,0,1,1,1.0,1.0,GridBagConstraints.EAST,
@@ -112,8 +118,8 @@ public class GuiBot extends JFrame implements ActionListener{
 		//GridBagConstraints cStoryView = new GridBagConstraints(0,0,1,1,1.0,1.0,GridBagConstraints.EAST,
 		//		GridBagConstraints.BOTH,new Insets(10,10,10,10),0,0);
 		
-		GridBagConstraints cPlayerList = new GridBagConstraints(0,3,1,1,1.0,1.0,GridBagConstraints.EAST,
-				GridBagConstraints.BOTH,new Insets(10,10,10,10),0,0);
+//		GridBagConstraints cPlayerList = new GridBagConstraints(0,3,1,1,1.0,1.0,GridBagConstraints.EAST,
+//				GridBagConstraints.BOTH,new Insets(10,10,10,10),0,0);
 		
 		//Panel construction
 		JPanel informationPanel = new JPanel(new GridBagLayout());

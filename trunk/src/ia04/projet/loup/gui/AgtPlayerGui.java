@@ -8,31 +8,51 @@ import jade.gui.GuiEvent;
 
 import java.util.ArrayList;
 
+/**
+ * @author Guillaume
+ */
 public class AgtPlayerGui extends GuiAgent {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
+	public static final int CHOOSE_TYPE = 0;
+	
 	GuiBot myGui;
 	AID myAgt, roleAgt;
 	
-
+	/**
+	 * Constructor
+	 * @param AID id
+	 */
 	public AgtPlayerGui(AID id) {
 		super();
 		myAgt = id;
+		myGui = new GuiBot(id.getLocalName(), this);
+		myGui.setVisible(true);
+
 		
 		if(Global.IS_GUI_ACTIVATED){
-			myGui = new GuiBot(id.getLocalName(),id);
+			myGui = new GuiBot(id.getLocalName(), this);
 			myGui.setVisible(true);
 		
 			this.addBehaviour(new BehaviourAgtPlayerGui());
 		}
 	}
 
-	@Override
-	protected void onGuiEvent(GuiEvent arg0) {
+	/**
+	 * Handles event on the GUI
+	 * @param GuiEvent guiEvent
+	 */
+	protected void onGuiEvent(GuiEvent guiEvent) {
+		switch(guiEvent.getType()){
+			case AgtPlayerGui.CHOOSE_TYPE: break;
+			default: break;
+		}
 	}
 	
+	/**
+	 * 
+	 * @param msgObj
+	 */
 	public void guiMaj(mToGui msgObj) {
 		switch(msgObj.getType()){
 		case STATUS:
@@ -56,7 +76,7 @@ public class AgtPlayerGui extends GuiAgent {
 		}
 		myGui.repaint();
 	}
-	//getters and setters
+	
 	public GuiBot getMyGui() {
 		return myGui;
 	}
