@@ -89,6 +89,14 @@ public class AgtAction extends Agent {
 		}
 		else {
 			ACLMessage message = new ACLMessage(ACLMessage.INFORM);
+			Roles performerRole = this.playersMap.get(performer);
+			
+			// If the agent is the clairvoyant we need to send him back the role of his target
+			if(performerRole.equals(Roles.CLAIRVOYANT)){
+				
+			}
+			
+			// Notify the storyteller it's over
 			anAction.setPerformer(performer.getLocalName().replace(Global.LOCALNAME_SUFFIX_ROLE, ""));
 			if(anAction.getTargetKilled() != null){
 				anAction.setTargetKilled(anAction.getTargetKilled().replace(Global.LOCALNAME_SUFFIX_ROLE, ""));				
