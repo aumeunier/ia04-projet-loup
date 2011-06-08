@@ -37,6 +37,7 @@ public class GuiPlayer extends GuiBot{
 		
 		jButtonChoose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				jButtonChoose.setEnabled(false);
 				GuiEvent guiEvent = new GuiEvent(e, AgtPlayerGui.CHOOSE_TYPE);
 				guiEvent.addParameter(jListPlayerList.getSelectedValue());
 				myPlayerAgent.postGuiEvent(guiEvent);
