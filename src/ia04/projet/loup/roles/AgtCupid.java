@@ -12,6 +12,7 @@ public class AgtCupid extends AgtRole {
 
 	public AgtCupid(AID guiID) {
 		super(guiID);
+		addAndSaveBehaviour(new BehaviourCupid());
 	}
 	
 	public mAction selectLovers(mAction msgContent){
@@ -19,10 +20,10 @@ public class AgtCupid extends AgtRole {
 		case RABBIT:
 		case BASIC:
 		case SHEEP:
-			msgContent.setTargetKilled((String)confidenceLevel.keySet().toArray()[random.nextInt(confidenceLevel.size())]);
-			String tmp = (String)confidenceLevel.keySet().toArray()[random.nextInt(confidenceLevel.size())];
+			msgContent.setTargetKilled(players.get(random.nextInt(players.size())));
+			String tmp = players.get(random.nextInt(players.size()));
 			while (tmp == msgContent.getTargetKilled())
-				tmp = (String)confidenceLevel.keySet().toArray()[random.nextInt(confidenceLevel.size())];
+				tmp = players.get(random.nextInt(players.size()));
 			msgContent.setTargetSaved(tmp);
 		}
 		return msgContent;
