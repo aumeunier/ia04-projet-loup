@@ -49,11 +49,6 @@ public class BehaviourVillager extends RoleBehaviour {
 				response.setPerformative(ACLMessage.INFORM);
 				myAgent.send(response);				
 				break;
-			case SUCCESSOR:
-				if(msgContent.getChoice() != null){ // It is the result
-					((AgtRole) myAgent).newMayorElected(msgContent.getChoice());
-				}
-				break;
 			}
 		}
 		else {
@@ -73,6 +68,10 @@ public class BehaviourVillager extends RoleBehaviour {
 					((AgtWerewolf) myAgent).setLastVoteWerewolf(msgContent.getWhoVotesForWho());
 					break;
 				case SUCCESSOR:
+					if(msgContent.getChoiceResult() != null){ // It is the result
+						((AgtRole) myAgent).newMayorElected(msgContent.getChoiceResult());
+					}
+					break;
 				}
 			}
 			else{

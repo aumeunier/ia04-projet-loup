@@ -2,6 +2,7 @@ package ia04.projet.loup.communication;
 
 import ia04.projet.loup.DFInterface;
 import ia04.projet.loup.Debugger;
+import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.messages.mAction;
 import jade.core.AID;
@@ -64,18 +65,16 @@ public class AgtAction extends Agent {
 	 */
 	public void performAction(mAction anActionRequest) {
 		ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
-		mAction anAction = new mAction();
-		message.setContent(anAction.toJson());
+		message.setContent(anActionRequest.toJson());
 
 		nbActionsInProgress = 0;
 
 		for (Entry<AID, Roles> entry : playersMap.entrySet()) {
-			if (entry.getValue() == anActionRequest.getRole()) {
+			if (entry.getValue().equals(anActionRequest.getRole())) {
 				message.addReceiver(entry.getKey());
 				nbActionsInProgress++;
 			}
 		}
-
 		this.send(message);
 	}
 
@@ -85,11 +84,18 @@ public class AgtAction extends Agent {
 	 */
 	public void addAction(mAction anAction, AID performer) {
 		nbActionsInProgress--;
-		if (nbActionsInProgress < 0)
-			Debugger.println("Should Never Happened: More Actions than expected.");
+		if (nbActionsInProgress < 0){
+			Debugger.println("Should Never Happened: More Actions than expected.");			
+		}
 		else {
 			ACLMessage message = new ACLMessage(ACLMessage.INFORM);
-			anAction.setPerformer(performer.getLocalName());
+			anAction.setPerformer(performer.getLocalName().replace(Global.LOCALNAME_SUFFIX_ROLE, ""));
+			if(anAction.getTargetKilled() != null){
+				anAction.setTargetKilled(anAction.getTargetKilled().replace(Global.LOCALNAME_SUFFIX_ROLE, ""));				
+			}
+			if(anAction.getTargetSaved() != null){
+				anAction.setTargetSaved(anAction.getTargetSaved().replace(Global.LOCALNAME_SUFFIX_ROLE, ""));				
+			}
 			message.setContent(anAction.toJson());
 			message.addReceiver(agtStoryteller);
 			this.send(message);

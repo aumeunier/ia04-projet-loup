@@ -1,5 +1,6 @@
 package ia04.projet.loup.roles;
 
+import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.messages.mAction;
 import jade.core.AID;
 
@@ -13,34 +14,57 @@ public class AgtGuardian extends AgtRole {
 	
 	public AgtGuardian(AID guiID) {
 		super(guiID);
-		addAndSaveBehaviour(new BehaviourCupid());
+		addAndSaveBehaviour(new BehaviourGuardian());
 	}
-	
+	/** initialize the role of the agent */
+	protected void initializeRole(){
+		role=Roles.GUARDIAN;
+	}
 	public mAction saveSomebody(mAction msgContent){ //TODO better guardian strategy
 		switch (currentStrategy){
 		case RABBIT:
-			if(lastTarget!=this.getLocalName())
+			if(lastTarget!=this.getLocalName()){
 				msgContent.setTargetSaved(this.getLocalName());
-			else
-				msgContent.setTargetSaved(players.get(random.nextInt(players.size())));
+				this.lastTarget = getLocalName();
+			}
+			else {
+				String targetSaved = players.get(random.nextInt(players.size()));
+				msgContent.setTargetSaved(targetSaved);
+				this.lastTarget = targetSaved;
+			}
 			return msgContent;
 		case BASIC:
-			if(lastTarget!=this.getLocalName())
+			if(lastTarget!=this.getLocalName()){
 				msgContent.setTargetSaved(this.getLocalName());
-			else
-				msgContent.setTargetSaved(getHighestConfidence(players));
+				this.lastTarget = getLocalName();
+			}
+			else {
+				String targetSaved = getHighestConfidence(players);
+				msgContent.setTargetSaved(targetSaved);
+				this.lastTarget = targetSaved;
+			}
 			return msgContent;
 		case DUMMIE:
-			if(lastTarget!=this.getLocalName())
+			if(lastTarget!=this.getLocalName()){
 				msgContent.setTargetSaved(this.getLocalName());
-			else
-				msgContent.setTargetSaved(getLowestConfidence(players));
+				this.lastTarget = getLocalName();
+			}
+			else {
+				String targetSaved = getLowestConfidence(players);
+				msgContent.setTargetSaved(targetSaved);
+				this.lastTarget = targetSaved;
+			}
 			return msgContent;
 		case SHEEP:
-			if(lastVote==null || lastTarget!=this.getLocalName())
+			if(lastVote==null || lastTarget!=this.getLocalName()){
 				msgContent.setTargetSaved(this.getLocalName());
-			else
-				msgContent.setTargetSaved(getLastLeastVoted(players, lastVote));
+				this.lastTarget = getLocalName();
+			}
+			else {
+				String targetSaved = getLastLeastVoted(players, lastVote);
+				msgContent.setTargetSaved(targetSaved);
+				this.lastTarget = targetSaved;
+			}
 			return msgContent;
 		default: return null;
 		}

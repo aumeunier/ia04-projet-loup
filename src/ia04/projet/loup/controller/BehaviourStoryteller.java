@@ -141,11 +141,20 @@ public class BehaviourStoryteller extends Behaviour {
 							if(generalMessage!=null){
 								mAction message = (mAction)generalMessage;
 								String performerName = message.getPerformer();
-								AID performer = new AID(performerName,AID.ISLOCALNAME);
+								AID performer = null;
+								if(performerName != null) {
+									new AID(performerName,AID.ISLOCALNAME);
+								}
 								String targetKilledName = message.getTargetKilled();
-								AID targetKilled = new AID(targetKilledName,AID.ISLOCALNAME);
+								AID targetKilled = null;
+								if(targetKilledName!=null){
+									targetKilled = new AID(targetKilledName,AID.ISLOCALNAME);
+								}
 								String targetSavedName = message.getTargetSaved();
-								AID targetSaved = new AID(targetSavedName,AID.ISLOCALNAME);
+								AID targetSaved = null;
+								if(targetSavedName!=null){
+									targetSaved = new AID(targetSavedName,AID.ISLOCALNAME);
+								}
 								Roles role = message.getRole();
 								myAgt.actionDone(performer, targetKilled, targetSaved, role);								
 							}

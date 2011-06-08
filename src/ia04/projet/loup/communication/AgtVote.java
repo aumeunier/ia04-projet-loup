@@ -170,6 +170,7 @@ public class AgtVote extends Agent {
 				if (uniqueWinner(lastElectionResult)) {
 					endOfVote(lastElectionResult);
 				} else {
+					Debugger.println("THERE IS A FUCKING TIE");
 					// There is no unique winner
 					switch(lastVote.getType()){
 					// If it is a vote to kill a were wolf, the mayor will choose one among the winners

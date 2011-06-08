@@ -418,6 +418,7 @@ public class AgtStoryteller extends Agent {
 				mVoteRun voteMsg = new mVoteRun(AgtVote.voteType.SUCCESSOR);
 				this.sendMessageToVoteAgent(voteMsg, ACLMessage.REQUEST);
 				this.nbWaitingAnswers++;
+				Debugger.println("Mayor has been killed. He has to name his successor");
 			}
 			else {
 				Global.Roles victimRole = this.playersMap.get(victim);
@@ -505,9 +506,10 @@ public class AgtStoryteller extends Agent {
 	}
 	public void actionDone(AID performer, AID targetKilled, AID targetSaved, Roles role){
 		switch(role){
-		case GUARDIAN:
+		case GUARDIAN: {
 			this.guardianTarget = targetSaved;
-			break;
+			Debugger.println("Protected:"+targetSaved.getLocalName());
+		}	break;
 		case HUNTER:
 			this.addVictim(targetKilled);
 			break;
@@ -700,10 +702,12 @@ public class AgtStoryteller extends Agent {
 			// TODO: action
 			storytelling = "The thief can choose between two roles.";
 			break;
-		case GUARDIAN:
-			// TODO: action
+		case GUARDIAN:{
+			mAction actionMsg = new mAction(Global.Roles.GUARDIAN);
+			this.sendMessageToActionAgent(actionMsg, ACLMessage.REQUEST);
+			this.nbWaitingAnswers++;
 			storytelling = "The guardian can protect one person for tonight.";
-			break;
+		}	break;
 		case CLAIRVOYANT:
 			// TODO: action
 			storytelling = "The clairvoyant can detect someone's role.";
@@ -811,7 +815,7 @@ public class AgtStoryteller extends Agent {
 			break;
 		case NIGHT:
 			break;
-		case CUPID:
+		case CUPID: 
 			break;
 		case LOVERS:
 			break;

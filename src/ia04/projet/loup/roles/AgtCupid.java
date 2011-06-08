@@ -1,5 +1,6 @@
 package ia04.projet.loup.roles;
 
+import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.messages.mAction;
 
 import java.util.ArrayList;
@@ -19,7 +20,10 @@ public class AgtCupid extends AgtRole {
 		super(guiID);
 		addAndSaveBehaviour(new BehaviourCupid());
 	}
-	
+	/** initialize the role of the agent */
+	protected void initializeRole(){
+		role=Roles.CUPID;
+	}
 	public mAction selectLovers(mAction msgContent){
 		switch (currentStrategy){
 		case RABBIT:

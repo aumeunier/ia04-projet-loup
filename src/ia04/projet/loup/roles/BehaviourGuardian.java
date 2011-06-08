@@ -1,5 +1,6 @@
 package ia04.projet.loup.roles;
 
+import ia04.projet.loup.Debugger;
 import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.messages.mAction;
 import ia04.projet.loup.messages.mMessage;
@@ -16,7 +17,7 @@ public class BehaviourGuardian extends RoleBehaviour {
 		/** Votes for the victim of the night */
 		//Debugger.println("BehaviourGuardian: special action : save somebody");
 		if(msgContent!=null){
-			if (msgContent.getRole() == Roles.GUARDIAN){
+			if (msgContent.getRole().equals(Roles.GUARDIAN)){
 				//Debugger.println(myAgent.getLocalName()+" received call for a guardian action.");
 				msgContent = ((AgtGuardian)myAgent).saveSomebody(msgContent);
 				msgContent.setPerformer(myAgent.getLocalName()); 
