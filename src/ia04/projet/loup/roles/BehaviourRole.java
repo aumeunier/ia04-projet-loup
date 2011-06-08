@@ -30,7 +30,8 @@ public class BehaviourRole extends RoleBehaviour {
 		mMessage message = mMessage.parseJson(msgString, mStartGame.class);
 		// if msgSender == Vote
 		if(message!=null){
-			Debugger.println(myAgent.getLocalName().replace("Role", ""));
+			//Debugger.println(myAgent.getLocalName().replace("Role", ""));
+			//TODO Send a message with the list roles localnames to the player
 			//msg.removeReceiver(myAgent.getAID());
 			//msg.addReceiver(new AID(myAgent.getLocalName().replace("Role", ""), AID.ISLOCALNAME));
 			//myAgent.send(msg);
