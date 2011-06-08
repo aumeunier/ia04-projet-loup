@@ -53,8 +53,10 @@ public class AgtPlayer extends GuiAgent {
 	 * @param storyTelling
 	 */
 	public void setStoryView(String storyTelling) {
-		myGui.setStoryView(storyTelling);
-		myGui.repaint();
+		if(Global.IS_GUI_ACTIVATED){
+			myGui.setStoryView(storyTelling);
+			myGui.repaint();
+		}
 	}
 	
 	/**
@@ -62,8 +64,10 @@ public class AgtPlayer extends GuiAgent {
 	 * @param string
 	 */
 	public void setStat(String string) {
-		myGui.setStat(string);
-		myGui.repaint();
+		if(Global.IS_GUI_ACTIVATED){
+			myGui.setStat(string);
+			myGui.repaint();
+		}
 	}
 	
 	/**
@@ -71,8 +75,10 @@ public class AgtPlayer extends GuiAgent {
 	 * @param role
 	 */
 	public void setRole(Roles role) {
-		myGui.setRole(role.toString());
-		myGui.repaint();
+		if(Global.IS_GUI_ACTIVATED){
+			myGui.setRole(role.toString());
+			myGui.repaint();
+		}
 	}
 	
 	/**
