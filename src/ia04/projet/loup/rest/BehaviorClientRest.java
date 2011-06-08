@@ -1,16 +1,12 @@
 package ia04.projet.loup.rest;
 
+import jade.core.behaviours.OneShotBehaviour;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.URL;
-
-import jade.core.behaviours.OneShotBehaviour;
-
-import org.restlet.engine.http.HttpResponse;
-
-import com.sun.org.apache.xml.internal.utils.URI;
 
 public class BehaviorClientRest extends OneShotBehaviour {
 

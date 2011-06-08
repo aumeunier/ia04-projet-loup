@@ -4,6 +4,7 @@ import ia04.projet.loup.communication.AgtAction;
 import ia04.projet.loup.communication.AgtVote;
 import ia04.projet.loup.controller.AgtStoryteller;
 import ia04.projet.loup.players.AgtPlayer;
+import ia04.projet.loup.rest.AgtRest;
 import jade.core.Agent;
 import jade.core.Profile;
 import jade.core.ProfileException;
@@ -61,9 +62,17 @@ public class StartGame {
 			storyteller.setVoteAgent(vote.getAID());
 			storyteller.setActionAgent(action.getAID());
 			
+			// Rest Service
+			System.out.println("Starting Rest Agent");
+			AgtRest agtRest = new AgtRest();
+			ac = mc.acceptNewAgent(Global.LOCALNAME_REST,agtRest);
+			ac.start();
+			
 			// Create players
 			System.out.println("Populating the room with players...");
 			storyteller.populate(storyteller.nbOfRequiredPlayersToStartAGame); 
+			
+			
 		}
 		else {
 			Runtime rt = Runtime.instance();
