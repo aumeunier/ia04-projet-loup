@@ -1,14 +1,15 @@
 package ia04.projet.loup.communication;
 
-import ia04.projet.loup.Debugger;
+import ia04.projet.loup.communication.AgtVote.voteType;
 import ia04.projet.loup.messages.mPlayerDied;
 import ia04.projet.loup.messages.mStartGame;
+import ia04.projet.loup.messages.mTimeElapsed;
 import ia04.projet.loup.messages.mVote;
 import ia04.projet.loup.messages.mVoteRegister;
 import ia04.projet.loup.messages.mVoteRun;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
-import jade.lang.acl.ACLMessage; 
+import jade.lang.acl.ACLMessage;
 
 public class BehaviourVote extends CyclicBehaviour {
 
@@ -34,6 +35,10 @@ public class BehaviourVote extends CyclicBehaviour {
 				if (runVote != null) {
 					this.agtVote.setStoryTeller(startMessage.getSender());
 					this.agtVote.election(runVote, true);
+				}
+				else {
+					mTimeElapsed timeVote = mTimeElapsed.parseJson(startMessage.getContent());
+					this.agtVote.terminateVote(voteType.valueOf(timeVote.getTypeTimeElapsed()));
 				}
 				break;
 			case ACLMessage.INFORM:

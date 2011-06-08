@@ -12,14 +12,26 @@ import java.util.Random;
  *
  */
 public class Global {
+	/** Is the gui opened ? Useful to test without opening guis */
 	public static final boolean IS_GUI_ACTIVATED = false;
+	/** The speed of the game (clock) */
+	public static final float AVERAGE_SPEED = 1.0f/40.0f;
+	/** The number of times we can repeat a phase before stopping it  */
+	public static final int MAX_REPEATED_TIMES = 10;
+	/** The name of the Storyteller agent on a platform */
 	public static final String LOCALNAME_STORYTELLER = "Storyteller";
+	/** The name of the Vote agent on a platform */
 	public static final String LOCALNAME_VOTE = "Vote";
+	/** The name of the Action agent on a platform */
 	public static final String LOCALNAME_ACTION = "Action";
+	/** The name of the Advice agent on a platform */
 	public static final String LOCALNAME_ADVICE = "Advice";
-	public static final String LOCALNAME_SUFFIX_ROLE = "Role";
-	public static final String LOCALNAME_SUFFIX_GUI = "Gui";
+	/** The name of the Rest agent on a platform */
 	public static final String LOCALNAME_REST = "Rest";
+	/** The suffix to append to the name of the Player agent to name its Role agent */
+	public static final String LOCALNAME_SUFFIX_ROLE = "Role";
+	/** The suffix to append to the name of the Player agent to name its Gui agent */
+	public static final String LOCALNAME_SUFFIX_GUI = "Gui";
 	/**
 	 * This enumeration contains the different game phases we have in the game.
 	 * These phases are used to modify the player's interface.
