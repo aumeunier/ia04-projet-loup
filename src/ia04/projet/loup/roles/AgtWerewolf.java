@@ -30,6 +30,9 @@ public class AgtWerewolf extends AgtRole {
 	}
 	/** chooses somebody to eat */
 	public String eatSomebody(ArrayList<String> candidates){
+		if(lover!=null){ //Do not vote for your lover !
+			candidates.remove(lover);
+		}
 		switch (currentStrategy){
 		case RABBIT:
 			//Debugger.println("AgtWerewofl: eatSomedy-RABBIT");

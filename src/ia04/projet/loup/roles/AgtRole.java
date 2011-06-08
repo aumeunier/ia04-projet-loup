@@ -54,7 +54,8 @@ public class AgtRole extends Agent {
 	protected Random random = new Random(Global.random.nextLong());
 	/** ID of his associated GUI */
 	protected AID myGuiID;
-	protected boolean firstTurn = true;
+	/** local name of the role the agent is in love with */
+	protected String lover;
 	
 	public int getVoices() {
 		return voices;
@@ -143,7 +144,9 @@ public class AgtRole extends Agent {
 	 * vote to kill somebody in the village 
 	 */
 	protected String vote(ArrayList<String> candidates){
-		ACLMessage toGui = new ACLMessage(ACLMessage.INFORM);
+		if(lover!=null){ //Do not kill your lover !
+			candidates.remove(lover);
+		}
 		switch (currentStrategy){
 		case RABBIT:
 			//Debugger.println("AgtRole: vote-RABBIT");
@@ -208,6 +211,9 @@ public class AgtRole extends Agent {
 	}
 	/** The mayor has to choose the victim in case of equality */
 	protected String resolveEquality(ArrayList<String> candidates){
+		if(lover!=null){ //Do not kill your lover !
+			candidates.remove(lover);
+		}
 		switch (currentStrategy){
 		case RABBIT:
 			//Debugger.println("AgtRole: resolveEquality-RABBIT");
@@ -317,7 +323,6 @@ public class AgtRole extends Agent {
 	}
 
 	protected String getLastMostVoted(ArrayList<String> players, HashMap<String, mVote> aVote){
-		//TODO if equality use confidenceLevels to tie
 		String maxPlayer=null; int max=0;
 		for(String player : players){
 			int tmp=0;
@@ -354,5 +359,10 @@ public class AgtRole extends Agent {
 			return players.get(random.nextInt(players.size()));	
 		}
 		return minPlayer; 
+	}
+	
+	protected void setLover(String myLover){
+		lover = myLover;
+		confidenceLevel.get(lover).update(ConfidenceLevel.ILOVEHIM);
 	}
 }

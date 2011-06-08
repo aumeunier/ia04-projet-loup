@@ -10,6 +10,11 @@ import jade.lang.acl.ACLMessage;
 
 public class AgtCupid extends AgtRole {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6639332510302096704L;
+
 	public AgtCupid(AID guiID) {
 		super(guiID);
 		addAndSaveBehaviour(new BehaviourCupid());
@@ -20,6 +25,7 @@ public class AgtCupid extends AgtRole {
 		case RABBIT:
 		case BASIC:
 		case SHEEP:
+		case DUMMIE:
 			msgContent.setTargetKilled(players.get(random.nextInt(players.size())));
 			String tmp = players.get(random.nextInt(players.size()));
 			while (tmp == msgContent.getTargetKilled())
