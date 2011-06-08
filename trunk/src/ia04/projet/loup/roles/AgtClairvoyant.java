@@ -46,15 +46,15 @@ public class AgtClairvoyant extends AgtRole {
 
 	protected void setLover(String myLover, Roles hisRole){
 		lover = myLover;
-		confidenceLevel.get(lover).update(ConfidenceLevel.ILOVEHIM);
+		confidenceLevelManager.update(lover, ConfidenceLevel.ILOVEHIM);
 		playersRole.put(myLover, hisRole);
 	}
 	
 	protected void hasSeen(String player, Roles hisRole){
 		playersRole.put(player, hisRole);
 		if (hisRole == Roles.WEREWOLF)
-			confidenceLevel.get(lover).update(ConfidenceLevel.ISWEREWOLF);
+			confidenceLevelManager.update(lover, ConfidenceLevel.ISWEREWOLF);
 		else
-			confidenceLevel.get(player).update(ConfidenceLevel.ISVILLAGER);
+			confidenceLevelManager.update(player, ConfidenceLevel.ISVILLAGER);
 	}
 }

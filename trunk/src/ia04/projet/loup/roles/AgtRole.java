@@ -3,24 +3,17 @@ package ia04.projet.loup.roles;
 import ia04.projet.loup.Debugger;
 import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.Roles;
-import ia04.projet.loup.Global.Strategies;
 import ia04.projet.loup.messages.mActionRegister;
 import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mPlayerDied;
-import ia04.projet.loup.messages.mStorytellerPlayer;
-import ia04.projet.loup.messages.mToGui;
 import ia04.projet.loup.messages.mVote;
 import ia04.projet.loup.messages.mVoteRegister;
-import ia04.projet.loup.messages.mStorytellerPlayer.mType;
 import jade.core.AID;
 import jade.core.Agent;
-import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 /**
@@ -32,9 +25,6 @@ import java.util.Random;
 
 public class AgtRole extends Agent {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1226925844951644365L;
 	/** role of the agent */
 	protected Global.Roles role;
@@ -43,7 +33,7 @@ public class AgtRole extends Agent {
 	/** Array of the players */
 	protected java.util.ArrayList<String> players;
 	/** Map of the players with the corresponding confidence level */
-	protected HashMap<String, ConfidenceLevel> confidenceLevel = new HashMap<String, ConfidenceLevel>();
+	protected ConfidenceLevelManager confidenceLevelManager = new ConfidenceLevelManager();
 	/** Map containing the last vote results */
 	protected HashMap<String, mVote> lastVote;
 	/** number of voices during a vote for the victim of the day */
@@ -243,14 +233,14 @@ public class AgtRole extends Agent {
 		for (String elector : this.lastVote.keySet()) {
 			if (lastVote.get(elector).getChoice().equals(this.getLocalName())){
 				/** this elector voted against me */
-				confidenceLevel.get(elector).update(ConfidenceLevel.VOTEFORME);
+				confidenceLevelManager.update(elector, ConfidenceLevel.VOTEFORME);
 			}
 			else if(Global.BASICROLECORRESONDANCE.get(role)==Global.BASICROLECORRESONDANCE.get(victimRole))
 				/** this elector voted for a player in my side */
-				confidenceLevel.get(elector).update(ConfidenceLevel.VOTEFORMYROLE);
+				confidenceLevelManager.update(elector, ConfidenceLevel.VOTEFORMYROLE);
 			else 
 				/** this elector voted for a player in the opposite side */
-			confidenceLevel.get(elector).update(ConfidenceLevel.VOTEFOROPPONENT);
+				confidenceLevelManager.update(elector,ConfidenceLevel.VOTEFOROPPONENT);
 		}
 	}
 	/** get the name of the player with the highest confidence level in a list of players */
@@ -258,9 +248,9 @@ public class AgtRole extends Agent {
 		int max=0;
 		String playerMax=null;
 		for(String player : players){
-			if(confidenceLevel.get(player).getLevel()>max){
+			if(confidenceLevelManager.getLevel(player)>max){
 				playerMax=player;
-				max=confidenceLevel.get(player).getLevel();
+				max=confidenceLevelManager.getLevel(player);
 			}
 		}
 		return playerMax;
@@ -270,9 +260,9 @@ public class AgtRole extends Agent {
 		int min=100;
 		String playerMin=null;
 		for(String player : players){
-			if(confidenceLevel.get(player).getLevel()<min)
+			if(confidenceLevelManager.getLevel(player)<min)
 				playerMin=player;
-				min=confidenceLevel.get(player).getLevel();
+				min=confidenceLevelManager.getLevel(player);
 		}
 		return playerMin;
 	}
@@ -365,6 +355,6 @@ public class AgtRole extends Agent {
 	
 	protected void setLover(String myLover, Roles hisRole){
 		lover = myLover;
-		confidenceLevel.get(lover).update(ConfidenceLevel.ILOVEHIM);
+		confidenceLevelManager.update(lover, ConfidenceLevel.ILOVEHIM);
 	}
 }
