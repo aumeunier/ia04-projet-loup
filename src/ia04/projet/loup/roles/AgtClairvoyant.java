@@ -1,11 +1,11 @@
 package ia04.projet.loup.roles;
 
-import java.util.HashMap;
-
 import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.messages.mAction;
 import ia04.projet.loup.messages.mActionClairvoyant;
 import jade.core.AID;
+
+import java.util.HashMap;
 
 public class AgtClairvoyant extends AgtRole {
 	/**
@@ -19,7 +19,10 @@ public class AgtClairvoyant extends AgtRole {
 		super(guiID);
 		addAndSaveBehaviour(new BehaviourClairvoyant());
 	}
-	
+	/** initialize the role of the agent */
+	protected void initializeRole(){
+		role=Roles.CLAIRVOYANT;
+	}	
 	public mActionClairvoyant seeARole (mAction msgContent){
 		mActionClairvoyant msgReply = new mActionClairvoyant();
 		switch (currentStrategy){
