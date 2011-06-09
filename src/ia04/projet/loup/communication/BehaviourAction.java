@@ -34,7 +34,6 @@ public class BehaviourAction extends CyclicBehaviour {
 			} break;
 			case ACLMessage.REQUEST: {
 				mAction anActionRequest = mAction.parseJson(message.getContent());
-				Debugger.println("test...");
 				if(anActionRequest != null){
 					this.agtAction.setAgtStoryteller(message.getSender());
 					this.agtAction.performAction(anActionRequest);

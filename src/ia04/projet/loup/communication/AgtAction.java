@@ -65,6 +65,9 @@ public class AgtAction extends Agent {
 	 */
 	public void performAction(mAction anActionRequest) {
 		ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
+		if(anActionRequest.getRole().equals(Roles.WITCH)){
+			anActionRequest.setTargetSaved(anActionRequest.getTargetSaved().concat(Global.LOCALNAME_SUFFIX_ROLE));
+		}
 		message.setContent(anActionRequest.toJson());
 		
 		nbActionsInProgress = 0;
@@ -101,6 +104,8 @@ public class AgtAction extends Agent {
 				anAction.setTargetSaved(anAction.getTargetSaved().replace(Global.LOCALNAME_SUFFIX_ROLE, ""));				
 			}
 			anAction.setPerformer(performer.getLocalName().replace(Global.LOCALNAME_SUFFIX_ROLE, ""));
+			
+			Debugger.println(anAction.toJson());
 			
 			// Send the message to storyteller
 			message.setContent(anAction.toJson());
