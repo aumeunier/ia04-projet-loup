@@ -74,7 +74,7 @@ public class StartGame {
 			
 			// Create players
 			System.out.println("Populating the room with players...");
-			storyteller.setNbRequiredPlayers(6); //TODO: change nb of players
+			storyteller.setNbRequiredPlayers(9); //TODO: change nb of players
 			storyteller.populate(storyteller.nbOfRequiredPlayersToStartAGame); 
 			
 			
@@ -87,7 +87,7 @@ public class StartGame {
 			AgentContainer mc = rt.createAgentContainer(p);	
 			
 			// Create a client
-			AgtPlayer agp = new AgtPlayer();
+			AgtPlayer agp = new AgtPlayer(true);
 			Agent a = (Agent)mc.getAgent("Storyteller");
 			agp.Register(a.getAID());
 		}

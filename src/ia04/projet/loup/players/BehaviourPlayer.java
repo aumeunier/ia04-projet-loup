@@ -1,6 +1,7 @@
 package ia04.projet.loup.players;
 
 import ia04.projet.loup.Global;
+import ia04.projet.loup.messages.mGuiAction;
 import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mPlayerDied;
 import ia04.projet.loup.messages.mPlayerRole;
@@ -27,6 +28,7 @@ public class BehaviourPlayer extends CyclicBehaviour {
 		mPlayerDied msgDied = null;
 		mStorytellerPlayer msgStoryTeller = null;
 		mToGui msgToGui = null;
+		mGuiAction msgGuiAction = null;
 		
 		ACLMessage msg = myAgent.receive();
 		if (msg != null) {
@@ -35,16 +37,22 @@ public class BehaviourPlayer extends CyclicBehaviour {
 			// 1. Reception of information concerning the db (stats, can be
 			// reused in future games)
 
-			if ((msgRole = (mPlayerRole) mMessage.parseJson(msgContent,mPlayerRole.class)) != null) {
+			if((msgRole = (mPlayerRole) mMessage.parseJson(msgContent,mPlayerRole.class)) != null) {
 				handleMsgRole(msgRole);
-			}else if(null != (msgDied = (mPlayerDied) mMessage.parseJson(msgContent, mPlayerDied.class))) {
+			} else if(null != (msgDied = (mPlayerDied) mMessage.parseJson(msgContent, mPlayerDied.class))) {
 				handleMsgDied(msgDied);
 			} else if((msgStoryTeller = (mStorytellerPlayer) mMessage.parseJson(msgContent, mStorytellerPlayer.class))!= null) {
 				handleMsgStoryTeller(msgStoryTeller, msg);
 			} else if((msgToGui = mToGui.parseJson(msgContent)) != null){
 				handleMsgGuiLevelConfidence(msgToGui);
+			}else if((msgGuiAction = mGuiAction.parseJson(msgContent)) != null){
+				handleMsgGuiAction(msgGuiAction);
 			}
 		}
+	}
+
+	private void handleMsgGuiAction(mGuiAction msgGuiAction) {
+		((AgtPlayer) myAgent).waitForAction();
 	}
 
 	/**
