@@ -429,7 +429,6 @@ public class AgtStoryteller extends Agent {
 		switch(role){
 		case GUARDIAN:
 		case HUNTER:
-		case CLAIRVOYANT:
 		case WITCH:
 			result = true;
 			break;

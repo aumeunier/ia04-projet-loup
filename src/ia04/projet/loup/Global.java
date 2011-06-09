@@ -13,7 +13,7 @@ import java.util.Random;
  */
 public class Global {
 	/** Is the gui opened ? Useful to test without opening guis */
-	public static final boolean IS_GUI_ACTIVATED = false;
+	public static final boolean IS_GUI_ACTIVATED = true;
 	/** The speed of the game (clock) */
 	public static final float AVERAGE_SPEED = 1.0f/40.0f;
 	/** The number of times we can repeat a phase before stopping it  */

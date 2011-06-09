@@ -22,7 +22,7 @@ public class BehaviourRole extends RoleBehaviour {
 
 		ACLMessage response = msg.createReply();
 		mMessage message = mMessage.parseJson(msgString, mStartGame.class);
-		// if msgSender == Vote
+		// if msgder == Vote
 		if(message!=null){
 			//Debugger.println(myAgent.getLocalName().replace("Role", ""));
 			//TODO Send a message with the list roles localnames to the player

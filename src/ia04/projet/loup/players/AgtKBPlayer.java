@@ -42,11 +42,15 @@ public class AgtKBPlayer extends Agent {
 	public AgtKBPlayer(String playerName) throws IOException {
 		int i = 0;
 		agtName = playerName;
-		kb =new File("./ressource/kb/players/"+playerName+".n3");
+		String fileName = "./resources/kb/players/"+playerName+".n3";
+		kb =new File(fileName);
+		try{
 		if(!kb.exists()){
+			kb.createNewFile();
 			FileWriter fw = new FileWriter(kb);
 			fw.write(str);
 		}
+		}catch(IOException e){e.printStackTrace();}
 		
 		
 		try{
@@ -55,7 +59,7 @@ public class AgtKBPlayer extends Agent {
 			
 			// Add both the skos and the foaf kb databases
 			modeln3.read(new FileInputStream("./resources/kb/kbfplyer.n3"),"http://utc/","N3"); ++i;
-			modeln3.read(new FileInputStream("./ressource/kb/players/"+playerName+".n3"),"http://utc/","N3"); ++i;
+			modeln3.read(new FileInputStream("./resources/kb/players/"+playerName+".n3"),"http://utc/","N3"); ++i;
 			
 			//this.ReadBDC();
 		}
@@ -74,6 +78,7 @@ public class AgtKBPlayer extends Agent {
 				System.out.println("Could not open kbfplyer.n3 file");
 			}
 			System.out.println(ex.getMessage());
+			this.addBehaviour(new BehaviourKBPlayer());
 		}
 	}
 
