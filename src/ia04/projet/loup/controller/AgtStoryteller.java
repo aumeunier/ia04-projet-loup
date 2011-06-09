@@ -407,9 +407,13 @@ public class AgtStoryteller extends Agent {
 			// Lovers 
 			if(victimAid.equals(this.firstLoverAid)){
 				this.lastVictimsRoles.add(this.secondLoverAid);
+				this.firstLoverAid = null;
+				this.secondLoverAid = null;
 			}
 			else if(victimAid.equals(this.secondLoverAid)){
 				this.lastVictimsRoles.add(this.firstLoverAid);
+				this.firstLoverAid = null;
+				this.secondLoverAid = null;
 			}
 		}
 	}
@@ -1020,10 +1024,9 @@ public class AgtStoryteller extends Agent {
 			}
 			// TODO: if charmed -> nCharmed++
 		}
-
 		return ((nWolf == nMax) // Only wolves alive
 				|| (nWolf == 0) // No werewolf remaining
-				|| (nCharmed == nMax-1) // Fluteplayer wins
+				//|| (nCharmed == nMax-1) // Fluteplayer wins
 				|| (nMax==2 && this.firstLoverAid!=null && this.secondLoverAid!=null)); // Lovers win
 	}
 	/**
@@ -1033,6 +1036,10 @@ public class AgtStoryteller extends Agent {
 	public void endGameWithState(GameExitErrorCodes errorCode){
 		// End the phase clock
 		this.phaseClock.stopTimer();
+		Debugger.println("\nGAME OVER");
+		for(AID aid:playersMap.keySet()){
+			Debugger.println(aid.getLocalName()+" "+playersMap.get(aid));
+		}
 
 		// Prepare a message for all the players using the Storyteller-Player Message template
 		mStorytellerPlayer message = new mStorytellerPlayer();
@@ -1046,7 +1053,21 @@ public class AgtStoryteller extends Agent {
 			// If everyone is charmed, the flute player wins the game
 			//TODO: all charmed
 			// If any werewolf is alive then the werewolves win the game
-			if(this.playersMap.containsValue(Roles.WEREWOLF)){
+			// If only the lovers are alive, they win the game
+			int nbOfAlivePpl = 0;
+			for(Roles role: playersMap.values()){
+				if(!role.equals(Roles.DEAD)){
+					nbOfAlivePpl++;
+				}
+			}
+			if(nbOfAlivePpl == 0){
+				message.setStoryTelling("Everyone is dead!");								
+			}
+			else if(nbOfAlivePpl == 2 && this.firstLoverAid!=null && 
+					!playersMap.get(this.firstLoverAid).equals(Roles.DEAD)){
+				message.setStoryTelling("The lovers win the game!");					
+			}
+			else if(this.playersMap.containsValue(Roles.WEREWOLF)){
 				message.setStoryTelling("The werewolves win the game!");
 			}
 			// If the white wolf is the only player alive, he wins the game
@@ -1055,23 +1076,7 @@ public class AgtStoryteller extends Agent {
 			}
 			// Otherwise, the villagers win the game
 			else {
-				int nbOfAlivePpl = 0;
-				for(Roles role: playersMap.values()){
-					if(!role.equals(Roles.DEAD)){
-						nbOfAlivePpl++;
-					}
-				}
-				// If only the lovers are alive, they win the game
-				if(nbOfAlivePpl == 2 && this.firstLoverAid!=null && 
-						!playersMap.get(this.firstLoverAid).equals(Roles.DEAD)){
-					message.setStoryTelling("The lovers win the game!");					
-				}
-				else if(nbOfAlivePpl == 0){
-					message.setStoryTelling("Everyone is dead!");								
-				}
-				else {
-					message.setStoryTelling("The villagers win the game!");					
-				}
+				message.setStoryTelling("The villagers win the game!");					
 			}
 		}break;
 		case UNKNOWN_REASON:
