@@ -14,9 +14,6 @@ import ia04.projet.loup.roles.AgtRole;
 import ia04.projet.loup.roles.AgtWerewolf;
 import ia04.projet.loup.roles.AgtWitch;
 import ia04.projet.loup.roles.ConfidenceLevel;
-
-
-
 import jade.core.AID;
 import jade.gui.GuiAgent;
 import jade.gui.GuiEvent;
@@ -26,6 +23,7 @@ import jade.wrapper.StaleProxyException;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Random;
 
 
 public class AgtPlayer extends GuiAgent {
@@ -35,7 +33,7 @@ public class AgtPlayer extends GuiAgent {
 	
 	private GuiBot myGui;
 	private AID RoleID, myKB;
-	private HashMap<String,Integer> Confidences;
+	private HashMap<String,ConfidenceLevel> Confidences;
 	private boolean human = false;
 	
 	/**
@@ -227,7 +225,9 @@ public class AgtPlayer extends GuiAgent {
 		agtR.registerToCommunicationAgents();
 		setRoleID(agtR.getAID());
 	}
-
+	
+	/** generate random int for the rabbit strategy */
+	protected Random random = new Random(Global.random.nextLong());
 	
 	/**Setters and getters*/
 	public void setRoleID(AID roleID) {
@@ -254,11 +254,11 @@ public class AgtPlayer extends GuiAgent {
 		this.myKB = myKB;
 	}
 
-	public HashMap<String, Integer> getConfidences() {
+	public HashMap<String, ConfidenceLevel> getConfidences() {
 		return Confidences;
 	}
 
-	public void setConfidences(HashMap<String, Integer> confidences) {
+	public void setConfidences(HashMap<String, ConfidenceLevel> confidences) {
 		Confidences = confidences;
 	}
 
