@@ -33,7 +33,7 @@ public class AgtWerewolf extends AgtRole {
 	}
 
 	public String eatSomebodyHuman(ArrayList<String> candidates){//TODO human method
-		return null;
+		return askGUI(candidates);
 	}
 
 	public String eatSomebodyBot(ArrayList<String> candidates){
