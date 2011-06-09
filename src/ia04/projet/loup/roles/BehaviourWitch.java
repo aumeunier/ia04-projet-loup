@@ -18,7 +18,7 @@ public class BehaviourWitch extends RoleBehaviour {
 		if(msgContent!=null){
 			if (msgContent.getRole() == Roles.WITCH){
 				//Debugger.println(myAgent.getLocalName()+" received call for a witch action.");
-				msgContent.setTargetKilled(((AgtWitch)myAgent).useDeathlyPot());
+				msgContent.setTargetKilled(((AgtWitch)myAgent).useDeathlyPot(msgContent.getTargetSaved()));
 				if(!((AgtWitch)myAgent).useRevivePot(msgContent.getTargetSaved()))
 					msgContent.setTargetSaved(null);
 				msgContent.setPerformer(myAgent.getLocalName()); 
