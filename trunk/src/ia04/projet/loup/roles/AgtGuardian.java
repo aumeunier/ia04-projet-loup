@@ -20,7 +20,19 @@ public class AgtGuardian extends AgtRole {
 	protected void initializeRole(){
 		role=Roles.GUARDIAN;
 	}
-	public mAction saveSomebody(mAction msgContent){ //TODO better guardian strategy
+	
+	public mAction saveSomebody(mAction msgContent){
+		if(human)
+			return saveSomebodyHuman(msgContent);
+		else 
+			return saveSomebodyBot(msgContent);
+	}
+
+	public mAction saveSomebodyHuman(mAction msgContent){//TODO human method
+		return null;
+	}
+
+	public mAction saveSomebodyBot(mAction msgContent){ //TODO better guardian strategy
 		switch (currentStrategy){
 		case RABBIT:
 			if(lastTarget!=this.getLocalName()){

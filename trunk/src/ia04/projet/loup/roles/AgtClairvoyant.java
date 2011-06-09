@@ -24,6 +24,17 @@ public class AgtClairvoyant extends AgtRole {
 		role=Roles.CLAIRVOYANT;
 	}	
 	public mActionClairvoyant seeARole (mAction msgContent){
+		if(human)
+			return seeARoleHuman(msgContent);
+		else
+			return seeARoleBot(msgContent);
+	}
+
+	public mActionClairvoyant seeARoleHuman (mAction msgContent){//TODO human method
+		return null;
+	}
+
+	public mActionClairvoyant seeARoleBot (mAction msgContent){
 		mActionClairvoyant msgReply = new mActionClairvoyant();
 		switch (currentStrategy){
 		case RABBIT:

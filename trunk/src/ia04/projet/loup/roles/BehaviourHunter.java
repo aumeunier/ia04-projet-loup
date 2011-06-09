@@ -1,5 +1,6 @@
 package ia04.projet.loup.roles;
 
+import ia04.projet.loup.Debugger;
 import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.messages.mAction;
 import ia04.projet.loup.messages.mMessage;
@@ -25,16 +26,17 @@ public class BehaviourHunter extends RoleBehaviour {
 
 		mAction msgContent = (mAction)mMessage.parseJson(msgString, mAction.class);
 		/** Votes for the victim of the night */
-		//Debugger.println("BehaviourHunter: special action : kill somebody");
 		if(msgContent!=null){
 			if (msgContent.getRole() == Roles.HUNTER){
-				//Debugger.println(myAgent.getLocalName()+" received call for a guardian action.");
+				//Debugger.println(myAgent.getLocalName()+" received call for a hunter action.");
 				msgContent = ((AgtHunter)myAgent).killSomebody(msgContent);
 				msgContent.setPerformer(myAgent.getLocalName()); 
 				ACLMessage response = msg.createReply();
 				response.setPerformative(ACLMessage.INFORM);
 				response.setContent(msgContent.toJson());
 				myAgent.send(response);
+				//Debugger.println(myAgent.getLocalName()+" end of hunter action.");
+
 			}
 		}
 		else {//other messages

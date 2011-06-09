@@ -18,6 +18,7 @@ public class AgtHunter extends AgtRole{
 	public AgtHunter(AID guiID) {
 		super(guiID);
 		addAndSaveBehaviour(new BehaviourHunter());
+		//Debugger.println("*****************agtHunter created");
 	}
 	
 	/** initialize the role of the agent */
@@ -27,6 +28,18 @@ public class AgtHunter extends AgtRole{
 	
 	/** chooses to kill */
 	public mAction killSomebody(mAction msgContent){
+		if(human)
+			return killSomebodyHuman(msgContent);
+		else
+			return killSomebodyBot(msgContent);
+	}
+
+	public mAction killSomebodyHuman(mAction msgContent){//TODO human method
+		return null;
+	}
+
+	public mAction killSomebodyBot(mAction msgContent){
+		System.out.println("Hunter list of choices :: "+players);
 		players.remove(this.getLocalName());
 		if(lover!=null){ //Do not vote for your lover !
 			players.remove(lover);
