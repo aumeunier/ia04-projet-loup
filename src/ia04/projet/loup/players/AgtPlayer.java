@@ -21,10 +21,10 @@ import jade.lang.acl.ACLMessage;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.StaleProxyException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Random;
-
 
 public class AgtPlayer extends GuiAgent {
 
@@ -33,8 +33,12 @@ public class AgtPlayer extends GuiAgent {
 	
 	private GuiBot myGui;
 	private AID RoleID, myKB;
-	private HashMap<String,ConfidenceLevel> Confidences;
+
+	private HashMap<String, ConfidenceLevel> confidenceLevels;
+
 	private boolean human = false;
+	private boolean guiActivated;
+	
 	
 	/**
 	 * Constructor
@@ -45,6 +49,7 @@ public class AgtPlayer extends GuiAgent {
 		this.addBehaviour(new BehaviourPlayer());
 		setRoleID(null);
 		this.human = human;
+		guiActivated = (human || Global.IS_GUI_ACTIVATED);
 	}
 	
 	/**
@@ -61,6 +66,11 @@ public class AgtPlayer extends GuiAgent {
 				aGuiAction.setChoice(choice.substring(0, choice.indexOf('-')-1));
 				message.setContent(aGuiAction.toJson());
 				this.send(message);
+				myGui.clearTheList();
+				for(Entry<String, ConfidenceLevel> entry : confidenceLevels.entrySet()){
+					myGui.addPlayerToTheList(entry.getKey() + " - " + entry.getValue().getLevel());
+				}
+				myGui.repaint();
 				break;
 			default: break;
 		}
@@ -71,7 +81,7 @@ public class AgtPlayer extends GuiAgent {
 	 * @param storyTelling
 	 */
 	public void setStoryView(String storyTelling) {
-		if(Global.IS_GUI_ACTIVATED){
+		if(guiActivated){
 			myGui.setStoryView(storyTelling);
 			myGui.repaint();
 		}
@@ -82,7 +92,7 @@ public class AgtPlayer extends GuiAgent {
 	 * @param string
 	 */
 	public void setStat(String string) {
-		if(Global.IS_GUI_ACTIVATED){
+		if(guiActivated){
 			myGui.setStat(string);
 			myGui.repaint();
 		}
@@ -93,14 +103,15 @@ public class AgtPlayer extends GuiAgent {
 	 * @param role
 	 */
 	public void setRole(Roles role) {
-		if(Global.IS_GUI_ACTIVATED){
+		if(guiActivated){
 			myGui.setRole(role.toString());
 			myGui.repaint();
 		}
 	}
 	
 	public void setConfidenceLevel(HashMap<String, ConfidenceLevel> hashMap){
-		if(Global.IS_GUI_ACTIVATED){
+		confidenceLevels = hashMap;
+		if(guiActivated){
 			myGui.clearTheList();
 			for(Entry<String, ConfidenceLevel> entry : hashMap.entrySet()){
 				myGui.addPlayerToTheList(entry.getKey() + " - " + entry.getValue().getLevel());
@@ -109,9 +120,14 @@ public class AgtPlayer extends GuiAgent {
 		}
 	}
 	
-	public void waitForAction() {
-		if(Global.IS_GUI_ACTIVATED){
+	public void waitForAction(ArrayList<String> candidates) {
+		if(guiActivated){
+			myGui.clearTheList();
+			for(String candidate : candidates){
+				myGui.addPlayerToTheList(candidate + " - " + confidenceLevels.get(candidate).getLevel()); 
+			}
 			((GuiPlayer)myGui).enableVote();
+			myGui.repaint();
 		}
 	}
 	
@@ -254,20 +270,16 @@ public class AgtPlayer extends GuiAgent {
 		this.myKB = myKB;
 	}
 
-	public HashMap<String, ConfidenceLevel> getConfidences() {
-		return Confidences;
-	}
-
-	public void setConfidences(HashMap<String, ConfidenceLevel> confidences) {
-		Confidences = confidences;
-	}
-
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
 
 	public static int getChooseType() {
 		return CHOOSE_TYPE;
+	}
+
+	public HashMap<String, ConfidenceLevel> getConfidences() {
+		return confidenceLevels;
 	}
 	
 }
