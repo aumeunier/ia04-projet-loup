@@ -56,7 +56,7 @@ public class AgtClairvoyant extends AgtRole {
 	protected void hasSeen(String player, Roles hisRole){
 		playersRole.put(player, hisRole);
 		if (hisRole == Roles.WEREWOLF)
-			confidenceLevelManager.update(lover, ConfidenceLevel.ISWEREWOLF);
+			confidenceLevelManager.update(player, ConfidenceLevel.ISWEREWOLF);
 		else
 			confidenceLevelManager.update(player, ConfidenceLevel.ISVILLAGER);
 	}
