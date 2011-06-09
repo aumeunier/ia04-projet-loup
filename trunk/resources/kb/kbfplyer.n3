@@ -10,28 +10,28 @@ kbfplyer:Player
 	a owl:Class;
 	rdfs:subClassOf foaf:Agent ;
 	rdfs:comment "A human or an IA player" ;
-	rdfs:Property RelationStatus.
+	rdfs:Property kbfplyer:RelationStatus.
 	
-kbfplyer: RelationStatus
+kbfplyer:RelationStatus
 	a rdf:Property ;
 	rdfs:comment "Give the relation with the player".
 	
-kbfplyer: Trustworthy
-	a kbfplyer: RelationStatus ;
+kbfplyer:Trustworthy
+	a kbfplyer:RelationStatus ;
 	rdfs:label "Trustworthy".
 	
-kbfplyer: Newcomer
-	a kbfplyer: RelationStatus ;
+kbfplyer:Newcomer
+	a kbfplyer:RelationStatus ;
 	rdfs:label "Newcomer".
 
-kbfplyer: Friend
-	a kbfplyer: RelationStatus ;
+kbfplyer:Friend
+	a kbfplyer:RelationStatus ;
 	rdfs:label "Friend".
 	
-kbfplyer: Dislike
-	a kbfplyer: RelationStatus ;
+kbfplyer:Dislike
+	a kbfplyer:RelationStatus ;
 	rdfs:label "Dislike".
 	
-kbfplyer: Betrayer
-	a kbfplyer: RelationStatus ;
+kbfplyer:Betrayer
+	a kbfplyer:RelationStatus ;
 	rdfs:label "Betrayer".	
