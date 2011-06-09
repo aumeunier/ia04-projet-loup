@@ -308,7 +308,7 @@ public class AgtRole extends Agent {
 		int max=0;
 		String playerMax=null;
 		for(String player : players){
-			Debugger.println(player+"boucle\n");
+			//Debugger.println(player+"boucle\n");
 			if(confidenceLevelManager.getLevel(player)>max){
 				playerMax=player;
 				max=confidenceLevelManager.getLevel(player);

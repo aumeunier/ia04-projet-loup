@@ -115,6 +115,8 @@ public class AgtWitch extends AgtRole {
 	}
 
 	protected boolean useRevivePotBot(String dead){
+		if(!revivePot)
+			return false;
 		switch (currentStrategy){
 		case RABBIT:
 			return (random.nextBoolean());
