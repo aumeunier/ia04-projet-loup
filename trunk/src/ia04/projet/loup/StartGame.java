@@ -1,5 +1,9 @@
 package ia04.projet.loup;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import ia04.projet.loup.communication.AgtAction;
 import ia04.projet.loup.communication.AgtVote;
 import ia04.projet.loup.controller.AgtStoryteller;

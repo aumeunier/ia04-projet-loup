@@ -12,10 +12,10 @@ import ia04.projet.loup.roles.AgtGuardian;
 import ia04.projet.loup.roles.AgtHunter;
 import ia04.projet.loup.roles.AgtRole;
 import ia04.projet.loup.roles.AgtWerewolf;
-
+import ia04.projet.loup.roles.AgtWitch;
 import ia04.projet.loup.roles.ConfidenceLevel;
 
-import ia04.projet.loup.roles.AgtWitch;
+
 
 import jade.core.AID;
 import jade.gui.GuiAgent;
@@ -34,7 +34,7 @@ public class AgtPlayer extends GuiAgent {
 	public static final int CHOOSE_TYPE = 0;
 	
 	private GuiBot myGui;
-	private AID RoleID;
+	private AID RoleID, myKB;
 	private HashMap<String,Integer> Confidences;
 	private boolean human = false;
 	
@@ -237,4 +237,37 @@ public class AgtPlayer extends GuiAgent {
 	public AID getRoleID() {
 		return RoleID;
 	}
+
+	public GuiBot getMyGui() {
+		return myGui;
+	}
+
+	public void setMyGui(GuiBot myGui) {
+		this.myGui = myGui;
+	}
+
+	public AID getMyKB() {
+		return myKB;
+	}
+
+	public void setMyKB(AID myKB) {
+		this.myKB = myKB;
+	}
+
+	public HashMap<String, Integer> getConfidences() {
+		return Confidences;
+	}
+
+	public void setConfidences(HashMap<String, Integer> confidences) {
+		Confidences = confidences;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public static int getChooseType() {
+		return CHOOSE_TYPE;
+	}
+	
 }
