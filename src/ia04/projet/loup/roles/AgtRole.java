@@ -33,7 +33,7 @@ public class AgtRole extends Agent {
 	/** Array of the players */
 	protected java.util.ArrayList<String> players;
 	/** Map of the players with the corresponding confidence level */
-	protected ConfidenceLevelManager confidenceLevelManager = new ConfidenceLevelManager();
+	protected ConfidenceLevelManager confidenceLevelManager;
 	/** Map containing the last vote results */
 	protected HashMap<String, mVote> lastVote;
 	/** number of voices during a vote for the victim of the day */
@@ -65,7 +65,9 @@ public class AgtRole extends Agent {
 		addAndSaveBehaviour(new BehaviourRole());
 		addAndSaveBehaviour(new BehaviourVillager());
 		initializeConfidenceLevel();
-		myGuiID=guiID;
+		myGuiID = guiID;
+		confidenceLevelManager = new ConfidenceLevelManager(this);
+		confidenceLevelManager.addListener(myGuiID);
 	}
 	/**
 	 * Here the agent registers to the Communication agents such that he can receive 

@@ -10,7 +10,11 @@ import ia04.projet.loup.roles.AgtGuardian;
 import ia04.projet.loup.roles.AgtHunter;
 import ia04.projet.loup.roles.AgtRole;
 import ia04.projet.loup.roles.AgtWerewolf;
+
+import ia04.projet.loup.roles.ConfidenceLevel;
+
 import ia04.projet.loup.roles.AgtWitch;
+
 import jade.core.AID;
 import jade.gui.GuiAgent;
 import jade.gui.GuiEvent;
@@ -19,6 +23,7 @@ import jade.wrapper.AgentContainer;
 import jade.wrapper.StaleProxyException;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 
 public class AgtPlayer extends GuiAgent {
@@ -81,6 +86,15 @@ public class AgtPlayer extends GuiAgent {
 		if(Global.IS_GUI_ACTIVATED){
 			myGui.setRole(role.toString());
 			myGui.repaint();
+		}
+	}
+	
+	public void setConfidenceLevel(HashMap<String, ConfidenceLevel> hashMap){
+		if(Global.IS_GUI_ACTIVATED){
+			myGui.clearTheList();
+			for(Entry<String, ConfidenceLevel> entry : hashMap.entrySet()){
+				myGui.addPlayerToTheList(entry.getKey() + " - " + entry.getValue().getLevel());
+			}
 		}
 	}
 	

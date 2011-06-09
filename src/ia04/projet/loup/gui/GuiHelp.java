@@ -31,7 +31,6 @@ public class GuiHelp extends JFrame{
 
 			this.add(rules);
 			
-			setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
 			setSize(640, 480);
 			setVisible(true);
 		}catch (Exception e) {

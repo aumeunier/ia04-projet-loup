@@ -5,6 +5,7 @@ import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mPlayerDied;
 import ia04.projet.loup.messages.mPlayerRole;
 import ia04.projet.loup.messages.mStorytellerPlayer;
+import ia04.projet.loup.messages.mToGui;
 import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -25,6 +26,7 @@ public class BehaviourPlayer extends CyclicBehaviour {
 		mPlayerRole msgRole = null;
 		mPlayerDied msgDied = null;
 		mStorytellerPlayer msgStoryTeller = null;
+		mToGui msgToGui = null;
 		
 		ACLMessage msg = myAgent.receive();
 		if (msg != null) {
@@ -39,8 +41,17 @@ public class BehaviourPlayer extends CyclicBehaviour {
 				handleMsgDied(msgDied);
 			} else if((msgStoryTeller = (mStorytellerPlayer) mMessage.parseJson(msgContent, mStorytellerPlayer.class))!= null) {
 				handleMsgStoryTeller(msgStoryTeller, msg);
+			} else if((msgToGui = mToGui.parseJson(msgContent)) != null){
+				handleMsgGuiLevelConfidence(msgToGui);
 			}
 		}
+	}
+
+	/**
+	 * @param msgGuiConfidenceLevel
+	 */
+	private void handleMsgGuiLevelConfidence(mToGui msgToGui) {
+		((AgtPlayer) myAgent).setConfidenceLevel(msgToGui.getConfidenceLevelMap());
 	}
 
 	/**
@@ -114,6 +125,7 @@ public class BehaviourPlayer extends CyclicBehaviour {
 			msgForRole.setContent(msgDied.toJson());
 			msgForRole.addReceiver(((AgtPlayer) myAgent).getRoleID());
 			myAgent.send(msgForRole);
+			((AgtPlayer) myAgent).setStat("MORT");
 		}
 	}
 }
