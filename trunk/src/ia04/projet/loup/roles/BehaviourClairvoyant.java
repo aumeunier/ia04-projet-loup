@@ -22,7 +22,9 @@ public class BehaviourClairvoyant extends RoleBehaviour {
 				mActionClairvoyant replyContent = ((AgtClairvoyant)myAgent).seeARole(msgContent);
 				ACLMessage response = new ACLMessage(ACLMessage.REQUEST);
 				response.setContent(replyContent.toJson());
+				response.addReceiver(msg.getSender());
 				myAgent.send(response);
+				
 			}
 		}
 		else {

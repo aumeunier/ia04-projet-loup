@@ -4,6 +4,7 @@ import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.gui.GuiBot;
 import ia04.projet.loup.messages.mStorytellerPlayer;
+import ia04.projet.loup.roles.AgtClairvoyant;
 import ia04.projet.loup.roles.AgtCupid;
 import ia04.projet.loup.roles.AgtGuardian;
 import ia04.projet.loup.roles.AgtHunter;
@@ -148,25 +149,34 @@ public class AgtPlayer extends GuiAgent {
 		case HUNTER:
 			agtR = new AgtHunter(this.getAID());
 			break;
+		case CLAIRVOYANT:
+			agtR = new AgtClairvoyant(this.getAID());
+			break;
 			/*
 			case THIEF:
 				agtR = new AgtRole();
-			case CLAIRVOYANT:
-				agtR = new AgtRole();
+				break;
 			case WITCH:
 				agtR = new AgtRole();
+				break;
 			case WHITEWOLF:
 				agtR = new AgtRole();
+				break;
 			case RAVEN:
 				agtR = new AgtRole();
+				break;
 			case FLUTEPLAYER:
 				agtR = new AgtRole();
+				break;
 			case SCAPEGOAT:
 				agtR = new AgtRole();
+				break;
 			case VILLAGEIDIOT:
 				agtR = new AgtRole();
+				break;
 			case VILLAGESAGE:
 				agtR = new AgtRole(); 
+				break;
 				*/
 		default:
 			agtR = new AgtRole(this.getAID());
