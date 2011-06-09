@@ -12,6 +12,7 @@ import ia04.projet.loup.messages.mPlayerDied;
 import ia04.projet.loup.messages.mStartGame;
 import ia04.projet.loup.messages.mStorytellerKb;
 import ia04.projet.loup.messages.mStorytellerPlayer;
+import ia04.projet.loup.messages.mStorytellerPlayer.mType;
 import ia04.projet.loup.messages.mTimeElapsed;
 import ia04.projet.loup.messages.mVoteRun;
 import ia04.projet.loup.players.AgtPlayer;
@@ -428,7 +429,7 @@ public class AgtStoryteller extends Agent {
 		switch(role){
 		case GUARDIAN:
 		case HUNTER:
-		case CLAIRVOYANT:
+		//case CLAIRVOYANT:
 			result = true;
 			break;
 		case WITCH:
@@ -507,6 +508,8 @@ public class AgtStoryteller extends Agent {
 	 * The communication agent is notified about that.
 	 */
 	public void killVictims(){
+		// Kill the victims
+		String storytelling = "";
 		for(AID victim: this.lastVictimsRoles){
 			Roles role = this.playersMap.get(victim);
 			this.playersMap.put(victim, Global.Roles.DEAD);
@@ -516,11 +519,20 @@ public class AgtStoryteller extends Agent {
 			message.setIsHungVictim(this.phaseClock.getCurrentPhase().
 					equals(GamePhases.HUNGRESOLUTION));
 			sendMessageToOneRegisteredAgent(victim, message, ACLMessage.INFORM);
-			Debugger.println(victim.getLocalName()+" ("+role+") died.");
+			storytelling+=victim.getLocalName()+" ("+role+") died.\n";
 		}
+		storytelling = storytelling.substring(0, storytelling.length()-1);
 
 		// Wait for the players to clean their role
 		this.nbWaitingAnswers = this.lastVictimsRoles.size();
+		
+		// Send a message to the agents
+		mStorytellerPlayer storytellingMsg = new mStorytellerPlayer();
+		storytellingMsg.setType(mType.STORYTELLING);
+		storytellingMsg.setPhase(this.phaseClock.getCurrentPhase());
+		storytellingMsg.setStoryTelling(storytelling);
+		this.sendMessageToRegisteredAgents(storytellingMsg);
+		
 	}
 	/**
 	 * A player finished his 'iAmDead' stuff

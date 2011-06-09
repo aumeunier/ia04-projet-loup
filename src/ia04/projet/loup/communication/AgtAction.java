@@ -66,6 +66,8 @@ public class AgtAction extends Agent {
 	public void performAction(mAction anActionRequest) {
 		ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
 		message.setContent(anActionRequest.toJson());
+		
+		Debugger.println(anActionRequest.toJson());
 
 		nbActionsInProgress = 0;
 
@@ -73,6 +75,7 @@ public class AgtAction extends Agent {
 			if (entry.getValue().equals(anActionRequest.getRole())) {
 				message.addReceiver(entry.getKey());
 				nbActionsInProgress++;
+				Debugger.println("Add receiver:"+entry.getKey().getLocalName());
 			}
 		}
 		this.send(message);
@@ -111,6 +114,7 @@ public class AgtAction extends Agent {
 	 * @param clairvoyant
 	 */
 	public void addClairvoyantAction(mActionClairvoyant anAction, AID clairvoyant){
+		Debugger.println("addClairvoyantAction");
 		nbActionsInProgress--;
 		if (nbActionsInProgress < 0){
 			Debugger.println("Should Never Happened: More Actions than expected.");			

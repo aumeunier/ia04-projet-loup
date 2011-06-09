@@ -1,5 +1,6 @@
 package ia04.projet.loup.communication;
 
+import ia04.projet.loup.Debugger;
 import ia04.projet.loup.messages.mAction;
 import ia04.projet.loup.messages.mActionClairvoyant;
 import ia04.projet.loup.messages.mActionRegister;
@@ -27,11 +28,13 @@ public class BehaviourAction extends CyclicBehaviour {
 		if(message!=null){
 			switch(message.getPerformative()){
 			case ACLMessage.SUBSCRIBE: {
+				Debugger.println("Received SUBSCRIBE message");
 				mActionRegister anActionRegister = mActionRegister.parseJson(message.getContent());
 				if(anActionRegister != null)
 					this.agtAction.addPlayer(message.getSender(), anActionRegister.getRole());
 			} break;
 			case ACLMessage.REQUEST: {
+				Debugger.println("Received REQUEST message");
 				mAction anActionRequest = mAction.parseJson(message.getContent());
 				if(anActionRequest != null){
 					this.agtAction.setAgtStoryteller(message.getSender());
@@ -40,12 +43,15 @@ public class BehaviourAction extends CyclicBehaviour {
 				else {
 					mActionClairvoyant clairvoyantRequest = (mActionClairvoyant)(mMessage.
 							parseJson(message.getContent(), mActionClairvoyant.class));
+					Debugger.println("mActionClairvoyant null ?");
 					if(clairvoyantRequest != null){
+						Debugger.println("mActionClairvoyant not null!");
 						this.agtAction.addClairvoyantAction(clairvoyantRequest, message.getSender());
 					}
 				}
 			}	break;
 			case ACLMessage.INFORM: {
+				Debugger.println("Received INFORM message");
 				mAction anAction = mAction.parseJson(message.getContent());
 				if(anAction != null){
 					this.agtAction.addAction(anAction, message.getSender());
