@@ -188,7 +188,7 @@ public class GuiBot extends JFrame implements ActionListener{
 
 	public void setStoryView(String str) {
 		jTextAreaStoryView.append("\n" +str);
-		jTextAreaStoryView.setCaretPosition( jTextAreaStoryView.getDocument().getLength() );
+		jTextAreaStoryView.setCaretPosition( jTextAreaStoryView.getDocument().getLength()-str.length() );
 	}
 
 	/**
