@@ -1,8 +1,12 @@
 package ia04.projet.loup.roles;
 
+import java.util.ArrayList;
+
 import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.messages.mAction;
+import ia04.projet.loup.messages.mGuiAction;
 import jade.core.AID;
+import jade.lang.acl.ACLMessage;
 
 public class AgtGuardian extends AgtRole {
 	/**
@@ -28,8 +32,10 @@ public class AgtGuardian extends AgtRole {
 			return saveSomebodyBot(msgContent);
 	}
 
-	public mAction saveSomebodyHuman(mAction msgContent){//TODO human method
-		return null;
+	public mAction saveSomebodyHuman(mAction anAction){//TODO human method
+		String choice = this.askGUI(new ArrayList<String>());
+		anAction.setTargetSaved(choice);
+		return anAction;
 	}
 
 	public mAction saveSomebodyBot(mAction msgContent){ //TODO better guardian strategy

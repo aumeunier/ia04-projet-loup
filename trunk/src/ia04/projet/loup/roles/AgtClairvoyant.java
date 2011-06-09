@@ -5,6 +5,7 @@ import ia04.projet.loup.messages.mAction;
 import ia04.projet.loup.messages.mActionClairvoyant;
 import jade.core.AID;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AgtClairvoyant extends AgtRole {
@@ -31,7 +32,10 @@ public class AgtClairvoyant extends AgtRole {
 	}
 
 	public mActionClairvoyant seeARoleHuman (mAction msgContent){//TODO human method
-		return null;
+		String choice = this.askGUI(new ArrayList<String>());
+		mActionClairvoyant anActionClairvoyant = new mActionClairvoyant();
+		anActionClairvoyant.setChosenPlayer(choice);
+		return anActionClairvoyant;
 	}
 
 	public mActionClairvoyant seeARoleBot (mAction msgContent){

@@ -122,9 +122,11 @@ public class AgtPlayer extends GuiAgent {
 	
 	public void waitForAction(ArrayList<String> candidates) {
 		if(guiActivated){
-			myGui.clearTheList();
-			for(String candidate : candidates){
-				myGui.addPlayerToTheList(candidate + " - " + confidenceLevels.get(candidate).getLevel()); 
+			if(candidates.size() > 0){
+				myGui.clearTheList();
+				for(String candidate : candidates){
+					myGui.addPlayerToTheList(candidate + " - " + confidenceLevels.get(candidate).getLevel()); 
+				}
 			}
 			((GuiPlayer)myGui).enableVote();
 			myGui.repaint();
