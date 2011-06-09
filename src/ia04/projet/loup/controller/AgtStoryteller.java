@@ -399,7 +399,7 @@ public class AgtStoryteller extends Agent {
 	private void addVictim(AID victimAid){		
 		// If the werewolves' target was the guardian's one, it is saved
 		if((victimAid != null)
-				&& !victimAid.equals(Roles.DEAD)
+				&& !this.playersMap.get(victimAid).equals(Roles.DEAD)
 				&& (this.phaseClock.getCurrentPhase()!=GamePhases.WEREWOLVES
 				|| !victimAid.equals(this.guardianTarget))){
 			this.lastVictimsRoles.add(victimAid);

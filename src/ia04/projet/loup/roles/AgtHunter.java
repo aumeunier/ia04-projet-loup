@@ -57,6 +57,7 @@ public class AgtHunter extends AgtRole{
 		}
 		players.add(this.getLocalName());
 		msgContent.setTargetKilled(target);
+		Debugger.println(msgContent.toJson());
 		return msgContent;
 	}
 	
