@@ -30,7 +30,7 @@ public class AgtRole extends Agent {
 	
 	private static final long serialVersionUID = 1226925844951644365L;
 	/** human or bot */
-	protected boolean human = false;
+	protected boolean human = Global.IS_HUMAN_PLAYER; //TODO: recupere de son joueur
 	/** role of the agent */
 	protected Global.Roles role;
 	/** The strategy in use */
@@ -432,9 +432,10 @@ public class AgtRole extends Agent {
 		
 		message.setContent(messageContent.toJson());
 		this.send(message);
-		
-		message = blockingReceive((long)(Global.MAX_REPEATED_TIMES*Global.AVERAGE_SPEED));//TODO v�rifier les unit�s
-		Debugger.println("End blocking reveive ");
+
+		//message = blockingReceive((long)(Global.MAX_REPEATED_TIMES*Global.AVERAGE_SPEED));//TODO verifier les unites
+		message = blockingReceive();
+		//Debugger.println("End blocking receive ");
 		messageContent = mGuiAction.parseJson(message.getContent());
 		return messageContent.getChoice();
 	}

@@ -163,7 +163,7 @@ public class AgtStoryteller extends Agent {
 		try {
 			for(int i = 1; i <= nbOfPlayers; ++i){
 				// Create a new Agent for the player
-				AgtPlayer player = new AgtPlayer(false);
+				AgtPlayer player = new AgtPlayer(Global.IS_HUMAN_PLAYER);
 				ac = mc.acceptNewAgent("player"+i, player);
 				ac.start();
 				player.GuiCreation();
@@ -205,9 +205,12 @@ public class AgtStoryteller extends Agent {
 		}
 
 		// Pick a configuration randomly
-		int pickedConfiguration = generator.nextInt(possibleConfigurations.size());
-		ArrayList<Global.Roles> rolesToAttribute =  possibleConfigurations.get(
-				possibleConfigurations.keySet().toArray()[pickedConfiguration]);
+		ArrayList<Global.Roles> rolesToAttribute = null;
+		do {
+			int pickedConfiguration = generator.nextInt(possibleConfigurations.size());
+			rolesToAttribute =  possibleConfigurations.get(
+					possibleConfigurations.keySet().toArray()[pickedConfiguration]);
+		} while (!rolesToAttribute.contains(Roles.WEREWOLF));
 
 		// Start the Roles assignation
 		System.out.println("Starting Roles assignation");
@@ -612,7 +615,7 @@ public class AgtStoryteller extends Agent {
 				this.firstLoverAid = targetKilled;
 				this.secondLoverAid = targetSaved;
 				Debugger.println("CUPID: "+firstLoverAid.getLocalName()+" and "+secondLoverAid.getLocalName()+
-						" are now in love.");
+				" are now in love.");
 			}
 		}	break;
 		case VILLAGEIDIOT:
@@ -779,7 +782,7 @@ public class AgtStoryteller extends Agent {
 			this.actionStart(Roles.CUPID);
 			storytelling = "Cupid wakes up. He can choose two people who will deeply fall in love.";
 		}	break;
-			
+
 		case THIEF:
 			// TODO: action
 			storytelling = "The thief can choose between two roles.";
@@ -827,7 +830,7 @@ public class AgtStoryteller extends Agent {
 		case DAY:
 			storytelling = "It is now the day. The village wakes up.";
 			break;
-	
+
 		case VICTIMSEVENT: {
 			nightVictimsEvent();
 			storytelling = "Before their last action the victims can try a desperate move.";
