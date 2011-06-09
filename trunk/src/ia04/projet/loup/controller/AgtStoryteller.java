@@ -558,7 +558,13 @@ public class AgtStoryteller extends Agent {
 			mAction actionMsg = new mAction(role);
 			if(role.equals(Roles.WITCH)){
 				if(this.lastVictimsRoles.size() > 0){
-					actionMsg.setTargetSaved(this.lastVictimsRoles.get(0).getLocalName());					
+					actionMsg.setTargetSaved(this.lastVictimsRoles.get(0).getLocalName());	
+					mStorytellerPlayer msgWitch = new mStorytellerPlayer();
+					msgWitch.setPhase(GamePhases.WITCH);
+					msgWitch.setRole(Roles.WITCH);
+					msgWitch.setStoryTelling("VICTIM: "+actionMsg.getTargetSaved()+". Do you want to save him?");
+					msgWitch.setType(mType.STORYTELLING);
+					this.sendMessageToOneRegisteredAgent(this.lastVictimsRoles.get(0), msgWitch, ACLMessage.REQUEST);
 				}
 				else {
 					return;
@@ -583,39 +589,57 @@ public class AgtStoryteller extends Agent {
 	 * @param role The role of the agent, of the action
 	 */
 	public void actionDone(AID performer, AID targetKilled, AID targetSaved, Roles role){
+		// Initialize a message between using the Storyteller-Player Message template
+		mStorytellerPlayer msg = new mStorytellerPlayer();
+		msg.setType(mStorytellerPlayer.mType.STORYTELLING);
+		
 		switch(role){
 		case GUARDIAN: {
 			this.guardianTarget = targetSaved;
-			Debugger.println("GUARDIAN: protected "+targetSaved.getLocalName()
+			msg.setStoryTelling("GUARDIAN: protected "+targetSaved.getLocalName()
 					+" ("+playersMap.get(targetSaved)+") for this turn.");
+			msg.setPhase(GamePhases.GUARDIAN);
+			msg.setRole(Roles.GUARDIAN);
 		}	break;
 		case HUNTER: {
 			this.addVictim(targetKilled);
-			Debugger.println("HUNTER: shot "+targetKilled.getLocalName()
+			msg.setStoryTelling("HUNTER: shot "+targetKilled.getLocalName()
 					+" ("+playersMap.get(targetKilled)+")");
+			msg.setRole(Roles.HUNTER);
 		}	break;
 		case CLAIRVOYANT: {
-			Debugger.println("CLAIRVOYANT: spotted "+targetSaved.getLocalName()
+			msg.setStoryTelling("CLAIRVOYANT: spotted "+targetSaved.getLocalName()
 					+" ("+playersMap.get(targetSaved)+")");
+			msg.setRole(Roles.CLAIRVOYANT);
 		}	break;
 		case WITCH: {
 			if(targetKilled != null){
 				this.addVictim(targetKilled);
-				Debugger.println("WITCH: used killer pot on "+targetKilled.getLocalName()
+				msg.setStoryTelling("WITCH: used killer pot on "+targetKilled.getLocalName()
 						+" ("+playersMap.get(targetKilled)+")");
+				msg.setPhase(GamePhases.WITCH);
+				msg.setRole(Roles.WITCH);
 			}
 			if(targetSaved != null){
 				this.saveVictim(targetSaved);
-				Debugger.println("WITCH: used revive pot on "+targetSaved.getLocalName()
+				msg.setStoryTelling("WITCH: used revive pot on "+targetSaved.getLocalName()
 						+" ("+playersMap.get(targetSaved)+")");
+				msg.setPhase(GamePhases.WITCH);
+				msg.setRole(Roles.WITCH);
 			}
 		}	break;
 		case CUPID: {
 			if(targetKilled != null && targetSaved != null){
 				this.firstLoverAid = targetKilled;
 				this.secondLoverAid = targetSaved;
-				Debugger.println("CUPID: "+firstLoverAid.getLocalName()+" and "+secondLoverAid.getLocalName()+
+				msg.setStoryTelling("CUPID: "+firstLoverAid.getLocalName()+" and "+secondLoverAid.getLocalName()+
 				" are now in love.");
+				msg.setPhase(GamePhases.CUPID);
+				msg.setRole(Roles.CUPID);
+				ArrayList<AID> aids = new ArrayList<AID>();
+				aids.add(this.firstLoverAid);
+				aids.add(this.secondLoverAid);
+				this.sendMessageToOneRegisteredAgent(aids, msg, ACLMessage.REQUEST);
 			}
 		}	break;
 		case VILLAGEIDIOT:
@@ -636,6 +660,10 @@ public class AgtStoryteller extends Agent {
 			break;
 		}
 		this.nbWaitingAnswers--;
+		
+		if(msg.getStoryTelling() != null && msg.getPhase()!=GamePhases.CUPID){
+			this.sendMessageToOneRegisteredAgent(performer,msg,ACLMessage.REQUEST);
+		}
 	}
 
 	////////////////////////////////////////////////////////////////////////////////
@@ -646,34 +674,63 @@ public class AgtStoryteller extends Agent {
 	 * @param choice The target
 	 */
 	public void werewolvesEndedWithChoice(AID choice){
+		// Initialize a message between using the Storyteller-Player Message template
+		mStorytellerPlayer msg = new mStorytellerPlayer();
+		msg.setType(mStorytellerPlayer.mType.STORYTELLING);
+		msg.setPhase(GamePhases.WEREWOLVES);
+		
 		if(choice!=null){
-			Debugger.println("WEREWOLVES: "+choice.getLocalName());
+			msg.setStoryTelling("WEREWOLVES: "+choice.getLocalName());
 			this.addVictim(choice);
 		}
 		else {
-			Debugger.println("WEREWOLVES: couldn't agree on a target");
+			msg.setStoryTelling("WEREWOLVES: couldn't agree on a target");
 		}
 		this.nbWaitingAnswers=0;
+		
+		ArrayList<AID> aids = new ArrayList<AID>();
+		for(AID aid: this.playersMap.keySet()){
+			if(playersMap.get(aid).equals(Roles.WEREWOLF)
+					|| playersMap.get(aid).equals(Roles.WHITEWOLF)){
+				aids.add(aid);
+			}
+		}
+		
+		this.sendMessageToOneRegisteredAgent(aids,msg,ACLMessage.INFORM);
 	}
 	/**
 	 * Treatment of the paysans' vote results
 	 * @param choice The target
 	 */
 	public void paysansEndedWithChoice(AID choice){
-		Debugger.println("HUNG: "+choice.getLocalName());
+		// Initialize a message between using the Storyteller-Player Message template
+		mStorytellerPlayer msg = new mStorytellerPlayer();
+		msg.setType(mStorytellerPlayer.mType.STORYTELLING);
+		msg.setPhase(GamePhases.WEREWOLVES);
+		msg.setStoryTelling("HUNG: "+choice.getLocalName());
+		
 		if(choice!=null){
 			this.addVictim(choice);
 		}
-		this.nbWaitingAnswers=0;		
+		this.nbWaitingAnswers=0;	
+		
+		this.sendMessageToRegisteredAgents(msg);	
 	}
 	/**
 	 * Treatment of the mayor's election's vote results
 	 * @param choice The elected player
 	 */
 	public void mayorElectionEndedWithChoice(AID choice){
-		Debugger.println("MAYOR: "+choice.getLocalName());
+		// Initialize a message between using the Storyteller-Player Message template
+		mStorytellerPlayer msg = new mStorytellerPlayer();
+		msg.setType(mStorytellerPlayer.mType.STORYTELLING);
+		msg.setPhase(GamePhases.WEREWOLVES);
+		msg.setStoryTelling("MAYOR: "+choice.getLocalName());
+		
 		this.mayorAid = choice;
 		this.nbWaitingAnswers=0;		
+		
+		this.sendMessageToRegisteredAgents(msg);
 	}
 
 	////////////////////////////////////////////////////////////////////////////////
@@ -1097,6 +1154,10 @@ public class AgtStoryteller extends Agent {
 		}
 
 		sendMessageToRegisteredAgents(message);
+		for(AID aid: this.playersMap.keySet()){
+			playersMap.put(aid, Roles.UNASSIGNED);
+		}
+		this.phaseClock.restartPreparationTimer();
 	}
 
 
@@ -1157,6 +1218,21 @@ public class AgtStoryteller extends Agent {
 		msg.addReceiver(aid);
 		msg.setContent(message.toJson());
 		this.send(msg);
+		Debugger.println(message.toJson());
+	}
+	/**
+	 * Initialize a message for several agent players.
+	 * @param aids The AIDs of the agents to whom we want to send the message
+	 * @param message The message object to serialize and send as content
+	 */
+	public void sendMessageToOneRegisteredAgent(ArrayList<AID> aids, mMessage message, int messageType){
+		ACLMessage msg = new ACLMessage(messageType);
+		for(AID aid: aids){
+			msg.addReceiver(aid);			
+		}
+		msg.setContent(message.toJson());
+		this.send(msg);
+		Debugger.println(message.toJson());
 	}
 	/**
 	 * Initialize a message for the kb agent linked to this AgtStoryteller 
