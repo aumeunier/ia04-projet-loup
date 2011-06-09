@@ -1,12 +1,10 @@
 package ia04.projet.loup.roles;
 
-import ia04.projet.loup.Debugger;
+import java.util.ArrayList;
+
 import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.messages.mAction;
-
 import jade.core.AID;
-
-import java.util.ArrayList;
 
 public class AgtHunter extends AgtRole{
 
@@ -35,7 +33,9 @@ public class AgtHunter extends AgtRole{
 	}
 
 	public mAction killSomebodyHuman(mAction msgContent){//TODO human method
-		return null;
+		String choice = askGUI(new ArrayList<String>());
+		msgContent.setTargetKilled(choice);
+		return msgContent;
 	}
 
 	public mAction killSomebodyBot(mAction msgContent){
