@@ -37,7 +37,6 @@ public class ConfidenceLevelManager {
 	}
 	
 	public int getLevel(String name) {
-		Debugger.println(name+"\n");
 		return this.confidenceLevelMap.get(name).getLevel();
 	}
 	
@@ -55,9 +54,8 @@ public class ConfidenceLevelManager {
 		return confidenceLevelMap;
 	}
 
-	public void setConfidenceLevelMap(
-			HashMap<String, ConfidenceLevel> confidenceLevelMap) {
-		this.confidenceLevelMap = confidenceLevelMap;
+	public void setConfidenceLevelMap(HashMap<String, ConfidenceLevel> l) {
+		this.confidenceLevelMap = l;
 	}
 
 	private void informListeners(){
