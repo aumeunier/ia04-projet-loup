@@ -429,7 +429,7 @@ public class AgtStoryteller extends Agent {
 		switch(role){
 		case GUARDIAN:
 		case HUNTER:
-		//case CLAIRVOYANT:
+		case CLAIRVOYANT:
 			result = true;
 			break;
 		case WITCH:
@@ -497,7 +497,7 @@ public class AgtStoryteller extends Agent {
 				}
 				// Scapegoat
 				else if(victimRole.equals(Roles.SCAPEGOAT)){
-					this.actionStart(Roles.VILLAGEIDIOT);
+					this.actionStart(Roles.SCAPEGOAT);
 				}
 			}
 		}		
@@ -521,12 +521,17 @@ public class AgtStoryteller extends Agent {
 			sendMessageToOneRegisteredAgent(victim, message, ACLMessage.INFORM);
 			storytelling+=victim.getLocalName()+" ("+role+") died.\n";
 		}
-		storytelling = storytelling.substring(0, storytelling.length()-1);
 
 		// Wait for the players to clean their role
 		this.nbWaitingAnswers = this.lastVictimsRoles.size();
 		
 		// Send a message to the agents
+		if(this.lastVictimsRoles.size() > 0){
+			storytelling = storytelling.substring(0, storytelling.length()-1);
+		}
+		else {
+			storytelling = "No one died tonight.";
+		}
 		mStorytellerPlayer storytellingMsg = new mStorytellerPlayer();
 		storytellingMsg.setType(mType.STORYTELLING);
 		storytellingMsg.setPhase(this.phaseClock.getCurrentPhase());

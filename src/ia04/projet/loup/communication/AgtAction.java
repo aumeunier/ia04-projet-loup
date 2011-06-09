@@ -67,15 +67,12 @@ public class AgtAction extends Agent {
 		ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
 		message.setContent(anActionRequest.toJson());
 		
-		Debugger.println(anActionRequest.toJson());
-
 		nbActionsInProgress = 0;
 
 		for (Entry<AID, Roles> entry : playersMap.entrySet()) {
 			if (entry.getValue().equals(anActionRequest.getRole())) {
 				message.addReceiver(entry.getKey());
 				nbActionsInProgress++;
-				Debugger.println("Add receiver:"+entry.getKey().getLocalName());
 			}
 		}
 		this.send(message);
@@ -92,11 +89,14 @@ public class AgtAction extends Agent {
 		}
 		else {
 			ACLMessage message = new ACLMessage(ACLMessage.INFORM);
-			Roles performerRole = this.playersMap.get(performer);
+
+			Debugger.println("addAction:"+performer.getLocalName());
+			Debugger.println(anAction.toJson());
 			
 			// Notify the storyteller it's over
 			anAction.setPerformer(performer.getLocalName().replace(Global.LOCALNAME_SUFFIX_ROLE, ""));
 			if(anAction.getTargetKilled() != null){
+				Debugger.println("killed:"+anAction.getTargetKilled());
 				anAction.setTargetKilled(anAction.getTargetKilled().replace(Global.LOCALNAME_SUFFIX_ROLE, ""));				
 			}
 			if(anAction.getTargetSaved() != null){
@@ -114,12 +114,12 @@ public class AgtAction extends Agent {
 	 * @param clairvoyant
 	 */
 	public void addClairvoyantAction(mActionClairvoyant anAction, AID clairvoyant){
-		Debugger.println("addClairvoyantAction");
 		nbActionsInProgress--;
 		if (nbActionsInProgress < 0){
 			Debugger.println("Should Never Happened: More Actions than expected.");			
 		}
 		else {
+			
 			// Send the role of the target to the clairvoyant
 			ACLMessage message = new ACLMessage(ACLMessage.INFORM);		
 			AID playerAid = new AID(anAction.getChosenPlayer(),AID.ISLOCALNAME);
@@ -127,6 +127,8 @@ public class AgtAction extends Agent {
 			message.setContent(anAction.toJson());
 			message.addReceiver(clairvoyant);
 			this.send(message);
+			
+			Debugger.println("Clairvoyant spotted:"+playerAid.getLocalName()+" ("+anAction.getRole()+").");
 
 			// Notify the storyteller: the action is over
 			ACLMessage answerToStory = new ACLMessage(ACLMessage.INFORM);
