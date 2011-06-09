@@ -104,9 +104,7 @@ public class AgtAction extends Agent {
 				anAction.setTargetSaved(anAction.getTargetSaved().replace(Global.LOCALNAME_SUFFIX_ROLE, ""));				
 			}
 			anAction.setPerformer(performer.getLocalName().replace(Global.LOCALNAME_SUFFIX_ROLE, ""));
-			
-			Debugger.println(anAction.toJson());
-			
+						
 			// Send the message to storyteller
 			message.setContent(anAction.toJson());
 			message.addReceiver(agtStoryteller);
@@ -133,13 +131,12 @@ public class AgtAction extends Agent {
 			message.setContent(anAction.toJson());
 			message.addReceiver(clairvoyant);
 			this.send(message);
-			
-			Debugger.println("Clairvoyant spotted:"+playerAid.getLocalName()+" ("+anAction.getRole()+").");
 
 			// Notify the storyteller: the action is over
 			ACLMessage answerToStory = new ACLMessage(ACLMessage.INFORM);
 			mAction answer = new mAction(Roles.CLAIRVOYANT);	
 			answer.setPerformer(clairvoyant.getLocalName().replace(Global.LOCALNAME_SUFFIX_ROLE, ""));
+			answer.setTargetSaved(playerAid.getLocalName().replace(Global.LOCALNAME_SUFFIX_ROLE, ""));
 			answerToStory.setContent(answer.toJson());
 			answerToStory.addReceiver(agtStoryteller);
 			this.send(answerToStory);
