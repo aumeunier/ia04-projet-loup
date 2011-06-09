@@ -401,7 +401,7 @@ public class AgtStoryteller extends Agent {
 		if((victimAid != null)
 				&& !this.playersMap.get(victimAid).equals(Roles.DEAD)
 				&& (this.phaseClock.getCurrentPhase()!=GamePhases.WEREWOLVES
-				|| !victimAid.equals(this.guardianTarget))){
+						|| !victimAid.equals(this.guardianTarget))){
 			this.lastVictimsRoles.add(victimAid);
 
 			// Lovers 
@@ -430,9 +430,9 @@ public class AgtStoryteller extends Agent {
 		case GUARDIAN:
 		case HUNTER:
 		case CLAIRVOYANT:
+		case WITCH:
 			result = true;
 			break;
-		case WITCH:
 		case VILLAGEIDIOT:
 		case VILLAGESAGE:
 		case SCAPEGOAT:
@@ -453,6 +453,7 @@ public class AgtStoryteller extends Agent {
 	public void nightVictimsEvent(){
 		this.nbWaitingAnswers = 0;
 		for(AID victim: this.lastVictimsRoles){
+			Global.Roles victimRole = this.playersMap.get(victim);
 			// Mayor
 			if(victim.equals(this.mayorAid)){
 				mVoteRun voteMsg = new mVoteRun(AgtVote.voteType.SUCCESSOR);
@@ -460,16 +461,13 @@ public class AgtStoryteller extends Agent {
 				this.nbWaitingAnswers++;
 				Debugger.println("Mayor has been killed. He has to name his successor");
 			}
-			else {
-				Global.Roles victimRole = this.playersMap.get(victim);
-				// Hunter
-				if(victimRole.equals(Roles.HUNTER)){
-					this.actionStart(Roles.HUNTER);
-				}
-				// Sage
-				else if(victimRole.equals(Roles.VILLAGESAGE)){
-					this.actionStart(Roles.VILLAGESAGE);
-				}
+			// Hunter
+			if(victimRole.equals(Roles.HUNTER)){
+				this.actionStart(Roles.HUNTER);
+			}
+			// Sage
+			else if(victimRole.equals(Roles.VILLAGESAGE)){
+				this.actionStart(Roles.VILLAGESAGE);
 			}
 		}		
 	}
@@ -479,26 +477,24 @@ public class AgtStoryteller extends Agent {
 	public void dayVictimsEvent(){
 		this.nbWaitingAnswers = 0;
 		for(AID victim: this.lastVictimsRoles){
+			Global.Roles victimRole = this.playersMap.get(victim);
 			// Mayor
 			if(victim.equals(this.mayorAid)){
 				mVoteRun voteMsg = new mVoteRun(AgtVote.voteType.SUCCESSOR);
 				this.sendMessageToVoteAgent(voteMsg, ACLMessage.REQUEST);
 				this.nbWaitingAnswers++;
 			}
-			else {
-				Global.Roles victimRole = this.playersMap.get(victim);
-				// Hunter
-				if(victimRole.equals(Roles.HUNTER)){
-					this.actionStart(Roles.HUNTER);
-				}
-				// Idiot
-				else if(victimRole.equals(Roles.VILLAGEIDIOT)){
-					this.actionStart(Roles.VILLAGEIDIOT);
-				}
-				// Scapegoat
-				else if(victimRole.equals(Roles.SCAPEGOAT)){
-					this.actionStart(Roles.SCAPEGOAT);
-				}
+			// Hunter
+			if(victimRole.equals(Roles.HUNTER)){
+				this.actionStart(Roles.HUNTER);
+			}
+			// Idiot
+			else if(victimRole.equals(Roles.VILLAGEIDIOT)){
+				this.actionStart(Roles.VILLAGEIDIOT);
+			}
+			// Scapegoat
+			else if(victimRole.equals(Roles.SCAPEGOAT)){
+				this.actionStart(Roles.SCAPEGOAT);
 			}
 		}		
 	}
@@ -524,7 +520,7 @@ public class AgtStoryteller extends Agent {
 
 		// Wait for the players to clean their role
 		this.nbWaitingAnswers = this.lastVictimsRoles.size();
-		
+
 		// Send a message to the agents
 		if(this.lastVictimsRoles.size() > 0){
 			storytelling = storytelling.substring(0, storytelling.length()-1);
@@ -537,7 +533,7 @@ public class AgtStoryteller extends Agent {
 		storytellingMsg.setPhase(this.phaseClock.getCurrentPhase());
 		storytellingMsg.setStoryTelling(storytelling);
 		this.sendMessageToRegisteredAgents(storytellingMsg);
-		
+
 	}
 	/**
 	 * A player finished his 'iAmDead' stuff
@@ -553,6 +549,11 @@ public class AgtStoryteller extends Agent {
 		// If we can do the action (is implemented)
 		if(isRoleActionAvailable(role)){
 			mAction actionMsg = new mAction(role);
+			if(role.equals(Roles.WITCH)){
+				if(this.lastVictimsRoles.size() > 0){
+					actionMsg.setTargetSaved(this.lastVictimsRoles.get(0).getLocalName());					
+				}
+			}
 			this.sendMessageToActionAgent(actionMsg, ACLMessage.REQUEST);
 			this.nbWaitingAnswers++;			
 		}
@@ -582,14 +583,14 @@ public class AgtStoryteller extends Agent {
 		}	break;
 		case CLAIRVOYANT:
 			break;
-		case WITCH:
+		case WITCH: {
 			if(targetKilled != null){
 				this.addVictim(targetKilled);
 			}
 			if(targetSaved != null){
 				this.saveVictim(targetSaved);
 			}
-			break;
+		}	break;
 		case VILLAGEIDIOT:
 			break;
 		case VILLAGESAGE:
@@ -761,7 +762,7 @@ public class AgtStoryteller extends Agent {
 			}
 			storytelling = "It is now the night. The village goes to sleep.";
 			break;
-			
+
 		case CUPID:
 			// TODO: action
 			storytelling = "Cupid wakes up. He can choose two people who will deeply fall in love.";
@@ -774,7 +775,7 @@ public class AgtStoryteller extends Agent {
 			// TODO: action
 			storytelling = "The thief can choose between two roles.";
 			break;
-			
+
 		case GUARDIAN:{
 			this.actionStart(Roles.GUARDIAN);
 			storytelling = "The guardian can protect one person for tonight.";
@@ -783,7 +784,7 @@ public class AgtStoryteller extends Agent {
 			this.actionStart(Roles.CLAIRVOYANT);
 			storytelling = "The clairvoyant can detect someone's role.";
 		}	break;
-		
+
 		case WEREWOLVES:{
 			storytelling = "The werewolves wake up and gather to select their victim for tonight.";
 
@@ -797,7 +798,7 @@ public class AgtStoryteller extends Agent {
 			this.actionStart(Roles.WITCH);
 			storytelling = "The witch wakes up. She can use her revive pot or her deathly pot.";
 		}	break;
-		
+
 		case WHITEWOLF:
 			// TODO: action
 			storytelling = "The white wolf wakes up and can select his wolf's victim.";
@@ -817,7 +818,7 @@ public class AgtStoryteller extends Agent {
 		case DAY:
 			storytelling = "It is now the day. The village wakes up.";
 			break;
-			
+
 		case VICTIMSREVELATION:
 			// TODO: can be removed ?
 			storytelling = "Tonight's victims are revealed.";
@@ -1048,8 +1049,6 @@ public class AgtStoryteller extends Agent {
 		case GAME_OVER:{
 			// If everyone is charmed, the flute player wins the game
 			//TODO: all charmed
-			// If only the lovers are alive, they win the game
-			//TODO: lovers
 			// If any werewolf is alive then the werewolves win the game
 			if(this.playersMap.containsValue(Roles.WEREWOLF)){
 				message.setStoryTelling("The werewolves win the game!");
@@ -1060,7 +1059,22 @@ public class AgtStoryteller extends Agent {
 			}
 			// Otherwise, the villagers win the game
 			else {
-				message.setStoryTelling("The villagers win the game!");
+				int nbOfAlivePpl = 0;
+				for(Roles role: playersMap.values()){
+					if(!role.equals(Roles.DEAD)){
+						nbOfAlivePpl++;
+					}
+				}
+				// If only the lovers are alive, they win the game
+				if(nbOfAlivePpl == 2 && !playersMap.get(this.firstLoverAid).equals(Roles.DEAD)){
+					message.setStoryTelling("The lovers win the game!");					
+				}
+				else if(nbOfAlivePpl == 0){
+					message.setStoryTelling("Everyone is dead!");								
+				}
+				else {
+					message.setStoryTelling("The villagers win the game!");					
+				}
 			}
 		}break;
 		case UNKNOWN_REASON:

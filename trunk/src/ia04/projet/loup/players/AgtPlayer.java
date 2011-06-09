@@ -10,6 +10,7 @@ import ia04.projet.loup.roles.AgtGuardian;
 import ia04.projet.loup.roles.AgtHunter;
 import ia04.projet.loup.roles.AgtRole;
 import ia04.projet.loup.roles.AgtWerewolf;
+import ia04.projet.loup.roles.AgtWitch;
 import jade.core.AID;
 import jade.gui.GuiAgent;
 import jade.gui.GuiEvent;
@@ -152,11 +153,11 @@ public class AgtPlayer extends GuiAgent {
 		case CLAIRVOYANT:
 			agtR = new AgtClairvoyant(this.getAID());
 			break;
+		case WITCH:
+			agtR = new AgtWitch(this.getAID());
+			break;
 			/*
 			case THIEF:
-				agtR = new AgtRole();
-				break;
-			case WITCH:
 				agtR = new AgtRole();
 				break;
 			case WHITEWOLF:
