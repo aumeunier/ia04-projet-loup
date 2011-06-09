@@ -74,6 +74,10 @@ public class AgtRole extends Agent {
 		confidenceLevelManager = new ConfidenceLevelManager(this);
 		confidenceLevelManager.addListener(myGuiID);
 	}
+	/** some actions cannot be done in constructor so do it here... */
+	 public void firstActionAfterInit(){
+		//do nothing
+	}
 	/**
 	 * Here the agent registers to the Communication agents such that he can receive 
 	 * all the messages regarding the game being played
