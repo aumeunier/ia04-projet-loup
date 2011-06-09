@@ -58,10 +58,8 @@ public class BehaviourPlayer extends CyclicBehaviour {
 				try {
 					handleMsgStoryTeller(msgStoryTeller, msg);
 				} catch (StaleProxyException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			} else if((msgToGui = mToGui.parseJson(msgContent)) != null){
@@ -73,7 +71,7 @@ public class BehaviourPlayer extends CyclicBehaviour {
 	}
 
 	private void handleMsgGuiAction(mGuiAction msgGuiAction) {
-		((AgtPlayer) myAgent).waitForAction();
+		((AgtPlayer) myAgent).waitForAction(msgGuiAction.getCandidates());
 	}
 
 	private void handleMsgKb(mPlayerKb msgPlayList) {
