@@ -1,6 +1,7 @@
 package ia04.projet.loup.roles;
 
 import ia04.projet.loup.Debugger;
+import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.messages.mAction;
 
 import jade.core.AID;
@@ -17,6 +18,11 @@ public class AgtHunter extends AgtRole{
 	public AgtHunter(AID guiID) {
 		super(guiID);
 		addAndSaveBehaviour(new BehaviourHunter());
+	}
+	
+	/** initialize the role of the agent */
+	protected void initializeRole(){
+		role=Roles.HUNTER;
 	}
 	
 	/** chooses to kill */
