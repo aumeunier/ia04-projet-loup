@@ -6,6 +6,7 @@ import ia04.projet.loup.gui.GuiBot;
 import ia04.projet.loup.messages.mStorytellerPlayer;
 import ia04.projet.loup.roles.AgtCupid;
 import ia04.projet.loup.roles.AgtGuardian;
+import ia04.projet.loup.roles.AgtHunter;
 import ia04.projet.loup.roles.AgtRole;
 import ia04.projet.loup.roles.AgtWerewolf;
 import jade.core.AID;
@@ -129,6 +130,7 @@ public class AgtPlayer extends GuiAgent {
 	 * **/
 	public void RoleInstance(Global.Roles role) throws StaleProxyException{
 		// RoleAgent instantiation, behaviours are added in the roles	
+		//TODO: do not forget to put them
 		AgtRole agtR = null;
 		switch(role){
 		case VILLAGER:
@@ -143,6 +145,9 @@ public class AgtPlayer extends GuiAgent {
 		case GUARDIAN:
 			agtR = new AgtGuardian(this.getAID());
 			break;
+		case HUNTER:
+			agtR = new AgtHunter(this.getAID());
+			break;
 			/*
 			case THIEF:
 				agtR = new AgtRole();
@@ -155,8 +160,6 @@ public class AgtPlayer extends GuiAgent {
 			case RAVEN:
 				agtR = new AgtRole();
 			case FLUTEPLAYER:
-				agtR = new AgtRole();
-			case HUNTER:
 				agtR = new AgtRole();
 			case SCAPEGOAT:
 				agtR = new AgtRole();
