@@ -5,6 +5,7 @@ import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.messages.mAction;
 import ia04.projet.loup.messages.mActionClairvoyant;
+import ia04.projet.loup.messages.mActionLover;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
@@ -92,16 +93,18 @@ public class AgtAction extends Agent {
 		}
 		else {
 			ACLMessage message = new ACLMessage(ACLMessage.INFORM);
+			String killed = anAction.getTargetKilled();
+			String saved = anAction.getTargetSaved();
 			
 			// Prepare the answer to storyteller
-			if(anAction.getTargetKilled() != null && (!anAction.getTargetKilled().equals(anAction.getPerformer()))){
-				anAction.setTargetKilled(anAction.getTargetKilled().replace(Global.LOCALNAME_SUFFIX_ROLE, ""));				
+			if(killed != null && (!killed.equals(anAction.getPerformer()))){
+				anAction.setTargetKilled(killed.replace(Global.LOCALNAME_SUFFIX_ROLE, ""));				
 			}
 			else {
 				anAction.setTargetKilled(null);
 			}
-			if(anAction.getTargetSaved() != null){
-				anAction.setTargetSaved(anAction.getTargetSaved().replace(Global.LOCALNAME_SUFFIX_ROLE, ""));				
+			if(saved != null){
+				anAction.setTargetSaved(saved.replace(Global.LOCALNAME_SUFFIX_ROLE, ""));				
 			}
 			anAction.setPerformer(performer.getLocalName().replace(Global.LOCALNAME_SUFFIX_ROLE, ""));
 						
@@ -109,6 +112,21 @@ public class AgtAction extends Agent {
 			message.setContent(anAction.toJson());
 			message.addReceiver(agtStoryteller);
 			this.send(message);
+			
+			// If it is the CUPID action, the lovers recognize each other
+			if(anAction.getRole().equals(Roles.CUPID) 
+					&& killed!=null && saved!=null){
+				ACLMessage loverMsg = new ACLMessage(ACLMessage.REQUEST);
+				mActionLover loverMessages = new mActionLover();
+				loverMessages.setLover1(killed);
+				loverMessages.setLover2(saved);
+				loverMessages.setLover1Role(this.playersMap.get(killed));
+				loverMessages.setLover2Role(this.playersMap.get(saved));
+				loverMsg.setContent(loverMessages.toJson());
+				loverMsg.addReceiver(new AID(killed,AID.ISLOCALNAME));
+				loverMsg.addReceiver(new AID(saved,AID.ISLOCALNAME));		
+				this.send(loverMsg);
+			}
 		}
 	}
 	
@@ -122,8 +140,7 @@ public class AgtAction extends Agent {
 		if (nbActionsInProgress < 0){
 			Debugger.println("Should Never Happened: More Actions than expected.");			
 		}
-		else {
-			
+		else {			
 			// Send the role of the target to the clairvoyant
 			ACLMessage message = new ACLMessage(ACLMessage.INFORM);		
 			AID playerAid = new AID(anAction.getChosenPlayer(),AID.ISLOCALNAME);

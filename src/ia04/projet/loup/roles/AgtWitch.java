@@ -90,7 +90,6 @@ public class AgtWitch extends AgtRole {
 	}
 
 	protected boolean useRevivePotBot(String dead){
-		Debugger.println("Do you want to use your revive pot on "+dead);
 		switch (currentStrategy){
 		case RABBIT:
 			return (random.nextBoolean());

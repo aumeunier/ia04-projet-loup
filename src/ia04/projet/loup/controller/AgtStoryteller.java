@@ -430,6 +430,7 @@ public class AgtStoryteller extends Agent {
 		case GUARDIAN:
 		case HUNTER:
 		case WITCH:
+		case CLAIRVOYANT:
 		case CUPID:
 			result = true;
 			break;
@@ -514,7 +515,7 @@ public class AgtStoryteller extends Agent {
 			message.setIsHungVictim(this.phaseClock.getCurrentPhase().
 					equals(GamePhases.HUNGRESOLUTION));
 			sendMessageToOneRegisteredAgent(victim, message, ACLMessage.INFORM);
-			storytelling+=victim.getLocalName()+" ("+role+") died.\n";
+			storytelling+="DEATH: "+victim.getLocalName()+" ("+role+").\n";
 		}
 
 		// Wait for the players to clean their role
@@ -578,35 +579,36 @@ public class AgtStoryteller extends Agent {
 		switch(role){
 		case GUARDIAN: {
 			this.guardianTarget = targetSaved;
-			Debugger.println("Guardian protects "+targetSaved.getLocalName()
+			Debugger.println("GUARDIAN: protected "+targetSaved.getLocalName()
 					+" ("+playersMap.get(targetSaved)+") for this turn.");
 		}	break;
 		case HUNTER: {
 			this.addVictim(targetKilled);
-			Debugger.println("Hunter shot "+targetSaved.getLocalName()
-					+" ("+playersMap.get(targetSaved)+")");
+			Debugger.println("HUNTER: shot "+targetKilled.getLocalName()
+					+" ("+playersMap.get(targetKilled)+")");
 		}	break;
 		case CLAIRVOYANT: {
-			Debugger.println("Clairvoyant spotted "+targetSaved.getLocalName()
+			Debugger.println("CLAIRVOYANT: spotted "+targetSaved.getLocalName()
 					+" ("+playersMap.get(targetSaved)+")");
 		}	break;
 		case WITCH: {
 			if(targetKilled != null){
 				this.addVictim(targetKilled);
-				Debugger.println("Witch uses killer pot on "+targetKilled.getLocalName()
+				Debugger.println("WITCH: used killer pot on "+targetKilled.getLocalName()
 						+" ("+playersMap.get(targetKilled)+")");
 			}
 			if(targetSaved != null){
 				this.saveVictim(targetSaved);
-				Debugger.println("Witch uses revive pot on "+targetSaved.getLocalName()
+				Debugger.println("WITCH: used revive pot on "+targetSaved.getLocalName()
 						+" ("+playersMap.get(targetSaved)+")");
 			}
 		}	break;
 		case CUPID: {
-			Debugger.println(targetKilled.getLocalName()+" "+targetSaved.getLocalName());
 			if(targetKilled != null && targetSaved != null){
 				this.firstLoverAid = targetKilled;
 				this.secondLoverAid = targetSaved;
+				Debugger.println("CUPID: "+firstLoverAid.getLocalName()+" and "+secondLoverAid.getLocalName()+
+						" are now in love.");
 			}
 		}	break;
 		case VILLAGEIDIOT:
@@ -640,11 +642,11 @@ public class AgtStoryteller extends Agent {
 	 */
 	public void werewolvesEndedWithChoice(AID choice){
 		if(choice!=null){
-			Debugger.println("Werewolves target: "+choice.getLocalName());
+			Debugger.println("WEREWOLVES: "+choice.getLocalName());
 			this.addVictim(choice);
 		}
 		else {
-			Debugger.println("Werewolves couldn't agree on a target");
+			Debugger.println("WEREWOLVES: couldn't agree on a target");
 		}
 		this.nbWaitingAnswers=0;
 	}
@@ -653,7 +655,7 @@ public class AgtStoryteller extends Agent {
 	 * @param choice The target
 	 */
 	public void paysansEndedWithChoice(AID choice){
-		Debugger.println("Future hung: "+choice.getLocalName());
+		Debugger.println("HUNG: "+choice.getLocalName());
 		if(choice!=null){
 			this.addVictim(choice);
 		}
@@ -664,7 +666,7 @@ public class AgtStoryteller extends Agent {
 	 * @param choice The elected player
 	 */
 	public void mayorElectionEndedWithChoice(AID choice){
-		Debugger.println("New mayor: "+choice.getLocalName());
+		Debugger.println("MAYOR: "+choice.getLocalName());
 		this.mayorAid = choice;
 		this.nbWaitingAnswers=0;		
 	}
@@ -684,9 +686,6 @@ public class AgtStoryteller extends Agent {
 		switch(phase){ // We only need to do phase x..
 		case CUPID: // during the first round and if someone has the cupid role
 			shouldSkip = afterFirstRound || !roleStillInGame(Roles.CUPID);
-			break;
-		case LOVERS: // during the first round and if lovers were chosen
-			shouldSkip = afterFirstRound || (this.firstLoverAid==null || this.secondLoverAid==null);
 			break;
 		case THIEF: // during the first round and if someone has the cupid role
 			shouldSkip = afterFirstRound || !roleStillInGame(Roles.THIEF);
@@ -715,9 +714,6 @@ public class AgtStoryteller extends Agent {
 			// TODO: charmed
 			shouldSkip = !roleStillInGame(Roles.FLUTEPLAYER);
 			break;
-		case VICTIMSREVELATION: // if someone has been killed during the night
-			shouldSkip = this.lastVictimsRoles.isEmpty();
-			break;
 		case VICTIMSEVENT: // if there is a lover, hunter or village sage night victim
 			shouldSkip = (this.lastVictimsRoles.contains(Roles.HUNTER)			
 					|| this.lastVictimsRoles.contains(Roles.VILLAGESAGE));
@@ -728,8 +724,6 @@ public class AgtStoryteller extends Agent {
 			shouldSkip = afterFirstRound;
 			break;
 		case HUNGVOTE:
-			break;
-		case HUNGREVELATION:
 			break;
 		case HUNGEVENT: // if the hung one is a scapegoat, hunter, lover, idiot or sage
 			shouldSkip = (this.lastVictimsRoles.contains(Roles.SCAPEGOAT)
@@ -765,12 +759,15 @@ public class AgtStoryteller extends Agent {
 			Debugger.println("\n Turn "+this.phaseClock.getNbOfTurns()+" \n");
 			if(Debugger.isOn() && this.phaseClock.getNbOfTurns() > 1){
 				for(Entry<AID,Roles> player: this.playersMap.entrySet()){
+					String toBePrint = player.getKey().getLocalName()+" has role: "+player.getValue();
 					if(player.getKey().equals(this.mayorAid)){
-						Debugger.println(player.getKey().getLocalName()+" has role: "+player.getValue()+" (Mayor).");						
+						toBePrint+=" (Mayor)";						
 					}
-					else {
-						Debugger.println(player.getKey().getLocalName()+" has role: "+player.getValue());
+					if(player.getKey().equals(this.firstLoverAid)
+							|| player.getKey().equals(this.secondLoverAid)){
+						toBePrint+=" (Lover)";								
 					}
+					Debugger.println(toBePrint);
 				}
 			}
 			storytelling = "It is now the night. The village goes to sleep.";
@@ -780,10 +777,6 @@ public class AgtStoryteller extends Agent {
 			this.actionStart(Roles.CUPID);
 			storytelling = "Cupid wakes up. He can choose two people who will deeply fall in love.";
 		}	break;
-		case LOVERS:
-			// TODO: action
-			storytelling = "The lovers recognize each other.";
-			break;
 			
 		case THIEF:
 			// TODO: action
@@ -832,11 +825,7 @@ public class AgtStoryteller extends Agent {
 		case DAY:
 			storytelling = "It is now the day. The village wakes up.";
 			break;
-
-		case VICTIMSREVELATION:
-			// TODO: can be removed ?
-			storytelling = "Tonight's victims are revealed.";
-			break;			
+	
 		case VICTIMSEVENT: {
 			nightVictimsEvent();
 			storytelling = "Before their last action the victims can try a desperate move.";
@@ -862,10 +851,7 @@ public class AgtStoryteller extends Agent {
 			this.sendMessageToVoteAgent(voteMsg, ACLMessage.REQUEST);
 			this.nbWaitingAnswers = 1;
 		}	break;
-		case HUNGREVELATION:
-			// TODO: can be removed ?
-			storytelling = "The hung role's revealed.";
-			break;
+
 		case HUNGEVENT:{ 
 			dayVictimsEvent();
 			storytelling = "Before his hunging the hung can try a desperate move.";
@@ -935,8 +921,6 @@ public class AgtStoryteller extends Agent {
 			break;
 		case CUPID: 
 			break;
-		case LOVERS:
-			break;
 		case THIEF:
 			break;
 		case GUARDIAN:
@@ -959,8 +943,6 @@ public class AgtStoryteller extends Agent {
 		case DAY:
 			this.guardianTarget = null; // The target is not protected anymore
 			break;
-		case VICTIMSREVELATION:
-			break;
 		case VICTIMSEVENT:
 			break;
 		case VICTIMSRESOLUTION:
@@ -970,8 +952,6 @@ public class AgtStoryteller extends Agent {
 		case MAYORELECTION:
 			break;
 		case HUNGVOTE:
-			break;
-		case HUNGREVELATION:
 			break;
 		case HUNGEVENT:
 			break;

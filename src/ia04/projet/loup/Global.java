@@ -45,8 +45,6 @@ public class Global {
 		NIGHT,
 		/** Only during the first night: choose 2 people that will be lovers */
 		CUPID,
-		/** Only during the first night: the lovers chosen by Cupid reveal to each other their role */
-		LOVERS,
 		/** Only during the first night: the thief can choose his role between two (has to choose Wolf if there is one) */
 		THIEF,
 		/** The guardian can choose a person that won't die this turn if it's the victim*/
@@ -68,8 +66,8 @@ public class Global {
 		
 		/** Beginning of the day phase */
 		DAY, 
-		/** The people who died during the night are revealed */
-		VICTIMSREVELATION,
+		///** The people who died during the night are revealed */
+		//VICTIMSREVELATION,
 		/** If the victims have special actions at their death */
 		VICTIMSEVENT,
 		/** The victims die */
@@ -78,8 +76,8 @@ public class Global {
 		MAYORELECTION,
 		/** The village select the villager to hang */
 		HUNGVOTE,
-		/** The role of the person to be hung is revealed */
-		HUNGREVELATION,
+		///** The role of the person to be hung is revealed */
+		//HUNGREVELATION,
 		/** If the hung has a special action at his hanging... */
 		HUNGEVENT,
 		/** The hung is hung */
