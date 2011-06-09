@@ -1,5 +1,6 @@
 package ia04.projet.loup.roles;
 
+import ia04.projet.loup.Debugger;
 import ia04.projet.loup.messages.mToGui;
 import jade.core.AID;
 import jade.core.Agent;
@@ -10,7 +11,7 @@ import java.util.HashMap;
 public class ConfidenceLevelManager {
 
 	/** Map of the players with the corresponding confidence level */
-	protected HashMap<String, ConfidenceLevel> confidenceLevelMap = new HashMap<String, ConfidenceLevel>();
+	private HashMap<String, ConfidenceLevel> confidenceLevelMap = new HashMap<String, ConfidenceLevel>();
 	/** Agents who listen to this ConfidenceLevels **/
 	protected ArrayList<AID> listeners = new ArrayList<AID>();
 	/** My Agent **/
@@ -36,6 +37,7 @@ public class ConfidenceLevelManager {
 	}
 	
 	public int getLevel(String name) {
+		Debugger.println(name+"\n");
 		return this.confidenceLevelMap.get(name).getLevel();
 	}
 	
@@ -47,6 +49,17 @@ public class ConfidenceLevelManager {
 		this.listeners.remove(aid);
 	}
 	
+	
+	
+	public HashMap<String, ConfidenceLevel> getConfidenceLevelMap() {
+		return confidenceLevelMap;
+	}
+
+	public void setConfidenceLevelMap(
+			HashMap<String, ConfidenceLevel> confidenceLevelMap) {
+		this.confidenceLevelMap = confidenceLevelMap;
+	}
+
 	private void informListeners(){
 		ACLMessage message = new ACLMessage(ACLMessage.INFORM);
 		for(AID aid : listeners){
