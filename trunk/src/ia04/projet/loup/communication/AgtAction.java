@@ -89,19 +89,20 @@ public class AgtAction extends Agent {
 		}
 		else {
 			ACLMessage message = new ACLMessage(ACLMessage.INFORM);
-
-			Debugger.println("addAction:"+performer.getLocalName());
-			Debugger.println(anAction.toJson());
 			
-			// Notify the storyteller it's over
-			anAction.setPerformer(performer.getLocalName().replace(Global.LOCALNAME_SUFFIX_ROLE, ""));
-			if(anAction.getTargetKilled() != null){
-				Debugger.println("killed:"+anAction.getTargetKilled());
+			// Prepare the answer to storyteller
+			if(anAction.getTargetKilled() != null && (!anAction.getTargetKilled().equals(anAction.getPerformer()))){
 				anAction.setTargetKilled(anAction.getTargetKilled().replace(Global.LOCALNAME_SUFFIX_ROLE, ""));				
+			}
+			else {
+				anAction.setTargetKilled(null);
 			}
 			if(anAction.getTargetSaved() != null){
 				anAction.setTargetSaved(anAction.getTargetSaved().replace(Global.LOCALNAME_SUFFIX_ROLE, ""));				
 			}
+			anAction.setPerformer(performer.getLocalName().replace(Global.LOCALNAME_SUFFIX_ROLE, ""));
+			
+			// Send the message to storyteller
 			message.setContent(anAction.toJson());
 			message.addReceiver(agtStoryteller);
 			this.send(message);
