@@ -1,5 +1,7 @@
 package ia04.projet.loup.roles;
 
+import java.util.ArrayList;
+
 import ia04.projet.loup.Debugger;
 import ia04.projet.loup.Global.Roles;
 import jade.core.AID;
@@ -18,22 +20,37 @@ public class AgtWitch extends AgtRole {
 		role=Roles.WITCH;
 	}
 	
-	protected String useDeathlyPot(){
+	protected String useDeathlyPot(String dead){
+		String result;
 		if(human)
-			return useDeathlyPotHuman();
+			result = useDeathlyPotHuman(dead);
 		else 
-			return useDeathlyPotBot();
+			result = useDeathlyPotBot(dead);
+		if(result != null)
+			deathlyPot = false;
+		return result;
 	}
 	
-	protected String useDeathlyPotHuman(){//TODO human method
-		return null;
+	protected String useDeathlyPotHuman(String dead){
+		ArrayList<String> candidates = players;
+		candidates.remove(dead);
+		return this.askGUI(candidates);
 	}
 
-	protected String useDeathlyPotBot(){
+	protected String useDeathlyPotBot(String dead){
 		if(!deathlyPot)
 			return null;
 		if(lover!=null){ //Do not kill your lover !
 			players.remove(lover);
+		}
+		players.remove(dead);
+		if (players.isEmpty()){
+			if(lover!=null){ 
+				players.add(lover);
+				
+			}
+			players.add(dead);
+			return null;
 		}
 		String target;
 		switch (currentStrategy){
@@ -74,19 +91,27 @@ public class AgtWitch extends AgtRole {
 		if(lover!=null){ //Do not vote for your lover !
 			players.add(lover);
 		}
-		
+		players.add(dead);
 		return target;
 	}
 	
 	protected boolean useRevivePot(String dead){
+		boolean result;
 		if(human)
-			return useRevivePotHuman(dead);
+			result = useRevivePotHuman(dead);
 		else
-			return useRevivePotBot(dead);
+			result = useRevivePotBot(dead);
+		if(result)
+			revivePot = false;
+		return result;
 	}
 	
-	protected boolean useRevivePotHuman(String dead){//TODO human method
-		return false;
+	protected boolean useRevivePotHuman(String dead){
+		ArrayList<String> candidates = new ArrayList<String>();
+		candidates.add(dead);
+		String result = this.askGUI(candidates);
+		return result != null;
+			
 	}
 
 	protected boolean useRevivePotBot(String dead){
