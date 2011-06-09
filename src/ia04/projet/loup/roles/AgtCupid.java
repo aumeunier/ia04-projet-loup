@@ -25,6 +25,17 @@ public class AgtCupid extends AgtRole {
 		role=Roles.CUPID;
 	}
 	public mAction selectLovers(mAction msgContent){
+		if(human)
+			return selectLoversHuman(msgContent);
+		else 
+			return selectLoversBot(msgContent);
+	}
+
+	public mAction selectLoversHuman(mAction msgContent){//TODO human method
+		return null;
+	}
+
+	public mAction selectLoversBot(mAction msgContent){
 		switch (currentStrategy){
 		case RABBIT:
 		case BASIC:

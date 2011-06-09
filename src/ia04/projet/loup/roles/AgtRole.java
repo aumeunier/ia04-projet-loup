@@ -26,6 +26,8 @@ import java.util.Random;
 public class AgtRole extends Agent {
 	
 	private static final long serialVersionUID = 1226925844951644365L;
+	/** human or bot */
+	protected boolean human = false;
 	/** role of the agent */
 	protected Global.Roles role;
 	/** The strategy in use */
@@ -137,6 +139,17 @@ public class AgtRole extends Agent {
 	 * vote to kill somebody in the village 
 	 */
 	protected String vote(ArrayList<String> candidates){
+		if(human)
+			return voteHuman(candidates);
+		else
+			return voteBote(candidates);
+	}
+	
+	protected String voteHuman(ArrayList<String> candidates){//TODO human method
+		return null;
+	}
+
+	protected String voteBote(ArrayList<String> candidates){
 		if(lover!=null){ //Do not kill your lover !
 			candidates.remove(lover);
 		}
@@ -164,6 +177,17 @@ public class AgtRole extends Agent {
 	}
 	/** Vote for the election of the first mayor */
 	protected String electMayor(ArrayList<String> candidates){
+		if(human)
+			return electMayorHuman(candidates); 
+		else
+			return electMayorBot(candidates);
+	}
+	
+	protected String electMayorHuman(ArrayList<String> candidates){//TODO human method
+		return null;
+	}
+
+	protected String electMayorBot(ArrayList<String> candidates){
 		switch (currentStrategy){
 		case RABBIT:
 		case SHEEP: //TODO sheep elect mayor comportment
@@ -180,6 +204,17 @@ public class AgtRole extends Agent {
 	}
 	/** When he dies the mayor has to choose his successor */
 	protected String nameSuccessor(ArrayList<String> candidates){
+		if(human)
+			return nameSuccessorHuman(candidates);
+		else
+			return nameSuccessorBot(candidates);
+	}
+
+	protected String nameSuccessorHuman(ArrayList<String> candidates){//TODO human method
+		return null;
+	}
+
+	protected String nameSuccessorBot(ArrayList<String> candidates){
 		switch (currentStrategy){
 		case RABBIT:
 			//Debugger.println("AgtRole: nameSuccessor-RABBIT");
@@ -204,6 +239,17 @@ public class AgtRole extends Agent {
 	}
 	/** The mayor has to choose the victim in case of equality */
 	protected String resolveEquality(ArrayList<String> candidates){
+		if(human)
+			return resolveEqualityHuman(candidates);
+		else
+			return resolveEqualityBot(candidates);
+	}
+
+	protected String resolveEqualityHuman(ArrayList<String> candidates){//TODO human method
+		return null;
+	}
+
+	protected String resolveEqualityBot(ArrayList<String> candidates){
 		if(lover!=null){ //Do not kill your lover !
 			candidates.remove(lover);
 		}

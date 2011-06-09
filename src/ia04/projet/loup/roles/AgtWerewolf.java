@@ -26,6 +26,17 @@ public class AgtWerewolf extends AgtRole {
 	}
 	/** chooses somebody to eat */
 	public String eatSomebody(ArrayList<String> candidates){
+		if(human)
+			return eatSomebodyHuman(candidates);
+		else 
+			return eatSomebodyBot(candidates);
+	}
+
+	public String eatSomebodyHuman(ArrayList<String> candidates){//TODO human method
+		return null;
+	}
+
+	public String eatSomebodyBot(ArrayList<String> candidates){
 		if(lover!=null){ //Do not vote for your lover !
 			candidates.remove(lover);
 		}

@@ -1,5 +1,6 @@
 package ia04.projet.loup.roles;
 
+import ia04.projet.loup.Debugger;
 import ia04.projet.loup.Global.Roles;
 import jade.core.AID;
 
@@ -18,6 +19,17 @@ public class AgtWitch extends AgtRole {
 	}
 	
 	protected String useDeathlyPot(){
+		if(human)
+			return useDeathlyPotHuman();
+		else 
+			return useDeathlyPotBot();
+	}
+	
+	protected String useDeathlyPotHuman(){//TODO human method
+		return null;
+	}
+
+	protected String useDeathlyPotBot(){
 		if(!deathlyPot)
 			return null;
 		if(lover!=null){ //Do not kill your lover !
@@ -67,6 +79,18 @@ public class AgtWitch extends AgtRole {
 	}
 	
 	protected boolean useRevivePot(String dead){
+		if(human)
+			return useRevivePotHuman(dead);
+		else
+			return useRevivePotBot(dead);
+	}
+	
+	protected boolean useRevivePotHuman(String dead){//TODO human method
+		return false;
+	}
+
+	protected boolean useRevivePotBot(String dead){
+		Debugger.println("Do you want to use your revive pot on "+dead);
 		switch (currentStrategy){
 		case RABBIT:
 			return (random.nextBoolean());
