@@ -10,7 +10,7 @@ public class AgtPlayerBot extends AgtPlayer {
 	private static final long serialVersionUID = 1L;
 
 	public AgtPlayerBot() throws ControllerException {
-		super();
+		super(false);
 		// TODO Auto-generated constructor stub
 	}
 

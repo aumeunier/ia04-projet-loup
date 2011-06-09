@@ -163,7 +163,7 @@ public class AgtStoryteller extends Agent {
 		try {
 			for(int i = 1; i <= nbOfPlayers; ++i){
 				// Create a new Agent for the player
-				AgtPlayer player = new AgtPlayer();
+				AgtPlayer player = new AgtPlayer(false);
 				ac = mc.acceptNewAgent("player"+i, player);
 				ac.start();
 				player.GuiCreation();

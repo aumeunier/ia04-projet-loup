@@ -3,6 +3,8 @@ package ia04.projet.loup.players;
 import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.gui.GuiBot;
+import ia04.projet.loup.gui.GuiPlayer;
+import ia04.projet.loup.messages.mGuiAction;
 import ia04.projet.loup.messages.mStorytellerPlayer;
 import ia04.projet.loup.roles.AgtClairvoyant;
 import ia04.projet.loup.roles.AgtCupid;
@@ -34,15 +36,17 @@ public class AgtPlayer extends GuiAgent {
 	private GuiBot myGui;
 	private AID RoleID;
 	private HashMap<String,Integer> Confidences;
-
+	private boolean human = false;
+	
 	/**
 	 * Constructor
 	 * @throws StaleProxyException
 	 */
-	public AgtPlayer() throws StaleProxyException {
+	public AgtPlayer(boolean human) throws StaleProxyException {
 		super();
 		this.addBehaviour(new BehaviourPlayer());
 		setRoleID(null);
+		this.human = human;
 	}
 	
 	/**
@@ -51,7 +55,15 @@ public class AgtPlayer extends GuiAgent {
 	 */
 	protected void onGuiEvent(GuiEvent guiEvent) {
 		switch(guiEvent.getType()){
-			case AgtPlayer.CHOOSE_TYPE: /** TO COMPLTE **/ break;
+			case AgtPlayer.CHOOSE_TYPE: 
+				ACLMessage message = new ACLMessage(ACLMessage.INFORM);
+				message.addReceiver(RoleID);
+				String choice = (String)guiEvent.getParameter(0);
+				mGuiAction aGuiAction = new mGuiAction();
+				aGuiAction.setChoice(choice.substring(0, choice.indexOf('-')-1));
+				message.setContent(aGuiAction.toJson());
+				this.send(message);
+				break;
 			default: break;
 		}
 	}
@@ -95,6 +107,13 @@ public class AgtPlayer extends GuiAgent {
 			for(Entry<String, ConfidenceLevel> entry : hashMap.entrySet()){
 				myGui.addPlayerToTheList(entry.getKey() + " - " + entry.getValue().getLevel());
 			}
+			myGui.repaint();
+		}
+	}
+	
+	public void waitForAction() {
+		if(Global.IS_GUI_ACTIVATED){
+			((GuiPlayer)myGui).enableVote();
 		}
 	}
 	
@@ -119,7 +138,11 @@ public class AgtPlayer extends GuiAgent {
 	 */
 	public void GuiCreation() throws StaleProxyException{
 		if(Global.IS_GUI_ACTIVATED){
-			myGui = new GuiBot(this.getLocalName(), this);
+			if(human){
+				myGui = new GuiPlayer(this.getLocalName(), this);
+			}else{
+				myGui = new GuiBot(this.getLocalName(), this);
+			}
 			myGui.setVisible(true);
 		}
 	}
