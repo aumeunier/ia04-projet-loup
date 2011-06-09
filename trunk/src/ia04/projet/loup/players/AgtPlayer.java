@@ -1,5 +1,6 @@
 package ia04.projet.loup.players;
 
+import ia04.projet.loup.Debugger;
 import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.gui.GuiBot;
@@ -36,7 +37,7 @@ public class AgtPlayer extends GuiAgent {
 
 	private HashMap<String, ConfidenceLevel> confidenceLevels;
 
-	private boolean human = false;
+	private boolean human;
 	private boolean guiActivated;
 	
 	
@@ -155,8 +156,10 @@ public class AgtPlayer extends GuiAgent {
 	public void GuiCreation() throws StaleProxyException{
 		if(Global.IS_GUI_ACTIVATED){
 			if(human){
+				Debugger.println("IS_GUI_ACTIVATED + ISHUMAN");
 				myGui = new GuiPlayer(this.getLocalName(), this);
 			}else{
+				Debugger.println("IS_GUI_ACTIVATED + ISBOT");
 				myGui = new GuiBot(this.getLocalName(), this);
 			}
 			myGui.setVisible(true);

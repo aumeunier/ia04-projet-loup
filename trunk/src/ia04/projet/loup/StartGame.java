@@ -78,7 +78,7 @@ public class StartGame {
 			
 			// Create players
 			System.out.println("Populating the room with players...");
-			storyteller.setNbRequiredPlayers(9); //TODO: change nb of players
+			storyteller.setNbRequiredPlayers(4); //TODO: change nb of players
 			storyteller.populate(storyteller.nbOfRequiredPlayersToStartAGame); 
 			
 			
