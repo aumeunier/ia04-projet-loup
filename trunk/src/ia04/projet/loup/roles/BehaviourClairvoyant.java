@@ -20,6 +20,7 @@ public class BehaviourClairvoyant extends RoleBehaviour {
 			if (msgContent.getRole() == Roles.CLAIRVOYANT){
 				//Debugger.println(myAgent.getLocalName()+" received call for a clairvoyant action.");
 				mActionClairvoyant replyContent = ((AgtClairvoyant)myAgent).seeARole(msgContent);
+				replyContent.setRole(Roles.CLAIRVOYANT);
 				ACLMessage response = new ACLMessage(ACLMessage.REQUEST);
 				response.setContent(replyContent.toJson());
 				response.addReceiver(msg.getSender());
