@@ -27,6 +27,7 @@ public class AgtHunter extends AgtRole{
 	
 	/** chooses to kill */
 	public mAction killSomebody(mAction msgContent){
+		players.remove(this.getLocalName());
 		if(lover!=null){ //Do not vote for your lover !
 			players.remove(lover);
 		}
@@ -54,6 +55,7 @@ public class AgtHunter extends AgtRole{
 		if(lover!=null){ //Do not vote for your lover !
 			players.add(lover);
 		}
+		players.add(this.getLocalName());
 		msgContent.setTargetKilled(target);
 		return msgContent;
 	}
