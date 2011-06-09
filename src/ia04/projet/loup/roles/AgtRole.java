@@ -4,6 +4,7 @@ import ia04.projet.loup.Debugger;
 import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.messages.mActionRegister;
+import ia04.projet.loup.messages.mGuiAction;
 import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mPlayerDied;
 import ia04.projet.loup.messages.mVote;
@@ -15,6 +16,8 @@ import jade.lang.acl.ACLMessage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+
+import com.hp.hpl.jena.sparql.procedure.library.debug;
 
 /**
  * This agent is the core of a role. Each role agent has to be a subclass of AgtRole.
@@ -145,8 +148,8 @@ public class AgtRole extends Agent {
 			return voteBote(candidates);
 	}
 	
-	protected String voteHuman(ArrayList<String> candidates){//TODO human method
-		return null;
+	protected String voteHuman(ArrayList<String> candidates){
+		return this.askGUI(candidates);
 	}
 
 	protected String voteBote(ArrayList<String> candidates){
@@ -183,8 +186,8 @@ public class AgtRole extends Agent {
 			return electMayorBot(candidates);
 	}
 	
-	protected String electMayorHuman(ArrayList<String> candidates){//TODO human method
-		return null;
+	protected String electMayorHuman(ArrayList<String> candidates){
+		return this.askGUI(candidates);
 	}
 
 	protected String electMayorBot(ArrayList<String> candidates){
@@ -210,8 +213,8 @@ public class AgtRole extends Agent {
 			return nameSuccessorBot(candidates);
 	}
 
-	protected String nameSuccessorHuman(ArrayList<String> candidates){//TODO human method
-		return null;
+	protected String nameSuccessorHuman(ArrayList<String> candidates){
+		return this.askGUI(candidates);
 	}
 
 	protected String nameSuccessorBot(ArrayList<String> candidates){
@@ -245,8 +248,8 @@ public class AgtRole extends Agent {
 			return resolveEqualityBot(candidates);
 	}
 
-	protected String resolveEqualityHuman(ArrayList<String> candidates){//TODO human method
-		return null;
+	protected String resolveEqualityHuman(ArrayList<String> candidates){
+		return this.askGUI(candidates);
 	}
 
 	protected String resolveEqualityBot(ArrayList<String> candidates){
@@ -404,5 +407,25 @@ public class AgtRole extends Agent {
 	protected void setLover(String myLover, Roles hisRole){
 		lover = myLover;
 		confidenceLevelManager.update(lover, ConfidenceLevel.ILOVEHIM);
+	}
+	
+	protected AID getPlayerAID (){
+		return new AID(this.getLocalName().replace(Global.LOCALNAME_SUFFIX_ROLE, ""),AID.ISLOCALNAME);
+	}
+	
+	protected String askGUI(ArrayList<String> candidates){
+		ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
+		message.addReceiver(getPlayerAID());
+		
+		mGuiAction messageContent = new mGuiAction();
+		messageContent.setCandidates(candidates);
+		
+		message.setContent(messageContent.toJson());
+		this.send(message);
+		
+		message = blockingReceive((long)(Global.MAX_REPEATED_TIMES*Global.AVERAGE_SPEED));//TODO vérifier les unités
+		Debugger.println("End blocking reveive ");
+		messageContent = mGuiAction.parseJson(message.getContent());
+		return messageContent.getChoice();
 	}
 }
