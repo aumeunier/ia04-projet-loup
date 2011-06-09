@@ -1,14 +1,14 @@
 package ia04.projet.loup.communication;
 
-import ia04.projet.loup.DFInterface;
 import ia04.projet.loup.Debugger;
 import ia04.projet.loup.Global;
 import ia04.projet.loup.Global.Roles;
 import ia04.projet.loup.messages.mAction;
+import ia04.projet.loup.messages.mActionClairvoyant;
 import jade.core.AID;
 import jade.core.Agent;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
+
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -79,8 +79,8 @@ public class AgtAction extends Agent {
 	}
 
 	/**
-	 * 
-	 * @param anAction
+	 * When the role agent has finished its action
+	 * @param anAction The action that was performed
 	 */
 	public void addAction(mAction anAction, AID performer) {
 		nbActionsInProgress--;
@@ -90,11 +90,6 @@ public class AgtAction extends Agent {
 		else {
 			ACLMessage message = new ACLMessage(ACLMessage.INFORM);
 			Roles performerRole = this.playersMap.get(performer);
-			
-			// If the agent is the clairvoyant we need to send him back the role of his target
-			if(performerRole.equals(Roles.CLAIRVOYANT)){
-				
-			}
 			
 			// Notify the storyteller it's over
 			anAction.setPerformer(performer.getLocalName().replace(Global.LOCALNAME_SUFFIX_ROLE, ""));
@@ -108,7 +103,35 @@ public class AgtAction extends Agent {
 			message.addReceiver(agtStoryteller);
 			this.send(message);
 		}
+	}
+	
+	/**
+	 * If the agent is the clairvoyant we need to send him back the role of his target
+	 * @param anAction
+	 * @param clairvoyant
+	 */
+	public void addClairvoyantAction(mActionClairvoyant anAction, AID clairvoyant){
+		nbActionsInProgress--;
+		if (nbActionsInProgress < 0){
+			Debugger.println("Should Never Happened: More Actions than expected.");			
+		}
+		else {
+			// Send the role of the target to the clairvoyant
+			ACLMessage message = new ACLMessage(ACLMessage.INFORM);		
+			AID playerAid = new AID(anAction.getChosenPlayer(),AID.ISLOCALNAME);
+			anAction.setRole(this.playersMap.get(playerAid));
+			message.setContent(anAction.toJson());
+			message.addReceiver(clairvoyant);
+			this.send(message);
 
+			// Notify the storyteller: the action is over
+			ACLMessage answerToStory = new ACLMessage(ACLMessage.INFORM);
+			mAction answer = new mAction(Roles.CLAIRVOYANT);	
+			answer.setPerformer(clairvoyant.getLocalName().replace(Global.LOCALNAME_SUFFIX_ROLE, ""));
+			answerToStory.setContent(answer.toJson());
+			answerToStory.addReceiver(agtStoryteller);
+			this.send(answerToStory);
+		}
 	}
 
 	/**

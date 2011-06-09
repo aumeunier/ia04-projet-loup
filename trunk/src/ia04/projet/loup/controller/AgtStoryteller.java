@@ -90,6 +90,13 @@ public class AgtStoryteller extends Agent {
 		this.nbWaitingAnswers = 0;
 	}	
 	/**
+	 * Set the number of players needed to start a game
+	 * @param nb The new value
+	 */
+	public void setNbRequiredPlayers(int nb){
+		this.nbOfRequiredPlayersToStartAGame = nb;
+	}
+	/**
 	 * Registers its service into the DF
 	 */
 	public void registerServiceToDf(){
@@ -390,10 +397,12 @@ public class AgtStoryteller extends Agent {
 	 */
 	private void addVictim(AID victimAid){		
 		// If the werewolves' target was the guardian's one, it is saved
-		if(this.phaseClock.getCurrentPhase()!=GamePhases.WEREWOLVES
-				|| !victimAid.equals(this.guardianTarget)){
+		if((victimAid != null)
+				&& !victimAid.equals(Roles.DEAD)
+				&& (this.phaseClock.getCurrentPhase()!=GamePhases.WEREWOLVES
+				|| !victimAid.equals(this.guardianTarget))){
 			this.lastVictimsRoles.add(victimAid);
-			
+
 			// Lovers 
 			if(victimAid.equals(this.firstLoverAid)){
 				this.lastVictimsRoles.add(this.secondLoverAid);
@@ -409,6 +418,33 @@ public class AgtStoryteller extends Agent {
 	 */
 	private void saveVictim(AID victimAid){
 		this.lastVictimsRoles.remove(victimAid);
+	}
+	/**
+	 * Check whether the action functionnality is available
+	 */
+	private boolean isRoleActionAvailable(Roles role){
+		//TODO: not to forget
+		boolean result = false;
+		switch(role){
+		case GUARDIAN:
+		case HUNTER:
+		case CLAIRVOYANT:
+			result = true;
+			break;
+		case WITCH:
+		case VILLAGEIDIOT:
+		case VILLAGESAGE:
+		case SCAPEGOAT:
+		case CUPID:
+		case THIEF:
+		case WHITEWOLF:
+		case RAVEN:
+		case FLUTEPLAYER:
+		default:
+			result = false;
+			break;
+		}
+		return result;
 	}
 	/**
 	 * The night's victims may have an action to perform before 
@@ -427,15 +463,11 @@ public class AgtStoryteller extends Agent {
 				Global.Roles victimRole = this.playersMap.get(victim);
 				// Hunter
 				if(victimRole.equals(Roles.HUNTER)){
-					mAction actionMsg = new mAction(victimRole);
-					this.sendMessageToActionAgent(actionMsg, ACLMessage.REQUEST);
-					this.nbWaitingAnswers++;
+					this.actionStart(Roles.HUNTER);
 				}
 				// Sage
 				else if(victimRole.equals(Roles.VILLAGESAGE)){
-					mAction actionMsg = new mAction(victimRole);
-					this.sendMessageToActionAgent(actionMsg, ACLMessage.REQUEST);
-					this.nbWaitingAnswers++;
+					this.actionStart(Roles.VILLAGESAGE);
 				}
 			}
 		}		
@@ -456,21 +488,15 @@ public class AgtStoryteller extends Agent {
 				Global.Roles victimRole = this.playersMap.get(victim);
 				// Hunter
 				if(victimRole.equals(Roles.HUNTER)){
-					mAction actionMsg = new mAction(victimRole);
-					this.sendMessageToActionAgent(actionMsg, ACLMessage.REQUEST);
-					this.nbWaitingAnswers++;
+					this.actionStart(Roles.HUNTER);
 				}
 				// Idiot
 				else if(victimRole.equals(Roles.VILLAGEIDIOT)){
-					mAction actionMsg = new mAction(victimRole);
-					this.sendMessageToActionAgent(actionMsg, ACLMessage.REQUEST);
-					this.nbWaitingAnswers++;
+					this.actionStart(Roles.VILLAGEIDIOT);
 				}
 				// Scapegoat
 				else if(victimRole.equals(Roles.SCAPEGOAT)){
-					mAction actionMsg = new mAction(victimRole);
-					this.sendMessageToActionAgent(actionMsg, ACLMessage.REQUEST);
-					this.nbWaitingAnswers++;
+					this.actionStart(Roles.VILLAGEIDIOT);
 				}
 			}
 		}		
@@ -502,22 +528,41 @@ public class AgtStoryteller extends Agent {
 	public void playerFinishedBeingKilled(){
 		this.nbWaitingAnswers--;
 	}
-	
+	/**
+	 * Launch an action for the given role if it is possible (check whether it is implemented)
+	 * @param role The role we want to perform an action
+	 */
 	public void actionStart(Roles role){
-		
+		// If we can do the action (is implemented)
+		if(isRoleActionAvailable(role)){
+			mAction actionMsg = new mAction(role);
+			this.sendMessageToActionAgent(actionMsg, ACLMessage.REQUEST);
+			this.nbWaitingAnswers++;			
+		}
 	}
+	/**
+	 * When an action failed we don't want to stop the game.
+	 * Usually called after a failed vote
+	 */
 	public void actionFailed(){
 		this.nbWaitingAnswers--;
 	}
+	/**
+	 * Role performed its action
+	 * @param performer The agent who performed the action
+	 * @param targetKilled The target to kill (optional)
+	 * @param targetSaved The target to save (optional)
+	 * @param role The role of the agent, of the action
+	 */
 	public void actionDone(AID performer, AID targetKilled, AID targetSaved, Roles role){
 		switch(role){
 		case GUARDIAN: {
 			this.guardianTarget = targetSaved;
 			Debugger.println("Protected:"+targetSaved.getLocalName());
 		}	break;
-		case HUNTER:
+		case HUNTER: {
 			this.addVictim(targetKilled);
-			break;
+		}	break;
 		case CLAIRVOYANT:
 			break;
 		case WITCH:
@@ -549,7 +594,7 @@ public class AgtStoryteller extends Agent {
 		}
 		this.nbWaitingAnswers--;
 	}
-	
+
 	//TODO: actions' reactions
 
 	////////////////////////////////////////////////////////////////////////////////
@@ -699,6 +744,7 @@ public class AgtStoryteller extends Agent {
 			}
 			storytelling = "It is now the night. The village goes to sleep.";
 			break;
+			
 		case CUPID:
 			// TODO: action
 			storytelling = "Cupid wakes up. He can choose two people who will deeply fall in love.";
@@ -711,17 +757,16 @@ public class AgtStoryteller extends Agent {
 			// TODO: action
 			storytelling = "The thief can choose between two roles.";
 			break;
+			
 		case GUARDIAN:{
-			mAction actionMsg = new mAction(Global.Roles.GUARDIAN);
-			this.sendMessageToActionAgent(actionMsg, ACLMessage.REQUEST);
-			this.nbWaitingAnswers++;
+			this.actionStart(Roles.GUARDIAN);
 			storytelling = "The guardian can protect one person for tonight.";
 		}	break;
-		case CLAIRVOYANT:
-			// TODO: action
+		case CLAIRVOYANT:{
+			this.actionStart(Roles.CLAIRVOYANT);
 			storytelling = "The clairvoyant can detect someone's role.";
-			break;
-
+		}	break;
+		
 		case WEREWOLVES:{
 			storytelling = "The werewolves wake up and gather to select their victim for tonight.";
 
@@ -731,10 +776,11 @@ public class AgtStoryteller extends Agent {
 			this.nbWaitingAnswers = 1;
 		}	break;
 
-		case WITCH:
-			// TODO: action
+		case WITCH:{
+			this.actionStart(Roles.WITCH);
 			storytelling = "The witch wakes up. She can use her revive pot or her deathly pot.";
-			break;
+		}	break;
+		
 		case WHITEWOLF:
 			// TODO: action
 			storytelling = "The white wolf wakes up and can select his wolf's victim.";
@@ -754,23 +800,23 @@ public class AgtStoryteller extends Agent {
 		case DAY:
 			storytelling = "It is now the day. The village wakes up.";
 			break;
+			
 		case VICTIMSREVELATION:
-			// TODO: ?? action ??
+			// TODO: can be removed ?
 			storytelling = "Tonight's victims are revealed.";
-			break;
-		case VICTIMSEVENT:
+			break;			
+		case VICTIMSEVENT: {
 			nightVictimsEvent();
 			storytelling = "Before their last action the victims can try a desperate move.";
-			break;
-		case VICTIMSRESOLUTION:
+		}	break;
+		case VICTIMSRESOLUTION: {
 			storytelling = "The victims die.";
 			killVictims();
-			break;
+		}	break;
 
 		case MAYORELECTION:{
 			storytelling = "The mayor election can begin. The village needs someone to follow! " +
 			"Choose wisely because the mayor has power.";
-
 			// Start a vote for the mayor
 			mVoteRun voteMsg = new mVoteRun(AgtVote.voteType.ELECT_MAYOR);
 			this.sendMessageToVoteAgent(voteMsg, ACLMessage.REQUEST);
@@ -779,25 +825,23 @@ public class AgtStoryteller extends Agent {
 
 		case HUNGVOTE:{
 			storytelling = "The hanged selection begins. Who will be hung on the place today ?";
-
 			// Start a vote in the village
 			mVoteRun voteMsg = new mVoteRun(AgtVote.voteType.VOTE_PAYSAN);
 			this.sendMessageToVoteAgent(voteMsg, ACLMessage.REQUEST);
 			this.nbWaitingAnswers = 1;
 		}	break;
-
 		case HUNGREVELATION:
-			// TODO: ?? action ??
+			// TODO: can be removed ?
 			storytelling = "The hung role's revealed.";
 			break;
-		case HUNGEVENT:
+		case HUNGEVENT:{ 
 			dayVictimsEvent();
 			storytelling = "Before his hunging the hung can try a desperate move.";
-			break;
-		case HUNGRESOLUTION:
+		}	break;
+		case HUNGRESOLUTION:{
 			killVictims();
 			storytelling = "The hung is dead.";
-			break;
+		}	break;
 		default:
 			break;
 		}
@@ -818,6 +862,7 @@ public class AgtStoryteller extends Agent {
 		}
 		// Waiting for some answers but we have time
 		else if(this.nbRepeatedPhase < Global.MAX_REPEATED_TIMES){
+			this.nbRepeatedPhase++;
 			result = true;
 		}
 		// Answered too late
@@ -830,6 +875,7 @@ public class AgtStoryteller extends Agent {
 				result = true;
 			}	
 			result = true;
+			this.nbRepeatedPhase++;
 		}
 		// Wait for the result (should have asked to finish)
 		else {
@@ -847,7 +893,6 @@ public class AgtStoryteller extends Agent {
 		// If it is needed, give more time
 		if(shouldRepeatPhase(phase)){
 			phaseClock.restartPhaseTimer();	
-			this.nbRepeatedPhase++;
 			return;
 		}
 		// TODO: lots of stuff to do

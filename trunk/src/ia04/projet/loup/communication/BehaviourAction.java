@@ -1,8 +1,9 @@
 package ia04.projet.loup.communication;
 
 import ia04.projet.loup.messages.mAction;
+import ia04.projet.loup.messages.mActionClairvoyant;
 import ia04.projet.loup.messages.mActionRegister;
-import ia04.projet.loup.messages.mActionRequest;
+import ia04.projet.loup.messages.mMessage;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 
@@ -25,24 +26,31 @@ public class BehaviourAction extends CyclicBehaviour {
 		ACLMessage message = agtAction.receive();
 		if(message!=null){
 			switch(message.getPerformative()){
-			case ACLMessage.SUBSCRIBE: 
+			case ACLMessage.SUBSCRIBE: {
 				mActionRegister anActionRegister = mActionRegister.parseJson(message.getContent());
 				if(anActionRegister != null)
 					this.agtAction.addPlayer(message.getSender(), anActionRegister.getRole());
-				break;
-			case ACLMessage.REQUEST: 
+			} break;
+			case ACLMessage.REQUEST: {
 				mAction anActionRequest = mAction.parseJson(message.getContent());
 				if(anActionRequest != null){
 					this.agtAction.setAgtStoryteller(message.getSender());
 					this.agtAction.performAction(anActionRequest);
 				}
-				break;
-			case ACLMessage.INFORM: 
+				else {
+					mActionClairvoyant clairvoyantRequest = (mActionClairvoyant)(mMessage.
+							parseJson(message.getContent(), mActionClairvoyant.class));
+					if(clairvoyantRequest != null){
+						this.agtAction.addClairvoyantAction(clairvoyantRequest, message.getSender());
+					}
+				}
+			}	break;
+			case ACLMessage.INFORM: {
 				mAction anAction = mAction.parseJson(message.getContent());
 				if(anAction != null){
 					this.agtAction.addAction(anAction, message.getSender());
 				}
-				break;
+			}	break;
 			}
 		}
 	}
