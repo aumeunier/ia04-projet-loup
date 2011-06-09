@@ -15,7 +15,7 @@ public class Global {
 	/** Is the gui opened ? Useful to test without opening guis */
 	public static final boolean IS_GUI_ACTIVATED = true;
 	/** The speed of the game (clock) */
-	public static final float AVERAGE_SPEED = 1.0f/40.0f;
+	public static final float AVERAGE_SPEED = 1.0f/4.0f;
 	/** The number of times we can repeat a phase before stopping it  */
 	public static final int MAX_REPEATED_TIMES = 10;
 	/** The name of the Storyteller agent on a platform */
