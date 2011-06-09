@@ -635,8 +635,6 @@ public class AgtStoryteller extends Agent {
 		this.nbWaitingAnswers--;
 	}
 
-	//TODO: actions' reactions
-
 	////////////////////////////////////////////////////////////////////////////////
 	/////////////// 	 VOTES      
 	////////////////////////////////////////////////////////////////////////////////
@@ -917,7 +915,6 @@ public class AgtStoryteller extends Agent {
 			phaseClock.restartPhaseTimer();	
 			return;
 		}
-		// TODO: lots of stuff to do
 		switch(phase){
 		case NONE:
 			break;
@@ -1006,7 +1003,7 @@ public class AgtStoryteller extends Agent {
 	 * or all the players have been charmed
 	 */
 	public boolean checkGameIsOver(){
-		int nWolf = 0, nMax = 0, nCharmed = 0;		
+		int nWolf = 0, nMax = 0;// nCharmed = 0;		
 		for(Roles role: this.playersMap.values()){
 			switch(role){
 			case WEREWOLF: 
