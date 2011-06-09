@@ -14,6 +14,9 @@ import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.ControllerException;
 
+import java.io.File;
+import java.io.IOException;
+
 public class StartGame {
 	private final static boolean MainComput = true;
 	private final static String MainContainerIP = "172.22.20.6";
@@ -23,8 +26,9 @@ public class StartGame {
 	 * @param args
 	 * @throws ProfileException 
 	 * @throws ControllerException 
+	 * @throws IOException 
 	 */
-	public static void main(String[] args) throws ProfileException, ControllerException {
+	public static void main(String[] args) throws ProfileException, ControllerException, IOException {
 		Debugger.setOn(true);
 		if(MainComput){
 			Runtime rt = Runtime.instance();

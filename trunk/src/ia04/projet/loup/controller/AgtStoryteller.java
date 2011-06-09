@@ -551,7 +551,11 @@ public class AgtStoryteller extends Agent {
 			mAction actionMsg = new mAction(role);
 			if(role.equals(Roles.WITCH)){
 				if(this.lastVictimsRoles.size() > 0){
+					Debugger.println("Victim:"+this.lastVictimsRoles.get(0).getLocalName());
 					actionMsg.setTargetSaved(this.lastVictimsRoles.get(0).getLocalName());					
+				}
+				else {
+					return;
 				}
 			}
 			this.sendMessageToActionAgent(actionMsg, ACLMessage.REQUEST);
