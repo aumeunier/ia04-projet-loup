@@ -34,6 +34,8 @@ public class AgtCupid extends AgtRole {
 	public mAction selectLoversHuman(mAction msgContent){//TODO human method
 		String choice = this.askGUI(new ArrayList<String>());
 		msgContent.setTargetSaved(choice);
+		choice = this.askGUI(new ArrayList<String>());
+		msgContent.setTargetKilled(choice);
 		return msgContent;
 	}
 
