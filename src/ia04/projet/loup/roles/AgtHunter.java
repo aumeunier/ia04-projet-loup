@@ -34,10 +34,13 @@ public class AgtHunter extends AgtRole{
 		switch (currentStrategy){
 		case RABBIT:
 			target = players.get(random.nextInt(players.size()));
+			break;
 		case BASIC:
 			target = getLowestConfidence(players);
+			break;
 		case DUMMIE:
 			target = getHighestConfidence(players);
+			break;
 		case SHEEP:
 			if(lastVote==null){//todo something else
 				target = players.get(random.nextInt(players.size()));
@@ -45,6 +48,7 @@ public class AgtHunter extends AgtRole{
 			else {
 				target = getLastMostVoted(players, lastVote);
 			}
+			break;
 		default: target = null;
 		}
 		if(lover!=null){ //Do not vote for your lover !
