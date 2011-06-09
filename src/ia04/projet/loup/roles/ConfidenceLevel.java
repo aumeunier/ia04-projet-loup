@@ -15,8 +15,8 @@ public class ConfidenceLevel{
 		level = -1;
 	}
 	
-	public ConfidenceLevel(int badFacing){
-		level = 45+badFacing;
+	public ConfidenceLevel(int baseLvl, int badFacing){
+		level = baseLvl+badFacing;
 	}
 	
 	public void update(int value){

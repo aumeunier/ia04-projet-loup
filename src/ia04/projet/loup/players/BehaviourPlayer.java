@@ -6,9 +6,12 @@ import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mPlayerDied;
 import ia04.projet.loup.messages.mPlayerKb;
 import ia04.projet.loup.messages.mPlayerKb.mType;
+import ia04.projet.loup.messages.mPlayerRole;
 import ia04.projet.loup.messages.mStartGame;
 import ia04.projet.loup.messages.mStorytellerPlayer;
 import ia04.projet.loup.messages.mToGui;
+import ia04.projet.loup.roles.AgtRole;
+import ia04.projet.loup.roles.ConfidenceLevel;
 import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -75,15 +78,26 @@ public class BehaviourPlayer extends CyclicBehaviour {
 
 	private void handleMsgKb(mPlayerKb msgPlayList) {
 		HashMap<String,String> list = msgPlayList.getConfidences();
-		HashMap<String,Integer> confLvl =((AgtPlayer)myAgent).getConfidences();
+		HashMap<String,ConfidenceLevel> confLvl =((AgtPlayer)myAgent).getConfidences();
 		for(Map.Entry<String, String> e : list.entrySet()){
-			if(e.getValue().equals("Newcomer")){confLvl.put(e.getKey(), 45);}
-			else if(e.getValue().equals("Betrayer")){confLvl.put(e.getKey(), 5);}
-			else if(e.getValue().equals("Trustworthy")){confLvl.put(e.getKey(), 80);}
-			else if(e.getValue().equals("Friend")){confLvl.put(e.getKey(), 65);}
-			else if(e.getValue().equals("Dislike")){confLvl.put(e.getKey(), 30);}
+			if(e.getValue().equals("Newcomer")){confLvl.put(e.getKey(),
+						new ConfidenceLevel(45,((AgtPlayer)myAgent).random.nextInt(10)));}
+			else if(e.getValue().equals("Betrayer")){confLvl.put(e.getKey(),
+					new ConfidenceLevel(5,((AgtPlayer)myAgent).random.nextInt(10)));}
+			else if(e.getValue().equals("Trustworthy")){confLvl.put(e.getKey(),
+					new ConfidenceLevel(80,((AgtPlayer)myAgent).random.nextInt(10)));}
+			else if(e.getValue().equals("Friend")){confLvl.put(e.getKey(),
+					new ConfidenceLevel(60,((AgtPlayer)myAgent).random.nextInt(10)));}
+			else if(e.getValue().equals("Dislike")){confLvl.put(e.getKey(),
+					new ConfidenceLevel(30,((AgtPlayer)myAgent).random.nextInt(10)));}
 		}
-		
+		ACLMessage init = new ACLMessage(ACLMessage.INFORM);
+		init.addReceiver(((AgtPlayer) myAgent).getRoleID());
+		mPlayerRole content = new mPlayerRole();
+		content.setConfidenceLevel(confLvl);
+		content.setType(mPlayerRole.mType.INIT_CONF);
+		init.setContent(content.toJson());
+		myAgent.send(init);
 	}
 
 	/**

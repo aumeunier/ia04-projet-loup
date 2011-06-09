@@ -6,7 +6,7 @@ public class mPlayerRole extends mMessage {
 	/** Message between player and his role containing the confidence levels */
 	public static enum mType {
 		/** This message is used at the begining or the end of the game */
-		START,END
+		INIT_CONF,SAVE_CONF
 		}
 	private java.util.HashMap<String, ConfidenceLevel> confidenceLevel;
 	private mType type;
