@@ -218,6 +218,11 @@ public class AgtRole extends Agent {
 	}
 
 	protected String nameSuccessorBot(ArrayList<String> candidates){
+		if(candidates.contains(this.getLocalName()))
+			candidates.remove(this.getLocalName());
+		else
+			if(lover != null && candidates.contains(lover))
+				candidates.remove(lover);
 		switch (currentStrategy){
 		case RABBIT:
 			//Debugger.println("AgtRole: nameSuccessor-RABBIT");
@@ -424,7 +429,7 @@ public class AgtRole extends Agent {
 		message.setContent(messageContent.toJson());
 		this.send(message);
 		
-		message = blockingReceive((long)(Global.MAX_REPEATED_TIMES*Global.AVERAGE_SPEED));//TODO vérifier les unités
+		message = blockingReceive((long)(Global.MAX_REPEATED_TIMES*Global.AVERAGE_SPEED));//TODO vï¿½rifier les unitï¿½s
 		Debugger.println("End blocking reveive ");
 		messageContent = mGuiAction.parseJson(message.getContent());
 		return messageContent.getChoice();

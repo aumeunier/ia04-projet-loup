@@ -6,6 +6,8 @@ import ia04.projet.loup.messages.mActionClairvoyant;
 import jade.core.AID;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class AgtClairvoyant extends AgtRole {
@@ -23,6 +25,7 @@ public class AgtClairvoyant extends AgtRole {
 	/** initialize the role of the agent */
 	protected void initializeRole(){
 		role=Roles.CLAIRVOYANT;
+		playersRole.put(this.getLocalName(), role);
 	}	
 	public mActionClairvoyant seeARole (mAction msgContent){
 		if(human)
@@ -40,6 +43,12 @@ public class AgtClairvoyant extends AgtRole {
 
 	public mActionClairvoyant seeARoleBot (mAction msgContent){
 		mActionClairvoyant msgReply = new mActionClairvoyant();
+		Collection<String> alreadySeen = Collections.unmodifiableCollection(playersRole.keySet());
+		players.removeAll(alreadySeen);
+		if (players.isEmpty()){
+			players.addAll(alreadySeen);
+			return msgReply;
+		}
 		switch (currentStrategy){
 		case RABBIT:
 			msgReply.setChosenPlayer(players.get(random.nextInt(players.size())));
