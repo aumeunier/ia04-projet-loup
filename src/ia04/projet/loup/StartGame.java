@@ -1,15 +1,11 @@
 package ia04.projet.loup;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
 import ia04.projet.loup.communication.AgtAction;
 import ia04.projet.loup.communication.AgtVote;
 import ia04.projet.loup.controller.AgtStoryteller;
 import ia04.projet.loup.players.AgtPlayer;
 import ia04.projet.loup.rest.AgtRest;
-import jade.core.Agent;
+import jade.core.AID;
 import jade.core.Profile;
 import jade.core.ProfileException;
 import jade.core.ProfileImpl;
@@ -18,13 +14,12 @@ import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.ControllerException;
 
-import java.io.File;
 import java.io.IOException;
 
 public class StartGame {
-	private final static boolean MainComput = true;
-	private final static String MainContainerIP = "172.22.20.6";
-	private final static int MainContainerPort = 1099;
+	private static boolean MainComput = true;
+	private static String MainContainerIP = "172.22.20.6";
+	private static int MainContainerPort = 1099;
 
 	/**
 	 * @param args
@@ -34,6 +29,11 @@ public class StartGame {
 	 */
 	public static void main(String[] args) throws ProfileException, ControllerException, IOException {
 		Debugger.setOn(true);
+		if(args.length >= 3) {
+			Global.AVERAGE_SPEED = Float.valueOf(args[args.length-1]);
+			MainComput = Boolean.getBoolean(args[args.length-2]);	
+			MainContainerIP = args[args.length-3];		
+		}
 		if(MainComput){
 			Runtime rt = Runtime.instance();
 			Profile pf = new ProfileImpl("./resources/properties.txt");
@@ -79,21 +79,46 @@ public class StartGame {
 			// Create players
 			System.out.println("Populating the room with players...");
 			storyteller.setNbRequiredPlayers(4); //TODO: change nb of players
+			
+			//*
 			storyteller.populate(storyteller.nbOfRequiredPlayersToStartAGame); 
+			/*/			
+			// Create a new Agent for the player
+			AgtPlayer player1 = new AgtPlayer(Global.IS_HUMAN_PLAYER);
+			ac = mc.acceptNewAgent("player1", player1);
+			ac.start();
+			player1.GuiCreation();
+			// Register the Agent to this AgtStoryteller
+			AID controllerAID = new AID(Global.LOCALNAME_STORYTELLER,AID.ISLOCALNAME);
+			player1.Register(controllerAID);
+			
+			// Create a new Agent for the player
+			AgtPlayer player2 = new AgtPlayer(Global.IS_HUMAN_PLAYER);
+			ac = mc.acceptNewAgent("player2", player2);
+			ac.start();
+			player2.GuiCreation();
+			// Register the Agent to this AgtStoryteller
+			//AID controllerAID = new AID(Global.LOCALNAME_STORYTELLER,AID.ISLOCALNAME);
+			player2.Register(controllerAID);
+			//*/
 			
 			
 		}
 		else {
 			Runtime rt = Runtime.instance();
-			Profile p = new ProfileImpl(MainContainerIP,MainContainerPort,null);
+			Profile p = new ProfileImpl(MainContainerIP,MainContainerPort,null,false);
 			
 			// Create the AgentContainer
 			AgentContainer mc = rt.createAgentContainer(p);	
 			
-			// Create a client
-			AgtPlayer agp = new AgtPlayer(true);
-			Agent a = (Agent)mc.getAgent("Storyteller");
-			agp.Register(a.getAID());
+			// Create a new Agent for the player
+			AgtPlayer player = new AgtPlayer(Global.IS_HUMAN_PLAYER);
+			AgentController ac = mc.acceptNewAgent("aurelien", player);
+			ac.start();
+			player.GuiCreation();
+			// Register the Agent to this AgtStoryteller
+			AID controllerAID = new AID(Global.LOCALNAME_STORYTELLER,AID.ISLOCALNAME);
+			player.Register(controllerAID);
 		}
 	}
 }

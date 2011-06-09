@@ -17,7 +17,7 @@ public class Global {
 	/** Is the player human ? */
 	public static final boolean IS_HUMAN_PLAYER = true;
 	/** The speed of the game (clock) */
-	public static final float AVERAGE_SPEED = 1.0f/1.0f;
+	public static float AVERAGE_SPEED = 1.0f/1.0f;
 	/** The number of times we can repeat a phase before stopping it  */
 	public static final int MAX_REPEATED_TIMES = 10;
 	/** The name of the Storyteller agent on a platform */
