@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
 
 /**
  * Class which handles the GUI for a bot player
@@ -87,6 +88,7 @@ public class GuiBot extends JFrame implements ActionListener{
 		
 		DefaultListModel model = new DefaultListModel();
 		jListPlayerList = new JList(model);
+		jListPlayerList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		jButtonHelp = new JButton("Help");
 		jButtonHelp.addActionListener(new ActionListener() {
@@ -221,5 +223,9 @@ public class GuiBot extends JFrame implements ActionListener{
 	public boolean removePlayerFromTheList(String str) {
 		ListModel model = jListPlayerList.getModel();
 		return ((DefaultListModel) model).removeElement(str);
+	}
+	
+	public void clearTheList(){
+		jListPlayerList.removeAll();
 	}
 }
