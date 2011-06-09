@@ -25,8 +25,11 @@ public class AgtClairvoyant extends AgtRole {
 	/** initialize the role of the agent */
 	protected void initializeRole(){
 		role=Roles.CLAIRVOYANT;
-		playersRole.put(this.getLocalName(), role);
 	}	
+	public void firstActionAfterInit(){
+
+		playersRole.put(this.getLocalName(), role);
+	}
 	public mActionClairvoyant seeARole (mAction msgContent){
 		if(human)
 			return seeARoleHuman(msgContent);

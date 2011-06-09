@@ -240,6 +240,7 @@ public class AgtPlayer extends GuiAgent {
 		// Create the role on the platform and register it
 		AgentContainer mc = this.getContainerController();
 		mc.acceptNewAgent(this.getLocalName() + Global.LOCALNAME_SUFFIX_ROLE, agtR).start();
+		agtR.firstActionAfterInit();
 		agtR.registerToCommunicationAgents();
 		setRoleID(agtR.getAID());
 	}
