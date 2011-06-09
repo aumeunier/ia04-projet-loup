@@ -1,9 +1,9 @@
 package ia04.projet.loup.players;
 
-import ia04.projet.loup.Global;
 import ia04.projet.loup.controller.AgtKbStoryteller;
 import ia04.projet.loup.messages.mMessage;
 import ia04.projet.loup.messages.mPlayerKb;
+import ia04.projet.loup.messages.mPlayerKb.mType;
 import ia04.projet.loup.messages.mStorytellerKb;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
@@ -12,11 +12,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 public class BehaviourKBPlayer extends Behaviour {
 	private static final String FAILURE_ANSWER = "FAILURE";
@@ -82,69 +86,38 @@ public class BehaviourKBPlayer extends Behaviour {
 			switch(message.getType()){
 				case GET_CONFIDENCE:{
 					ArrayList<String> list = message.getPlayers();
+					HashMap<String,String> resultab= message.getConfidences();
+					String status;
 					((AgtKBPlayer) myAgent).verifList(list,allPrefixes);
 					for(int i=0; i<list.size();i++){	
-						queryString += "\nSELECT ?x WHERE { "+list.get(i) +" a kbfplyer:Player; . }";
+						queryString += "\nSELECT ?x WHERE {\n "+list.get(i) +" a kbfplyer:Player;\n kbfplyer:RelationStatus ?x. }";
 						result = ((AgtKbStoryteller)myAgent).runExecQuery(queryString);
-						
+						// Get only the results, without the prefixes
+						ObjectMapper m = new ObjectMapper();
+						JsonNode rootNode;
+						rootNode = m.readValue(result, JsonNode.class);
+						JsonNode node = rootNode.path("results").path("bindings");
+						Iterator<JsonNode> itr = node.getElements();
+						while (itr.hasNext()) {
+							JsonNode element = itr.next();
+							JsonNode nameNode = element.get("x");
+							status = nameNode.path("value").getValueAsText();
+							resultab.put(list.get(i), status);
+						}	
 					}
-				}
-				break;
-			
-			case PUT_CONFIDENCE: {
-				// Get the number of players we want
-				int nbPlayers = response.getNbPlayers();
-				
-				// Create the query
-				queryString += "\nSELECT ?c ?x ?nV ?nW WHERE { " +
-						"	?c a werewolves:GameComposition ;" +
-						"		owl:cardinality "+nbPlayers+";" +
-						"		foaf:knows ?x;" +
-						"		rdfs:subClassOf [ a werewolves:NbVillagers;" +
-						"			owl:cardinality ?nV ];" +
-						"		rdfs:subClassOf [ a werewolves:NbWerewolves;" +
-						"			owl:cardinality ?nW ]." +
-						"}";
-				result = ((AgtKbStoryteller)myAgent).runExecQuery(queryString);
-
-				// Get the results in a form we are interested in
-				ObjectMapper m = new ObjectMapper();
-				JsonNode rootNode;
-				rootNode = m.readValue(result, JsonNode.class);
-				JsonNode node = rootNode.path("results").path("bindings");
-				Iterator<JsonNode> itr = node.getElements();
-				HashMap<String,ArrayList<Global.Roles>> compositions = new HashMap<String,ArrayList<Global.Roles>>();
-				// Get the composition names
-				while (itr.hasNext()) {
-					JsonNode element = itr.next();
-					String compositionName = element.get("c").get("value").getTextValue().replace("http://www.utc.fr/werewolves#", "");
-					compositions.put(compositionName, new ArrayList<Global.Roles>());
-				}
-				itr = node.getElements();
-				// Add the roles to their composition
-				while (itr.hasNext()) {
-					JsonNode element = itr.next();
-					String compositionName = element.get("c").get("value").getTextValue().replace("http://www.utc.fr/werewolves#", "");
-					String compositionRole = element.get("x").get("value").getTextValue().
-						replace("http://www.utc.fr/werewolves#", "").toUpperCase();	
-					int nbRoles = 1;
-					Global.Roles roleToAdd = Global.Roles.valueOf(compositionRole);
-					if(roleToAdd.equals(Global.Roles.VILLAGER)){
-						nbRoles = element.get("nV").get("value").getValueAsInt();
-					}
-					else if(roleToAdd.equals(Global.Roles.WEREWOLF)){
-						nbRoles = element.get("nW").get("value").getValueAsInt();
-					}
-					for(int i = 0; i < nbRoles ; ++i){
-						compositions.get(compositionName).add(roleToAdd);
-					}
+					response.setConfidences(resultab);
+					response.setType(mType.GET_CONFIDENCE);
+					return response.toJson();
 				}
 				
-				// Set the possible compositions in the message that will be sent back to the Storyteller agent
-				response.setCompositions(compositions);
-			}	break;
-			}		
-			
+				case PUT_CONFIDENCE: {
+					HashMap<String,String> confidences = message.getConfidences();
+					// Create the new file
+					((AgtKBPlayer)myAgent).createPlayerKb(confidences);
+					return "KB_UPDATED";
+				}
+				default: return result;
+			}
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
