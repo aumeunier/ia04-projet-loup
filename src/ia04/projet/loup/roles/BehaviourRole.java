@@ -31,7 +31,14 @@ public class BehaviourRole extends RoleBehaviour {
 			msg.addReceiver(new AID(myAgent.getLocalName().replace("Role", ""), AID.ISLOCALNAME));
 			myAgent.send(msg);
 			mStartGame msgContent = (mStartGame)message;
-			((AgtRole)myAgent).players=msgContent.getLocalNames();
+			((AgtRole)myAgent).players = msgContent.getLocalNames();
+			
+			for(String name : msgContent.getLocalNames())
+			{
+				
+				((AgtRole)myAgent).getConfidenceLevelManager().put(name, new ConfidenceLevel(((AgtRole)myAgent).random.nextInt(10)));
+			}
+			
 		} else {
 			message = mMessage.parseJson(msgString, mPlayerRole.class);
 			if(message != null){
