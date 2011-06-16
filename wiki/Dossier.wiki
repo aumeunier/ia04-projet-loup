@@ -62,7 +62,7 @@ Cette page décrit les différentes section à inclure dans le dossier de rendu 
   * Utilité/Description
   * Implémentation
 
-= Interfaces Utilisateurs  =
+= Interfaces Utilisateurs  (done/a intégrer)=
 Description avec captures d'écran
   * Interface d'un Joueur Humain
   * Interface d'un Joueur Bot
