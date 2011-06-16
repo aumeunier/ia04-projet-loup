@@ -12,6 +12,8 @@ import java.util.Random;
  *
  */
 public class Global {
+	/** Default number of players */
+	public static int DEFAULT_NB_PLAYERS = 9;
 	/** Is the gui opened ? Useful to test without opening guis */
 	public static final boolean IS_GUI_ACTIVATED = true;
 	/** Is the player human ? */

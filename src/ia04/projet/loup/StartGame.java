@@ -29,10 +29,11 @@ public class StartGame {
 	 */
 	public static void main(String[] args) throws ProfileException, ControllerException, IOException {
 		Debugger.setOn(true);
-		if(args.length >= 3) {
-			Global.AVERAGE_SPEED = Float.valueOf(args[args.length-1]);
-			MainComput = Boolean.getBoolean(args[args.length-2]);	
-			MainContainerIP = args[args.length-3];		
+		if(args.length >= 7) {
+			Global.DEFAULT_NB_PLAYERS = Integer.valueOf(args[args.length-1]);
+			Global.AVERAGE_SPEED = Float.valueOf(args[args.length-2]);
+			MainComput = Boolean.getBoolean(args[args.length-3]);	
+			MainContainerIP = args[args.length-4];		
 		}
 		if(MainComput){
 			Runtime rt = Runtime.instance();
@@ -78,7 +79,7 @@ public class StartGame {
 			
 			// Create players
 			System.out.println("Populating the room with players...");
-			storyteller.setNbRequiredPlayers(4); //TODO: change nb of players
+			storyteller.setNbRequiredPlayers(Global.DEFAULT_NB_PLAYERS); //TODO: change nb of players
 			
 			//*
 			storyteller.populate(storyteller.nbOfRequiredPlayersToStartAGame); 
