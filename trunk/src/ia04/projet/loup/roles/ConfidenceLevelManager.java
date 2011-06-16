@@ -56,6 +56,7 @@ public class ConfidenceLevelManager {
 
 	public void setConfidenceLevelMap(HashMap<String, ConfidenceLevel> l) {
 		this.confidenceLevelMap = l;
+		informListeners();
 	}
 
 	private void informListeners(){

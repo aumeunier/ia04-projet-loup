@@ -138,8 +138,9 @@ public class BehaviourPlayer extends CyclicBehaviour {
 
 		switch (msgStoryTeller.getType()) {
 			case START_GAME:
-				AgtKBPlayer newKb = new AgtKBPlayer(myAgent.getLocalName());
-				((AgtPlayer) myAgent).getContainerController().acceptNewAgent(newKb.getAgtName()+"KB", newKb).start();
+				//FIXME:
+				//AgtKBPlayer newKb = new AgtKBPlayer(myAgent.getLocalName());
+				//((AgtPlayer) myAgent).getContainerController().acceptNewAgent(newKb.getAgtName()+"KB", newKb).start();
 				((AgtPlayer) myAgent).JoinGame(msg, msgStoryTeller);
 				break;
 			case ATTRIBUTE_ROLE:

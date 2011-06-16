@@ -206,11 +206,9 @@ public class AgtStoryteller extends Agent {
 
 		// Pick a configuration randomly
 		ArrayList<Global.Roles> rolesToAttribute = null;
-		do {
-			int pickedConfiguration = generator.nextInt(possibleConfigurations.size());
-			rolesToAttribute =  possibleConfigurations.get(
-					possibleConfigurations.keySet().toArray()[pickedConfiguration]);
-		} while (!rolesToAttribute.contains(Roles.WEREWOLF));
+		int pickedConfiguration = generator.nextInt(possibleConfigurations.size());
+		rolesToAttribute =  possibleConfigurations.get(
+				possibleConfigurations.keySet().toArray()[pickedConfiguration]);
 
 		// Start the Roles assignation
 		System.out.println("Starting Roles assignation");
@@ -237,6 +235,7 @@ public class AgtStoryteller extends Agent {
 			// Remove role from list
 			rolesToAttribute.remove(roleIndex);
 		}			
+		//TODO: sometimes no werewolf
 		System.out.println("Remaining roles:"+rolesToAttribute.toString());
 	}
 	/**
@@ -1218,7 +1217,7 @@ public class AgtStoryteller extends Agent {
 		msg.addReceiver(aid);
 		msg.setContent(message.toJson());
 		this.send(msg);
-		Debugger.println(message.toJson());
+		//Debugger.println(message.toJson());
 	}
 	/**
 	 * Initialize a message for several agent players.
@@ -1232,7 +1231,7 @@ public class AgtStoryteller extends Agent {
 		}
 		msg.setContent(message.toJson());
 		this.send(msg);
-		Debugger.println(message.toJson());
+		//Debugger.println(message.toJson());
 	}
 	/**
 	 * Initialize a message for the kb agent linked to this AgtStoryteller 

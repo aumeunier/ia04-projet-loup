@@ -227,5 +227,7 @@ public class GuiBot extends JFrame implements ActionListener{
 	
 	public void clearTheList(){
 		jListPlayerList.removeAll();
+		ListModel model = jListPlayerList.getModel();
+		((DefaultListModel) model).clear();
 	}
 }
