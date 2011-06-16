@@ -32,7 +32,7 @@ Cette page décrit les différentes section à inclure dans le dossier de rendu 
   * Mise en place plateforme de collaboration sur Google Code
   * Repartition des taches
 
-= Planification OK =
+= <del>Planification </del> =
   * Liste des versions (ok mathieu)
   * Implementation des versions (ok mathieu)
 
