@@ -13,7 +13,7 @@ Cette page décrit les différentes section à inclure dans le dossier de rendu 
 ---- 
 = Table des matières =
 = Table des figures =
-= Introduction = 
+= Introduction = Done/inclue dossier
   * Projet IA04 - contraintes
   * Objectifs du projet / Pourquoi ce projet
   
@@ -28,7 +28,7 @@ Cette page décrit les différentes section à inclure dans le dossier de rendu 
   * Tableau des fonctionnalités
   * Diagramme de déploiement
 
-= Organisation de Gestion de projet =
+= Organisation de Gestion de projet = done/inclue dossier
   * Mise en place plateforme de collaboration sur Google Code
   * Repartition des taches
 
@@ -42,7 +42,7 @@ Cette page décrit les différentes section à inclure dans le dossier de rendu 
   * Description des bases de connaissances
 
 = Implémentation = 
-== Phases de Jeu ==
+== Phases de Jeu == Done/inclue dossier
   * Conteur
   * Horloge
   * Ordre des phases de jeu
@@ -52,7 +52,7 @@ Cette page décrit les différentes section à inclure dans le dossier de rendu 
   * AgentY (Role, Behaviour, Stratégies) (ok mathieu)
   * ..
 
-== Messages ==
+== Messages == /Done inclue dossier
 
 == Intelligence Articielle OK ==
   * Description des IA (ok mathieu)
