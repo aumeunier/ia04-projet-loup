@@ -33,8 +33,8 @@ Cette page décrit les différentes section à inclure dans le dossier de rendu 
   * Repartition des taches
 
 = Planification =
-  * Liste des versions
-  * Implementation des versions
+  * Liste des versions (ok mathieu)
+  * Implementation des versions (ok mathieu)
 
 = Utilisation des Bases de connaissances =
   * Cas d'utilisation
@@ -48,15 +48,15 @@ Cette page décrit les différentes section à inclure dans le dossier de rendu 
   * Ordre des phases de jeu
 
 == Description des Agents ==
-  * AgentX (Role, Behaviour, Stratégies)
-  * AgentY (Role, Behaviour, Stratégies)
+  * AgentX (Role, Behaviour, Stratégies) (ok mathieu)
+  * AgentY (Role, Behaviour, Stratégies) (ok mathieu)
   * ..
 
 == Messages ==
 
 == Intelligence Articielle ==
-  * Description des IA
-  * Algorithmes utilisés
+  * Description des IA (ok mathieu)
+  * Algorithmes utilisés (ok mathieu)
 
 == Service Restlet ==
   * Utilité/Description
