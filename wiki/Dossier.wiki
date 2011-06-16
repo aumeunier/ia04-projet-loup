@@ -32,7 +32,7 @@ Cette page décrit les différentes section à inclure dans le dossier de rendu 
   * Mise en place plateforme de collaboration sur Google Code
   * Repartition des taches
 
-= Planification =
+= Planification OK =
   * Liste des versions (ok mathieu)
   * Implementation des versions (ok mathieu)
 
@@ -47,14 +47,14 @@ Cette page décrit les différentes section à inclure dans le dossier de rendu 
   * Horloge
   * Ordre des phases de jeu
 
-== Description des Agents ==
+== Description des Agents OK ==
   * AgentX (Role, Behaviour, Stratégies) (ok mathieu)
   * AgentY (Role, Behaviour, Stratégies) (ok mathieu)
   * ..
 
 == Messages ==
 
-== Intelligence Articielle ==
+== Intelligence Articielle OK ==
   * Description des IA (ok mathieu)
   * Algorithmes utilisés (ok mathieu)
 
