@@ -22,7 +22,7 @@ Cette page décrit les différentes section à inclure dans le dossier de rendu 
   * Les phases de jeu
   * Les personnages
 
-= Analyse Jade=
+= Analyse Jade (done/a intégrer au dossier)=
   * Use Cases
   * Diagramme d'Agents
   * Tableau des fonctionnalités
@@ -58,7 +58,7 @@ Cette page décrit les différentes section à inclure dans le dossier de rendu 
   * Description des IA (ok mathieu)
   * Algorithmes utilisés (ok mathieu)
 
-== Service Restlet ==
+== Service Rest (done/à intégrer au dossier) ==
   * Utilité/Description
   * Implémentation
 
