@@ -1,0 +1,1 @@
+Ce projet consiste en un SMA qui permet de jouer au jeu Les Loups-garous de Thiercelieux (cf: http://fr.wikipedia.org/wiki/Les_Loups-garous_de_Thiercelieux )

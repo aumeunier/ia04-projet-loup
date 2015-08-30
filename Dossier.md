@@ -1,0 +1,83 @@
+# Introduction #
+Cette page décrit les différentes section à inclure dans le dossier de rendu de projet.
+
+# Indications #
+  * Problèmes qui se posent
+  * Solutions possibles
+  * Priorités des tâches
+  * Expliquer résolution des tâches
+  * Montrer solutions envisagées si pas assez de temps pour la réalisation
+  * Mettre en valeur la gestion/organisation du projet (svn)
+
+---
+
+# Table des matières #
+# Table des figures #
+= Introduction = Done/inclue dossier
+  * Projet IA04 - contraintes
+  * Objectifs du projet / Pourquoi ce projet
+
+# Règles des Loups-Garous de Thiercelieux #
+  * Règles générales
+  * Les phases de jeu
+  * Les personnages
+
+# Analyse Jade (done/a intégrer au dossier) #
+  * Use Cases
+  * Diagramme d'Agents
+  * Tableau des fonctionnalités
+  * Diagramme de déploiement
+
+= Organisation de Gestion de projet = done/inclue dossier
+  * Mise en place plateforme de collaboration sur Google Code
+  * Repartition des taches
+
+# Planification  OK #
+  * Liste des versions (ok mathieu)
+  * Implementation des versions (ok mathieu)
+
+# Utilisation des Bases de connaissances #
+  * Cas d'utilisation
+  * Implementation
+  * Description des bases de connaissances
+
+# Implémentation #
+== Phases de Jeu == Done/inclue dossier
+  * Conteur
+  * Horloge
+  * Ordre des phases de jeu
+
+## Description des Agents OK ##
+  * AgentX (Role, Behaviour, Stratégies) (ok mathieu)
+  * AgentY (Role, Behaviour, Stratégies) (ok mathieu)
+  * ..
+
+== Messages == /Done inclue dossier
+
+## Intelligence Articielle OK ##
+  * Description des IA (ok mathieu)
+  * Algorithmes utilisés (ok mathieu)
+
+## Service Rest (done/à intégrer au dossier) ##
+  * Utilité/Description
+  * Implémentation
+
+# Interfaces Utilisateurs  (done/a intégrer) #
+Description avec captures d'écran
+  * Interface d'un Joueur Humain
+  * Interface d'un Joueur Bot
+
+# Difficultés rencontrées #
+  * Réception de messages avec plusieurs behaviour
+> > Solution = Qlist et Dispatcher
+
+  * Format des messages
+> > Solution = Seralisation JSON
+
+  * Messages et methodes: Roles ou Player ? Vote ou Storyteller ?
+
+  * Ontologies
+
+# Améliorations #
+# Conclusion #
+# Glossaire #

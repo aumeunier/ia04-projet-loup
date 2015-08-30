@@ -1,0 +1,98 @@
+Dans cette section seront présentées toutes les phases de jeu, décomposées en éléments simples.
+
+# Liste de toutes les étapes d'un tour #
+Nuit
+  1. Cupidon (premiere nuit)
+  1. Voleur (premiere nuit)
+  1. Salvateur
+  1. Voyante
+  1. Loup
+  1. Sorciere
+  1. LoupGarou Blanc
+  1. Corbeau
+  1. Joueur de Flute
+
+Jour
+  1. Annonce du mort
+  1. Evenement en reponse a une mort pendant la nuit
+    * Ancien
+    * Chasseur
+    * Amoureux
+  1. Election du maire
+  1. Avis
+  1. Vote
+  1. Revelation
+  1. Evenement en reponse a la revelation du role
+    * Bouc-Emissaire
+    * Chasseur
+    * Amoureux
+    * L'idiot
+    * Nomination du maire
+  1. Pendaison
+
+# Phase de jour #
+
+## Selection du maire (premier tour) ##
+La sélection du maire au premier tour se fait en plusieurs étapes: les candidatures, le vote, le résultat.
+
+### Candidatures pour être maire ###
+Les candidatures se font en plusieurs fois: il est possible de se présenter dès le premier tour ou d'attendre quelques tours. Cette phase se fait donc par itération, dès lors que personne ne se présente pendant une itération, la phase est considérée terminée. En cas de non candidature (personne ne s'est présenté), une deuxième itération est effectuée et si personne ne s'est encore présenté alors le maire sera sélectionné au hasard.
+
+Pour chaque itération, le processus est le suivant:
+> Candidature de X personnes
+
+> Chaque joueur émet un avis positif ou négatif (dans une version ultérieure, l'avis pourrait se faire sur une échelle plutôt que sur un simple positif/négatif) sur la personne. Les niveaux de confiance de chaque joueur sont modifiés suivant les avis de tous les joueurs.
+    * Les joueurs se présentant auront probablement des avis négatifs sur les autres personnes se présentant.
+    * Les joueurs se présentant auront une meilleure confiance envers ceux qui émettent un avis favorable à leur égard et une confiance plus faible envers ceux qui émettent un avis défavorable à leur encontre.
+    * Les autres joueurs seront plus affectés par les joueurs en qui ils ont déjà confiance. Ainsi, une personne A en qui ils ont confiance et émettant un avis négatif sur une personne B qu'il considère déjà comme peu digne de confiance aura une influence plus importante sur son niveau de confiance de B que si une personne C, peu digne de confiance selon lui, émettait un avis négatif sur la personne A.
+
+> Les niveaux de confiance sont recalculés.
+
+Remarques:
+  * Dans la première version, les niveau de confiance au début d'une partie seront tous identiques, les avis seront donc assez aléatoire et les niveaux de confiance résultant de cette phase seront essentiellement une pondération des avis positifs par les avis négatifs. En revanche, dans une deuxième version, les niveaux de confiance des parties antérieures et les connaissances qu'un joueur possède sur les autres joueurs auront une influence sur les niveaux de confiance initiaux.
+  * Dans un premier temps l'évaluation des niveaux de confiance pendant la phase des candidatures se fera uniquement sur les nouvelles candidatures. Il serait en revanche possible de recalculer à chaque itération tous les niveaux de confiance envers toutes les personnes s'étant présentées.
+  * Il serait possible d'ajouter une importance à la phase à laquelle le joueur se présente. Ainsi, un joueur se présentant maire dès le premier tour est souvent suspect alors qu'un joueur se présentant dans les tours suivants pourra être considéré comme une personne souhaitant s'opposer à un joueur suspect.
+
+### Vote ###
+Une fois les candidatures closes il faut procéder au vote. Le vote se fait en deux étapes:
+
+> Chaque joueur vote pour une personne. Ce choix se fera de manière simple pour les bots: parmi les joueurs se présentant, le bot votera pour la personne en qui il a le plus confiance, ou de manière aléatoire entre les joueurs ex-aequo. Pour les joueurs humains, le choix leur appartient.
+
+> Le vote étant public les niveaux de confiance sont modifiés suivant les votes des joueurs:
+    * Les joueurs s'étant présentés diminueront leur confiance envers les gens n'ayant pas voté pour eux et augmenteront leur confiance en les joueurs qui ont voté pour eux.
+    * Les autres joueurs (A) augmenteront leur niveau de confiance envers les joueurs (B) ayant voté comme eux mais diminueront ceux des autres joueurs. L'importance de la hausse / baisse dépend du niveau de confiance envers la personne C pour laquelle B a voté.
+
+> Le "dépouillage" des votes a lieu: si une personne a la majorité (relative) alors il est élu maire. Si plusieurs joueurs sont ex-aequo, le maire est choisi aléatoirement parmi ceux-ci.
+
+## Sélection de l'accusé (personne à pendre) ##
+### Avis ###
+De même que pour la sélection du maire, la sélection de l'accusé demande un tour d'avis général: chaque personne donne son avis sur chaque autre personne de la partie (initialement +/-, dans le futur sur une échelle).
+  1. Avis général
+  1. Calcul des niveaux de confiance ("niveau de suspicion" dans ce cas) après les avis
+  1. Décision du maire:
+    * recommencer au 1. (relancer un tour d'avis, ce qui peut être perçu comme suspicieux)
+    * procéder au vote
+
+### Vote ###
+  1. Chaque joueur vote pour la personne qu'il souhaite voir pendue. Les bots choisissent la personne qu'ils trouvent la plus suspecte (ou aléatoirement en cas d'ex-aequo).
+  1. Détermination de la personne à pendre:
+    * Si majorité relative: la personne avec le plus grand nombre de voies est pendue
+    * Sinon, c'est le maire qui décide parmi les ex-aequo
+  1. Evolution du niveau de suspicion suivant la personne tuée:
+    * Si la personne était un villageois, le niveau de confiance des villageois envers ceux qui ont voté pour le pendu diminue, de même que le niveau de dangerosité des loups-garous envers ceux qui ont voté pour le pendu.
+    * Si le pendu était un loup-garou, le niveau de confiance des villageois envers ceux qui ont voté pour le pendu augmente, de même que le niveau de dangerosité des loups-garous envers ceux qui ont voté pour le pendu augmente.
+    * Le niveau de confiance d'un joueur envers ceux qui ont voté contre lui diminue
+    * Eventuellement, les votes des autres joueurs contre d'autres joueurs influent ses propres niveaux de confiance (si A vote contre une personne B en qui on a confiance, alors A sera plus suspect ; si B vote contre A, le niveau de confiance envers A diminuera). L'importance des modifications dépendra des niveaux existants. Le vote du maire peut avoir plus d'importance que celui des autres (un maire ayant voté contre un loup-garou regagnera la confiance de ses citoyens alors qu'un maire ayant voté contre un villageois perdra cette confiance).
+  1. Si le maire doit être pendu, celui-ci désigne son successeur. Le niveau de confiance envers le successeur évolue en fonction du rôle qu'avait le maire.
+    * Si le maire était un loup alors les paysans perdront confiance envers le nouveau maire
+    * Si le maire était un paysan alors les paysans auront plus confiance envers le nouveau maire mais les loups-garous augmenteront leur niveau de dangerosité lié à ce nouveau maire.
+
+# Phases de nuit #
+## Choix des loups-garous ##
+Chaque nuit les loups-garous peuvent se concerter pour éliminer un joueur. Pour cela ils doivent tous se mettre d'accord sur une cible. Tous les loups connaissent le vote de chacun des autres loups. Pour l'élection on procède de la manière suivante:
+  1. Chaque loup-garou vote pour une cible (au cours du premier tour, il leur ai possible de voter blanc)
+  1. Probabilité que certains des joueurs endormis repèrent un ou plusieurs loups
+  1. Si unanimité des votes, la cible est validée, sinon on retourne à l'étape un
+
+Remarques:
+  * Le nombre d'itérations est limité
